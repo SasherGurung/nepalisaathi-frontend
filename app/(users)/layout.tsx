@@ -8,7 +8,7 @@ export default function UserLayout({
   return (
     <>
       <Navbar />
-      <div className="bg-zinc-200 min-h-screen">{children}</div>
+      <div className="bg-zinc-100 min-h-screen">{children}</div>
     </>
   );
 }

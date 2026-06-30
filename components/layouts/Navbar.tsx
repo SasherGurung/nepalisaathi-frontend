@@ -15,7 +15,7 @@ function Navbar() {
   return (
     <header className="flex justify-between px-10 py-2 items-center cursor-pointer z-10 sticky">
       <div onClick={() => router.push("/feed")} className="flex gap-5">
-        <Image src="/image.png" alt="Nepal Sathi Logo" height={50} width={50} />
+        <Image src="/image.png" alt="Nepali Saathi Logo" height={50} width={50} />
         <h1 className="font-bold text-xl text-(--brand-maroon) mt-3">Nepal Saathi</h1>
       </div>
       <div className="flex gap-8">

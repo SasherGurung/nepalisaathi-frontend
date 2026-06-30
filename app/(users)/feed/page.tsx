@@ -21,7 +21,7 @@ const users = [
 
 function FeedClientPage() {
   return (
-    <section className="min-h-screen bg-gray-100 py-8">
+    <section className="min-h-screen py-8">
       <div className="mx-auto flex max-w-7xl gap-8 px-6">
         <aside className="w-[320px] space-y-6 sticky top-6 self-start">
           <div className="overflow-hidden rounded-2xl bg-white shadow-sm border">
