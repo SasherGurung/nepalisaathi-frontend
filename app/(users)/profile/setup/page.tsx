@@ -12,6 +12,7 @@ import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
+import { useImageStore } from "@/lib/stores/imageStore";
 
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
@@ -24,6 +25,8 @@ export default function ProfileSetup() {
   };
 
   const formData = useProfileStore((state) => state.formData);
+  const profilePicture = useImageStore((state) => state.profilePicture);
+  const coverPicture = useImageStore((state) => state.coverPicture);
 
   const handleNext = async () => {
     if (step === 1) {
@@ -70,15 +73,15 @@ export default function ProfileSetup() {
       data.append("status", formData.status);
       data.append("profession", formData.profession);
       data.append("bio", formData.bio);
-      data.append("latitude", formData.latitude.toString());
-      data.append("longitude", formData.longitude.toString());
+      data.append("latitude", formData.latitude?.toString() ?? "");
+      data.append("longitude", formData.longitude?.toString() ?? "");
 
-      if (formData.profilePicture) {
-        data.append("profilePicture", formData.profilePicture);
+      if (profilePicture) {
+        data.append("profilePicture", profilePicture);
       }
 
-      if (formData.coverPicture) {
-        data.append("coverPicture", formData.coverPicture);
+      if (coverPicture) {
+        data.append("coverPicture", coverPicture);
       }
 
       await api.post("/profile/edit", data);

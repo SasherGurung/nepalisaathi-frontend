@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
 import { useImageStore } from "@/lib/stores/imageStore";
+import Map from "../map/locationMarker";
 
 export default function Step3() {
   const { formData, setFormData } = useProfileStore();
@@ -37,6 +38,19 @@ export default function Step3() {
   const profileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [mapOpen, setMapOpen] = useState(false);
+
+const [selectedLocation, setSelectedLocation] = useState<{
+  lat: number;
+  lng: number;
+} | null>(null);
+
+const handleConfirm = () => {
+  console.log(selectedLocation);
+
+  setMapOpen(false);
+
+  // Save to Zustand or send to backend
+};
 
   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -175,7 +189,7 @@ export default function Step3() {
 
       <Dialog open={mapOpen} onOpenChange={setMapOpen}>
         <form>
-          <DialogContent className="sm:max-w-sm">
+          <DialogContent className="sm:max-w-xl">
             <DialogHeader>
               <DialogTitle>Approximate Location</DialogTitle>
               <DialogDescription className="text-xs text-red-400">
@@ -183,10 +197,13 @@ export default function Step3() {
                 just used to connect you with people nearby.
               </DialogDescription>
             </DialogHeader>
-            <FieldGroup></FieldGroup>
+            <FieldGroup className="flex justify-center items-center">
+              <Map />
+            </FieldGroup>
             <DialogFooter>
               <Button
                 type="submit"
+                  onClick={handleConfirm}
                 className="bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600"
               >
                 Confirm Location
