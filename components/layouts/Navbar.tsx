@@ -19,9 +19,9 @@ function Navbar() {
         <h1 className="font-bold text-xl text-(--brand-maroon) mt-3">Nepal Saathi</h1>
       </div>
       <div className="flex gap-8">
-        <FiHome className="h-6 w-6 text-(--crimson) cursor-pointer" />
-        <MdOutlineGroup className="h-7 w-7 text-(--crimson) cursor-pointer" />
-        <FaRegCompass className="h-6 w-6 text-(--crimson) cursor-pointer" />
+        <FiHome onClick={() => router.push("/feed")} className="h-6 w-6 text-(--crimson) cursor-pointer hover:scale-110 transition-all duration-200" />
+        <MdOutlineGroup onClick={() => router.push("/connection")} className="h-7 w-7 text-(--crimson) cursor-pointer rounded-full hover:scale-110 transition-all duration-200" />
+        <FaRegCompass onClick={() => router.push("/discover")} className="h-6 w-6 text-(--crimson) cursor-pointer hover:scale-110 transition-all duration-200" />
       </div>
       <div className="flex gap-5 items-center">
         <FiBell className="h-6 w-6 cursor-pointer" />

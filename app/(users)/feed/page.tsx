@@ -19,16 +19,16 @@ const users = [
   },
 ];
 
-function FeedClient() {
+function FeedClientPage() {
   return (
     <section className="min-h-screen bg-gray-100 py-8">
       <div className="mx-auto flex max-w-7xl gap-8 px-6">
         <aside className="w-[320px] space-y-6 sticky top-6 self-start">
           <div className="overflow-hidden rounded-2xl bg-white shadow-sm border">
-            <div className="h-24 bg-red-300" />
+            <div className="h-24 bg-red-400" />
 
             <div className="-mt-10 flex justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-red-500 text-3xl font-bold text-white shadow">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-zinc-100 bg-(--brand-maroon) text-3xl font-bold text-white shadow cursor-pointer">
                 S
               </div>
             </div>
@@ -55,7 +55,6 @@ function FeedClient() {
 
           <div className="rounded-2xl bg-white shadow-sm border p-5">
             <h3 className="mb-5 text-lg font-semibold flex gap-2 items-center text-black">
-              {" "}
               <MdOutlineGroup className="h-6 w-6 text-zinc-500" /> People you
               may know
             </h3>
@@ -85,7 +84,7 @@ function FeedClient() {
         <main className="flex-1 max-w-3xl space-y-6">
           <div className="rounded-2xl border bg-white shadow-sm p-6">
             <div className="flex gap-3">
-              <p className="bg-red-500 h-11 w-11 text-lg font-bold rounded-full text-white text-center pt-2">
+              <p className="bg-(--brand-maroon) h-11 w-11 text-lg font-bold rounded-full text-white text-center pt-2 cursor-pointer">
                 S
               </p>
               <div>
@@ -111,7 +110,7 @@ function FeedClient() {
 
           <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
             <div className="flex items-center gap-4 p-5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500 font-bold text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) font-bold text-white">
                 S
               </div>
 
@@ -148,4 +147,4 @@ function FeedClient() {
   );
 }
 
-export default FeedClient;
+export default FeedClientPage;
