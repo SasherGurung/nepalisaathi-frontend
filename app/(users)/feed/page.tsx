@@ -1,6 +1,23 @@
 "use client";
 
 import React from "react";
+import { CiImageOn } from "react-icons/ci";
+import { MdOutlineGroup } from "react-icons/md";
+
+const users = [
+  {
+    name: "John Doe",
+    role: "UI Designer",
+  },
+  {
+    name: "Jane Smith",
+    role: "Backend Developer",
+  },
+  {
+    name: "Alex Kim",
+    role: "Product Designer",
+  },
+];
 
 function FeedClient() {
   return (
@@ -31,43 +48,32 @@ function FeedClient() {
 
               <div className="flex justify-between px-3">
                 <p className="text-gray-500">Profile Views</p>
-                <p className="text-gray-500">0</p>
+                <p className="text-gray-500">1</p>
               </div>
             </div>
           </div>
 
           <div className="rounded-2xl bg-white shadow-sm border p-5">
-            <h3 className="mb-5 text-lg font-semibold">Suggested for you</h3>
+            <h3 className="mb-5 text-lg font-semibold flex gap-2 items-center text-black">
+              {" "}
+              <MdOutlineGroup className="h-6 w-6 text-zinc-500" /> People you
+              may know
+            </h3>
 
             <div className="space-y-5">
-              {[
-                {
-                  name: "John Doe",
-                  role: "UI Designer",
-                },
-                {
-                  name: "Jane Smith",
-                  role: "Backend Developer",
-                },
-                {
-                  name: "Alex Kim",
-                  role: "Product Designer",
-                },
-              ].map((user) => (
+              {users.map((user) => (
                 <div
                   key={user.name}
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-11 w-11 rounded-full bg-gray-300" />
-
                     <div>
                       <p className="font-medium">{user.name}</p>
                       <p className="text-xs text-gray-500">{user.role}</p>
                     </div>
                   </div>
-
-                  <button className="rounded-full bg-blue-600 px-4 py-1.5 text-sm text-white hover:bg-blue-700 transition">
+                  <button className=" text-blue-600 hover:text-blue-700 px-4 py-1.5 text-sm transition cursor-pointer">
                     Follow
                   </button>
                 </div>
@@ -90,12 +96,14 @@ function FeedClient() {
             <div className="flex gap-4">
               <textarea
                 placeholder="What's on your mind, Sasher?"
-                className="w-full h-xl p-3 rounded-lg mt-3 "
+                className="w-full h-32 p-3 rounded-lg mt-3 border focus:outline-none focus:ring-1 focus:ring-red-400"
               />
             </div>
-            <div className="mt-6 flex items-center justify-between border-t pt-5">
-              <button className="cursor-pointer hover:bg-zinc-200 p-2 rounded-xl">Photos</button>
-              <button className="rounded-full bg-blue-600 px-8 py-2 font-medium text-white hover:bg-blue-700 transition">
+            <div className="mt-2 flex items-center justify-between pt-5">
+              <button className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1">
+                <CiImageOn className="h-5 w-5 text-green-400" /> Photos
+              </button>
+              <button className="rounded-full bg-blue-600 px-8 py-2 font-medium text-white hover:bg-blue-700 transition cursor-pointer">
                 Post
               </button>
             </div>

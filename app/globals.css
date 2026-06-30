@@ -81,6 +81,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --midnight: #0b0f1a;
+  --deep-navy: #111827;
+  --card-bg: #161d2f;
+  --border: #ffffff12;
+  --saffron: #f5a623;
+  --saffron-dim: #c47c10;
+  --crimson: #c0392b;
+  --white-100: #fff;
+  --white-70: #ffffffb8;
+  --white-40: #fff6;
+  --brand-maroon: #b81d33;
+  --brand-blue: #16407b;
 }
 
 .dark {
