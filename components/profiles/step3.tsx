@@ -11,28 +11,28 @@ import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+import { useImageStore } from "@/lib/stores/imageStore";
 
 export default function Step3() {
+  const { formData, setFormData } = useProfileStore();
+
   const {
-    formData,
-    setFormData,
     profilePreview,
-    setProfilePreview,
     coverPreview,
+    setProfilePicture,
+    setCoverPicture,
+    setProfilePreview,
     setCoverPreview,
-    setDeleteProfilePreview,
-    setDeleteCoverPreview,
-  } = useProfileStore();
+    clearProfileImage,
+    clearCoverImage,
+  } = useImageStore();
 
   const profileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +41,8 @@ export default function Step3() {
   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setFormData({ profilePicture: file });
+
+    setProfilePicture(file);
     setProfilePreview(URL.createObjectURL(file));
   };
 
@@ -52,7 +53,7 @@ export default function Step3() {
   const handleCoverImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setFormData({ coverPicture: file });
+    setCoverPicture(file);
     setCoverPreview(URL.createObjectURL(file));
   };
 
@@ -61,11 +62,11 @@ export default function Step3() {
   };
 
   const handleDeleteProfilePreview = () => {
-    setDeleteProfilePreview();
+    clearProfileImage();
   };
 
   const handleDeleteCoverPreview = () => {
-    setDeleteCoverPreview();
+    clearCoverImage();
   };
 
   return (
@@ -178,14 +179,18 @@ export default function Step3() {
             <DialogHeader>
               <DialogTitle>Approximate Location</DialogTitle>
               <DialogDescription className="text-xs text-red-400">
-              Location Privacy: We do not show your exact location. This is just used to connect you with people nearby.
+                Location Privacy: We do not show your exact location. This is
+                just used to connect you with people nearby.
               </DialogDescription>
             </DialogHeader>
-            <FieldGroup>
-              
-            </FieldGroup>
+            <FieldGroup></FieldGroup>
             <DialogFooter>
-              <Button type="submit" className="bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600">Confirm Location</Button>
+              <Button
+                type="submit"
+                className="bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600"
+              >
+                Confirm Location
+              </Button>
             </DialogFooter>
           </DialogContent>
         </form>

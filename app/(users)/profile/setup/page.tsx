@@ -13,45 +13,52 @@ import { toast } from "react-hot-toast";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
 
-
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+
   const progress = {
     1: 33,
     2: 67,
     3: 100,
   };
-  const formData = useProfileStore((state) => state.formData);
-  const profilePicture = useProfileStore((state) => state.profilePreview);
-  const coverPicture = useProfileStore((state) => state.coverPreview);
 
-  const handleNext = () => {
-    if(step === 1) {
+  const formData = useProfileStore((state) => state.formData);
+
+  const handleNext = async () => {
+    if (step === 1) {
       const result = step1Schema.safeParse({
         homeCity: formData.homeCity,
       });
+
       if (!result.success) {
         toast.error(result.error.issues[0].message);
         return;
       }
+
       setStep(2);
       return;
     }
 
-    if(step === 2) {
+    if (step === 2) {
       const result = step2Schema.safeParse({
         status: formData.status,
         profession: formData.profession,
       });
-      if(!result.success) {
+
+      if (!result.success) {
         toast.error(result.error.issues[0].message);
         return;
       }
+
       setStep(3);
       return;
     }
-  }
+
+    if (step === 3) {
+      await handleSubmit();
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -66,19 +73,20 @@ export default function ProfileSetup() {
       data.append("latitude", formData.latitude.toString());
       data.append("longitude", formData.longitude.toString());
 
-      if (profilePicture) {
-        data.append("profilePicture", profilePicture);
+      if (formData.profilePicture) {
+        data.append("profilePicture", formData.profilePicture);
       }
 
-      if (coverPicture) {
-        data.append("coverPicture", coverPicture);
+      if (formData.coverPicture) {
+        data.append("coverPicture", formData.coverPicture);
       }
 
-      await api.post("/profile/edit");
+      await api.post("/profile/edit", data);
+
       toast.success("Profile setup completed!");
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong! Please try again");
+      console.error(error);
+      toast.error("Something went wrong! Please try again.");
     } finally {
       setLoading(false);
     }
@@ -100,13 +108,14 @@ export default function ProfileSetup() {
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="font-medium">Step {step} of 3</span>
+
             <span className="text-muted-foreground">
-              {progress[step as 1 | 2 | 3]}%
+              {progress[step as keyof typeof progress]}%
             </span>
           </div>
 
           <Progress
-            value={progress[step as 1 | 2 | 3]}
+            value={progress[step as keyof typeof progress]}
             className="h-2 rounded-full"
           />
         </div>
@@ -117,12 +126,12 @@ export default function ProfileSetup() {
 
         <div className="flex justify-between pt-2">
           <Button
+            variant="outline"
+            className="h-10 px-6 cursor-pointer"
             onClick={() => {
               if (step === 1) return;
               setStep(step - 1);
             }}
-            variant="outline"
-            className="h-10 px-6 cursor-pointer"
           >
             {step === 1 ? "Cancel" : "Back"}
           </Button>
