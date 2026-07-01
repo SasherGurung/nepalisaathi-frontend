@@ -184,7 +184,7 @@ export default function LoginForm() {
                       disabled={loading}
                       className="cursor-pointer bg-(--brand-maroon) hover:bg-red-600 rounded-2xl p-5"
                     >
-                      {loading ? "Login..." : "Login"}
+                      {loading ? "Logging You In..." : "Login"}
                     </Button>
                   </Field>
                   <FieldDescription className="text-center">

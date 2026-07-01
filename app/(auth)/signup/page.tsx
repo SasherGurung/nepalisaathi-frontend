@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/authStores";
+import { RegisterApiResponse } from "@/lib/types/auth.types";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -41,6 +42,7 @@ export default function SignupForm() {
   });
 
   const setUser = useAuthStore((state) => state.setUser)
+  const {setToken} = useAuthStore();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +50,6 @@ export default function SignupForm() {
     if (
       !formData.name.trim() ||
       !formData.email.trim() ||
-      !formData.phoneNumber.trim() ||
       !formData.password.trim() ||
       !formData.password_confirmation.trim()
     ) {
@@ -69,9 +70,9 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
-      const res = await api.post("/auth/register", formData);
-
-      setUser(res.data.user)
+      const res = await api.post<RegisterApiResponse>("/auth/register", formData);
+      setUser(res.data.data.user)
+      setToken(res.data.data.token);
       console.log(res.data);
       toast.success(res.data.message);
       router.push("/profile/setup");
@@ -274,7 +275,7 @@ export default function SignupForm() {
                     <Field>
                       <Button
                         type="submit"
-                        disabled={false}
+                        disabled={loading}
                         className="cursor-pointer bg-(--brand-maroon) hover:bg-red-600 rounded-2xl p-5"
                       >
                         {loading ? "Creating Account..." : "Create My Account"}
