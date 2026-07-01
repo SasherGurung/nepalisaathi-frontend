@@ -41,4 +41,5 @@ export interface User {
     user: User;
   }
 
+
   export type RegisterApiResponse = ApiResponse<RegisterResponse>;

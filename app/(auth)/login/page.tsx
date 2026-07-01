@@ -38,6 +38,7 @@ export default function LoginForm() {
   const [acceptedTerm, setAcceptedTerm] = useState(false);
 
   const setUser = useAuthStore((state) => state.setUser)
+  const { setToken } = useAuthStore();
 
   const resetForm = () => {
     setEmail("");
@@ -73,6 +74,7 @@ export default function LoginForm() {
       });
 
       console.log(res.data);
+      setToken(res.data.token);
       setUser(res.data.user);
       toast.success(res.data.message);
       
