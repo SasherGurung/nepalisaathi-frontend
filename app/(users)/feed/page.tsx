@@ -20,6 +20,9 @@ const users = [
 ];
 
 function FeedClientPage() {
+
+  
+
   return (
     <section className="min-h-screen py-8">
       <div className="mx-auto flex max-w-7xl gap-8 px-6">

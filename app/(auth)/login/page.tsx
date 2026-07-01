@@ -25,6 +25,7 @@ import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
 import { useRouter } from "next/navigation";
 import { loginSchema } from "@/app/schema/authSchema";
+import { useAuthStore } from "@/lib/stores/authStores";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -35,6 +36,8 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [acceptedTerm, setAcceptedTerm] = useState(false);
+
+  const setUser = useAuthStore((state) => state.setUser)
 
   const resetForm = () => {
     setEmail("");
@@ -70,9 +73,11 @@ export default function LoginForm() {
       });
 
       console.log(res.data);
+      setUser(res.data.user);
       toast.success(res.data.message);
+      
       resetForm();
-      router.push("/");
+      router.push("/feed");
     } catch (err: unknown) {
       console.log("Error:", err);
       toast.error(

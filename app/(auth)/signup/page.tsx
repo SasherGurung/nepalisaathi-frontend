@@ -24,6 +24,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
+import { useAuthStore } from "@/lib/stores/authStores";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -38,6 +39,8 @@ export default function SignupForm() {
     password_confirmation: "",
     acceptedTerm: false,
   });
+
+  const setUser = useAuthStore((state) => state.setUser)
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,6 +71,7 @@ export default function SignupForm() {
     try {
       const res = await api.post("/auth/register", formData);
 
+      setUser(res.data.user)
       console.log(res.data);
       toast.success(res.data.message);
       router.push("/profile/setup");
