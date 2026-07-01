@@ -93,7 +93,7 @@ export default function LoginForm() {
               <div className="flex justify-center mb-4">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
                   <Image
-                    src="/demo.png"
+                    src="/logo.png"
                     alt="Logo"
                     width={50}
                     height={50}
@@ -112,7 +112,7 @@ export default function LoginForm() {
                 <Field>
                   <FieldLabel htmlFor="email">Email</FieldLabel>
                   <div className="relative">
-                    <MdOutlineMail className="absolute left-3 top-3 h-4 w-4 text-indigo-500" />
+                    <MdOutlineMail className="absolute left-3 top-3 h-4 w-4 text-(--brand-maroon)" />
                     <Input
                       id="email"
                       type="email"
@@ -120,7 +120,7 @@ export default function LoginForm() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-9 h-10 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                     />
                   </div>
                 </Field>
@@ -129,13 +129,13 @@ export default function LoginForm() {
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <Link
                       href="#"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-indigo-600 hover:text-indigo-500"
+                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-(--brand-maroon) hover:text-red-600"
                     >
                       Forgot your password?
                     </Link>
                   </div>
                   <div className="relative">
-                    <MdLockOutline className="absolute left-3 top-3 h-4.5 w-4.5 text-indigo-500" />
+                    <MdLockOutline className="absolute left-3 top-3 h-4.5 w-4.5 text-(--brand-maroon)" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -143,7 +143,7 @@ export default function LoginForm() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-9 h-10 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                     />
 
                     <button
@@ -162,7 +162,7 @@ export default function LoginForm() {
                       type="checkbox"
                       checked={acceptedTerm}
                       onChange={(e) => setAcceptedTerm(e.target.checked)}
-                      className="mt-1 h-3 w-3 border-zinc-700 cursor-pointer accent-indigo-500"
+                      className="mt-1 h-3 w-3 border-zinc-700 cursor-pointer accent-red-600"
                     />
 
                     <FieldLabel
@@ -177,7 +177,7 @@ export default function LoginForm() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="cursor-pointer bg-indigo-500 hover:bg-indigo-400 rounded-2xl p-5"
+                      className="cursor-pointer bg-(--brand-maroon) hover:bg-red-600 rounded-2xl p-5"
                     >
                       {loading ? "Login..." : "Login"}
                     </Button>
@@ -186,7 +186,7 @@ export default function LoginForm() {
                     Don&apos;t have an account?{" "}
                     <Link
                       href="/signup"
-                      className=" text-indigo-600 hover:text-indigo-500"
+                      className="text-(--brand-maroon) hover:text-red-600"
                     >
                       Register here
                     </Link>
@@ -195,12 +195,12 @@ export default function LoginForm() {
               </FieldGroup>
             </CardContent>
           </form>
-          <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-indigo-400 text-white">
+          <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-(--brand-maroon) text-white">
 
             <div className="relative z-10 mb-8">
               <div className="flex h-50 w-50 items-center justify-center rounded-tr-4xl rounded-bl-4xl p-4 shadow-[0_0_25px_0px]">
                 <Image
-                  src="/image.png"
+                  src="/logo.png"
                   alt="Logo"
                   width={80}
                   height={80}

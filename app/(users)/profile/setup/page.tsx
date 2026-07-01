@@ -13,6 +13,7 @@ import { toast } from "react-hot-toast";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
 import { useImageStore } from "@/lib/stores/imageStore";
+import { router } from "next/client";
 
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
@@ -84,9 +85,10 @@ export default function ProfileSetup() {
         data.append("coverPicture", coverPicture);
       }
 
-      await api.post("/profile/edit", data);
+      await api.post("/profile/setup", data);
 
       toast.success("Profile setup completed!");
+      router.push("/feed");
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong! Please try again.");
@@ -142,7 +144,7 @@ export default function ProfileSetup() {
           <Button
             disabled={loading}
             onClick={handleNext}
-            className="h-10 px-8 bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+            className="h-10 px-8 bg-(--brand-maroon) hover:bg-red-600 cursor-pointer"
           >
             {loading
               ? "Submitting..."

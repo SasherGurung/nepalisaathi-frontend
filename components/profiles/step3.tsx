@@ -185,7 +185,7 @@ export default function Step3() {
           value={formData.approximateLocation}
           onClick={() => setMapOpen(true)}
           placeholder="Select location on map"
-          className="h-11 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-indigo-500 cursor-pointer"
+          className="h-11 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600 cursor-pointer"
         />
 
         <FieldLabel className="text-zinc-500 text-sm">Short Bio</FieldLabel>
@@ -194,7 +194,7 @@ export default function Step3() {
           value={formData.bio}
           onChange={(e) => setFormData({ bio: e.target.value })}
           placeholder="Tell the community a bit about yourself.."
-          className="h-25 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-indigo-500"
+          className="h-25 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600"
         />
       </Field>
 
@@ -221,7 +221,7 @@ export default function Step3() {
             <Button
               type="button"
               onClick={handleConfirm}
-              className="bg-indigo-500 hover:bg-indigo-600"
+              className="bg-(--) hover:bg-indigo-600 cursor-pointer rounded-2xl p-5"
             >
               Confirm Location
             </Button>

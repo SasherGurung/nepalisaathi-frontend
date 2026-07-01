@@ -70,7 +70,7 @@ export default function SignupForm() {
 
       console.log(res.data);
       toast.success(res.data.message);
-      router.push("/setup");
+      router.push("/profile/setup");
     } catch (err: unknown) {
       console.log("Error:", err);
       toast.error(
@@ -86,11 +86,11 @@ export default function SignupForm() {
       <Card className="overflow-hidden p-0">
         <form onSubmit={handleRegister}>
           <CardContent className="grid p-0 md:grid-cols-2">
-            <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-indigo-400 text-white">
+            <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-(--brand-maroon) text-white">
               <div className="relative z-10 mb-8">
                 <div className="flex h-50 w-50 items-center justify-center rounded-tr-4xl rounded-bl-4xl p-4 shadow-[0_0_25px_0px]">
                   <Image
-                    src="/image.png"
+                    src="/logo.png"
                     alt="Logo"
                     width={80}
                     height={80}
@@ -124,7 +124,7 @@ export default function SignupForm() {
                   <Field>
                     <FieldLabel htmlFor="name">Full Name</FieldLabel>
                     <div className="relative">
-                      <MdPersonOutline className="absolute left-3 top-2 text-indigo-500 h-5 w-5" />
+                      <MdPersonOutline className="absolute left-3 top-2 text-(--brand-maroon) h-5 w-5" />
                       <Input
                         id="name"
                         type="text"
@@ -137,14 +137,14 @@ export default function SignupForm() {
                           })
                         }
                         className="pl-9 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                       />
                     </div>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="email">Email Address</FieldLabel>
                     <div className="relative">
-                      <MdOutlineMail className="absolute left-3 top-2 h-4 w-4 text-indigo-500" />
+                      <MdOutlineMail className="absolute left-3 top-2 h-4 w-4 text-(--brand-maroon)" />
                       <Input
                         id="email"
                         type="email"
@@ -157,7 +157,7 @@ export default function SignupForm() {
                           })
                         }
                         className="pl-9 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                       />
                     </div>
                   </Field>
@@ -166,7 +166,7 @@ export default function SignupForm() {
                       Phone Number (Optional)
                     </FieldLabel>
                     <div className="relative">
-                      <LuPhone className="absolute left-3 top-2 h-4 w-4 text-indigo-500" />
+                      <LuPhone className="absolute left-3 top-2 h-4 w-4 text-(--brand-maroon)" />
                       <Input
                         id="phone"
                         type="phone"
@@ -179,14 +179,14 @@ export default function SignupForm() {
                           })
                         }
                         className="pl-9 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                       />
                     </div>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <div className="relative">
-                      <MdLockOutline className="absolute left-3 top-2 text-indigo-500" />
+                      <MdLockOutline className="absolute left-3 top-2 text-(--brand-maroon)" />
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
@@ -199,7 +199,7 @@ export default function SignupForm() {
                           })
                         }
                         className="pl-9 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                       />
                       <button
                         type="button"
@@ -215,7 +215,7 @@ export default function SignupForm() {
                       Confirm Password
                     </FieldLabel>
                     <div className="relative">
-                      <MdLockOutline className="absolute left-3 top-2 text-indigo-500" />
+                      <MdLockOutline className="absolute left-3 top-2 text-(--brand-maroon)" />
                       <Input
                         id="password"
                         type={showConfirmPassword ? "text" : "password"}
@@ -228,7 +228,7 @@ export default function SignupForm() {
                           })
                         }
                         className="pl-9 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
+                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none"
                       />
 
                       <button
@@ -254,7 +254,7 @@ export default function SignupForm() {
                             acceptedTerm: e.target.checked,
                           })
                         }
-                        className="mt-1 h-3 w-3 rounded-b-full border-zinc-700 cursor-pointer accent-indigo-500"
+                        className="mt-1 h-3 w-3 rounded-b-full border-zinc-700 cursor-pointer accent-red-600"
                       />
 
                       <FieldLabel
@@ -271,7 +271,7 @@ export default function SignupForm() {
                       <Button
                         type="submit"
                         disabled={false}
-                        className="cursor-pointer bg-indigo-500 hover:bg-indigo-400 rounded-2xl p-5"
+                        className="cursor-pointer bg-(--brand-maroon) hover:bg-red-600 rounded-2xl p-5"
                       >
                         {loading ? "Creating Account..." : "Create My Account"}
                       </Button>
@@ -279,7 +279,7 @@ export default function SignupForm() {
                         Already have an account?{" "}
                         <Link
                           href="/login"
-                          className="text-indigo-600 hover:text-indigo-500"
+                          className="text-(--brand-maroon) hover:text-red-600"
                         >
                           Sign in
                         </Link>

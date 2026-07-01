@@ -65,7 +65,7 @@ export default function Step2() {
             onChange={(e) => setFormData({
               profession: e.target.value,
             })}
-            className="h-11 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-indigo-500"
+            className="h-11 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600"
           />
         </Field>
       </div>
