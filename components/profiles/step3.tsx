@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Field, FieldLabel } from "../ui/field";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { FiUpload, FiImage } from "react-icons/fi";
+import { XIcon } from "lucide-react";
+
+import { Field, FieldLabel, FieldGroup } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { FiUpload, FiImage } from "react-icons/fi";
-import { useProfileStore } from "@/lib/stores/profileStore";
-import Image from "next/image";
-import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,12 +18,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FieldGroup } from "@/components/ui/field";
+
+import { useProfileStore } from "@/lib/stores/profileStore";
 import { useImageStore } from "@/lib/stores/imageStore";
-import Map from "../map/locationMarker";
+
+const MapLocation = dynamic(() => import("@/components/map/locationMarker"), {
+  ssr: false,
+});
 
 export default function Step3() {
-  const { formData, setFormData } = useProfileStore();
+  const { formData, setFormData, setLocation } = useProfileStore();
 
   const {
     profilePreview,
@@ -39,18 +44,24 @@ export default function Step3() {
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [mapOpen, setMapOpen] = useState(false);
 
-const [selectedLocation, setSelectedLocation] = useState<{
-  lat: number;
-  lng: number;
-} | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
-const handleConfirm = () => {
-  console.log(selectedLocation);
+  const handleConfirm = () => {
+    if (!selectedLocation) return;
 
-  setMapOpen(false);
+    const { lat, lng } = selectedLocation;
 
-  // Save to Zustand or send to backend
-};
+    setLocation(
+      lat,
+      lng,
+      `Latitude: ${lat.toFixed(5)} | Longitude: ${lng.toFixed(5)}`,
+    );
+
+    setMapOpen(false);
+  };
 
   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -188,29 +199,34 @@ const handleConfirm = () => {
       </Field>
 
       <Dialog open={mapOpen} onOpenChange={setMapOpen}>
-        <form>
-          <DialogContent className="sm:max-w-xl">
-            <DialogHeader>
-              <DialogTitle>Approximate Location</DialogTitle>
-              <DialogDescription className="text-xs text-red-400">
-                Location Privacy: We do not show your exact location. This is
-                just used to connect you with people nearby.
-              </DialogDescription>
-            </DialogHeader>
-            <FieldGroup className="flex justify-center items-center">
-              <Map />
-            </FieldGroup>
-            <DialogFooter>
-              <Button
-                type="submit"
-                  onClick={handleConfirm}
-                className="bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600"
-              >
-                Confirm Location
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </form>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Approximate Location</DialogTitle>
+
+            <DialogDescription className="text-xs text-red-400">
+              Location Privacy: We do not show your exact location. This is only
+              used to connect you with people nearby.
+            </DialogDescription>
+          </DialogHeader>
+
+          <FieldGroup className="flex justify-center">
+            <MapLocation
+              onLocationSelect={(lat, lng) => {
+                setSelectedLocation({ lat, lng });
+              }}
+            />
+          </FieldGroup>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              onClick={handleConfirm}
+              className="bg-indigo-500 hover:bg-indigo-600"
+            >
+              Confirm Location
+            </Button>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
     </div>
   );
