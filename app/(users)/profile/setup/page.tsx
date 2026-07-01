@@ -13,11 +13,12 @@ import { toast } from "react-hot-toast";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
 import { useImageStore } from "@/lib/stores/imageStore";
-import { router } from "next/client";
+import { useRouter } from "next/navigation";
 
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const progress = {
     1: 33,
@@ -28,6 +29,7 @@ export default function ProfileSetup() {
   const formData = useProfileStore((state) => state.formData);
   const profilePicture = useImageStore((state) => state.profilePicture);
   const coverPicture = useImageStore((state) => state.coverPicture);
+
 
   const handleNext = async () => {
     if (step === 1) {

@@ -1,4 +1,4 @@
-import { ApiResponse } from "./response.types";
+import { BaseApiResponse } from "./response.types";
 
 export interface User {
     id: number;
@@ -36,10 +36,9 @@ export interface User {
     open_to_helping_newcomers: boolean;
   }
 
-  export interface RegisterResponse {
+  export interface RegisterResponse extends BaseApiResponse {
     token: string;
     user: User;
   }
+  
 
-
-  export type RegisterApiResponse = ApiResponse<RegisterResponse>;

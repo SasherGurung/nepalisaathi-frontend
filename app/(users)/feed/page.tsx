@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import { useAuthStore } from "@/lib/stores/authStores";
+import { useProfileStore } from "@/lib/stores/profileStore";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGroup } from "react-icons/md";
 
@@ -20,8 +21,8 @@ const users = [
 ];
 
 function FeedClientPage() {
-
-  
+  const { user } = useAuthStore();
+  const { formData } = useProfileStore();
 
   return (
     <section className="min-h-screen py-8">
@@ -37,9 +38,9 @@ function FeedClientPage() {
             </div>
 
             <div className="px-5 pb-2 text-center">
-              <h2 className="text-xl font-bold text-gray-900">Sasher</h2>
+              <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
               <p className="text-sm text-gray-500">
-                Frontend Developer at Skybase
+                {formData.profession}, at Skybase
               </p>
             </div>
 
@@ -91,7 +92,7 @@ function FeedClientPage() {
                 S
               </p>
               <div>
-                <p className="font-bold text-lg">Sasher</p>
+                <p className="font-bold text-lg">{user?.name}</p>
                 <p className="text-zinc-400 text-sm">Friends</p>
               </div>
             </div>
@@ -118,7 +119,7 @@ function FeedClientPage() {
               </div>
 
               <div>
-                <p className="font-semibold">Sasher</p>
+                <p className="font-semibold">{user?.name}</p>
               </div>
             </div>
 

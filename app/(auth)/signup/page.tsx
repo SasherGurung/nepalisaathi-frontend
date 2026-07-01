@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/authStores";
-import { RegisterApiResponse } from "@/lib/types/auth.types";
+import { RegisterResponse } from "@/lib/types/auth.types";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -41,8 +41,8 @@ export default function SignupForm() {
     acceptedTerm: false,
   });
 
-  const setUser = useAuthStore((state) => state.setUser)
-  const {setToken} = useAuthStore();
+  const setUser = useAuthStore((state) => state.setUser);
+  const { setToken } = useAuthStore();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,11 +70,15 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
-      const res = await api.post<RegisterApiResponse>("/auth/register", formData);
-      setUser(res.data.data.user)
-      setToken(res.data.data.token);
-      console.log(res.data);
-      toast.success(res.data.message);
+      const { data } = await api.post<RegisterResponse>(
+        "/auth/register",
+        formData,
+      );
+      console.log("data",data);
+      setUser(data.user);
+      setToken(data.token);
+      console.log(data.user);
+      toast.success(data.message);
       router.push("/profile/setup");
     } catch (err: unknown) {
       console.log("Error:", err);
@@ -110,8 +114,9 @@ export default function SignupForm() {
                 </h1>
 
                 <p className="mt-8 text-sm text-indigo-100">
-                Create your account to connect with fellow Nepalis, discover opportunities,
-                and build meaningful connections wherever you are.
+                  Create your account to connect with fellow Nepalis, discover
+                  opportunities, and build meaningful connections wherever you
+                  are.
                 </p>
               </div>
             </div>
