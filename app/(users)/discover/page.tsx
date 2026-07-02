@@ -15,10 +15,12 @@ type DiscoverUser = {
   displayName: string | null;
   profession: string | null;
   profilePicture: string | null;
+  status: string | null;
 };
 
 function DiscoverPage() {
   const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
+  const [selectstatus, setSelectStatus] = useState("All")
 
   useEffect(() => {
     const getDiscoverUsers = async () => {
@@ -68,9 +70,9 @@ function DiscoverPage() {
         </div>
 
         {discoverUsers.length <= 3 ? (
-          <div className="flex justify-center items-center flex-col text-center">
-            <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
-            <h1 className="font-bold text-xl">No User Found</h1>
+          <div className="flex justify-center items-center flex-col text-center mt-17">
+            <MdOutlineGroup className="w-20 h-20 text-zinc-400" />
+            <h1 className="font-bold text-3xl">No User Found</h1>
             <p className="font-light text-zinc-500 text-sm line-clamp-3 w-sm">
               We couldnt find any new people to connect with right now. Check
               back later as our community grows!
