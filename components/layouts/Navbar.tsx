@@ -39,7 +39,7 @@ function Navbar() {
           Nepal Saathi
         </h1>
       </div>
-      <div className="flex gap-8 mr-30">
+      <div className="flex gap-8 mr-30 ">
         <FiHome
           onClick={() => router.push("/feed")}
           className="h-6 w-6 text-(--crimson) cursor-pointer hover:scale-110 transition-all duration-200"
@@ -79,7 +79,7 @@ function Navbar() {
               <DropdownMenuItem className="cursor-pointer text-base font-light text-zinc-600">
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer text-base font-light text-zinc-600">
+              <DropdownMenuItem onClick={() => router.push("/change-password")} className="cursor-pointer text-base font-light text-zinc-600">
                 Change Password
               </DropdownMenuItem>
               <DropdownMenuItem

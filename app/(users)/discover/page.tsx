@@ -20,7 +20,6 @@ type DiscoverUser = {
 
 function DiscoverPage() {
   const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
-  const [selectstatus, setSelectStatus] = useState("All")
 
   useEffect(() => {
     const getDiscoverUsers = async () => {
