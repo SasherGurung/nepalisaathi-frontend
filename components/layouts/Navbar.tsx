@@ -10,6 +10,16 @@ import { FiBell } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -79,19 +89,47 @@ function Navbar() {
               <DropdownMenuItem className="cursor-pointer text-base font-light text-zinc-600">
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/change-password")} className="cursor-pointer text-base font-light text-zinc-600">
+              <DropdownMenuItem
+                onClick={() => router.push("/change-password")}
+                className="cursor-pointer text-base font-light text-zinc-600"
+              >
                 Change Password
               </DropdownMenuItem>
-              <DropdownMenuItem
-                variant="destructive"
-                className="cursor-pointer text-base font-light"
-                onClick={() => {
-                  clearUser();
-                  router.replace("/login");
-                }}
-              >
-                Log out
-              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    className="cursor-pointer text-base font-light"
+                    onSelect={(e) => e.preventDefault()} // Prevents the dropdown from closing immediately
+                  >
+                    Log out
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-xl">Log out?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to log out of your account?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter>
+                    <AlertDialogAction variant="outline" className="cursor-pointer">Cancel</AlertDialogAction>
+
+                    <AlertDialogAction
+                    variant={"destructive"}
+                    className="cursor-pointer"
+                      onClick={() => {
+                        clearUser();
+                        router.replace("/login");
+                      }}
+                    >
+                      Log out
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -37,7 +37,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [acceptedTerm, setAcceptedTerm] = useState(false);
 
-  const setUser = useAuthStore((state) => state.setUser)
+  const setUser = useAuthStore((state) => state.setUser);
   const { setToken } = useAuthStore();
 
   const resetForm = () => {
@@ -52,7 +52,7 @@ export default function LoginForm() {
     const result = loginSchema.safeParse({
       email,
       password,
-    })
+    });
 
     if (!result.success) {
       toast.error(result.error.issues[0].message);
@@ -77,7 +77,7 @@ export default function LoginForm() {
       setToken(res.data.token);
       setUser(res.data.user);
       toast.success(res.data.message);
-      
+
       resetForm();
       router.push("/feed");
     } catch (err: unknown) {
@@ -203,7 +203,6 @@ export default function LoginForm() {
             </CardContent>
           </form>
           <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-(--brand-maroon) text-white">
-
             <div className="relative z-10 mb-8">
               <div className="flex h-50 w-50 items-center justify-center rounded-tr-4xl rounded-bl-4xl p-4 shadow-[0_0_25px_0px]">
                 <Image
@@ -218,8 +217,7 @@ export default function LoginForm() {
 
             <div className="relative z-10 max-w-sm text-center text-base">
               <h1 className="text-3xl font-bold leading-wide">
-                Your Companion
-                Across Nepal
+                Your Companion Across Nepal
               </h1>
 
               <p className="mt-4 text-sm text-indigo-100">
