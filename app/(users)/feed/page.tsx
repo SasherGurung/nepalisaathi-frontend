@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthStore } from "@/lib/stores/authStores";
-import { useProfileStore } from "@/lib/stores/profileStore";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGroup } from "react-icons/md";
 
@@ -26,7 +25,7 @@ function FeedClientPage() {
   return (
     <section className="min-h-screen py-8">
       <div className="mx-auto flex max-w-7xl gap-8 px-6">
-        <aside className="w-[320px] space-y-6 sticky top-6 self-start">
+        <div className="w-[320px] space-y-6 sticky top-25 self-start">
           <div className="overflow-hidden rounded-2xl bg-white shadow-sm border">
             <div className="h-24 bg-red-400" />
 
@@ -82,7 +81,7 @@ function FeedClientPage() {
               ))}
             </div>
           </div>
-        </aside>
+        </div>
 
         <main className="flex-1 max-w-3xl space-y-6">
           <div className="rounded-2xl border bg-white shadow-sm p-6">

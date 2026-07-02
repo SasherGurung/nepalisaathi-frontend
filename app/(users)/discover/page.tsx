@@ -6,6 +6,7 @@ import Image from "next/image";
 import { FaRegCompass } from "react-icons/fa6";
 import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
+import { MdOutlineGroup } from "react-icons/md";
 
 type DiscoverUser = {
   id: number;
@@ -37,7 +38,7 @@ function DiscoverPage() {
     <section className="min-h-screen flex justify-center">
       <Card className="w-7xl mt-6">
         <div className="items-center flex justify-center flex-col mb-3">
-          <FaRegCompass className="text-gray-400 w-18 h-18 mb-3" />
+          <FaRegCompass className="text-gray-400 w-15 h-15 mb-3" />
           <div className="flex flex-col justify-center text-center gap-2">
             <h1 className="text-3xl text-zinc-500 font-bold">
               Discover New Connection
@@ -65,36 +66,48 @@ function DiscoverPage() {
             Planning To Relocate
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-2 mt-5">
-          {discoverUsers.map((user) => (
-            <div
-              key={user.uid}
-              className="w-sm rounded-2xl bg-white border border-zinc-200 overflow-hidden transition-all duration-100 hover:shadow-md"
-            >
-              <div className="h-20 bg-(--brand-maroon)"></div>
 
-              <div className="flex flex-col items-center px-6 pb-6 -mt-12">
-                <Image
-                  src={user.profilePicture || "/logo.png"}
-                  alt="Profile Image"
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
-                />
+        {discoverUsers.length <= 3 ? (
+          <div className="flex justify-center items-center flex-col text-center">
+            <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
+            <h1 className="font-bold text-xl">No User Found</h1>
+            <p className="font-light text-zinc-500 text-sm line-clamp-3 w-sm">
+              We couldnt find any new people to connect with right now. Check
+              back later as our community grows!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-2 mt-5">
+            {discoverUsers.map((user) => (
+              <div
+                key={user.uid}
+                className="w-sm rounded-2xl bg-white border border-zinc-200 overflow-hidden transition-all duration-100 hover:shadow-md"
+              >
+                <div className="h-20 bg-(--brand-maroon)"></div>
 
-                <h3 className="mt-3 text-lg font-semibold text-zinc-900">
-                  {user.name || user.displayName}
-                </h3>
+                <div className="flex flex-col items-center px-6 pb-6 -mt-12">
+                  <Image
+                    src={user.profilePicture || "/logo.png"}
+                    alt="Profile Image"
+                    width={96}
+                    height={96}
+                    className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+                  />
 
-                <p className="text-sm text-zinc-500">{user.profession}</p>
+                  <h3 className="mt-3 text-lg font-semibold text-zinc-900">
+                    {user.name || user.displayName}
+                  </h3>
 
-                <button className="mt-5 w-full rounded-full text-red-600 py-2.5 font-medium border border-red-600 hover:bg-red-100 transition-all cursor-pointer">
-                  Connect
-                </button>
+                  <p className="text-sm text-zinc-500">{user.profession}</p>
+
+                  <button className="mt-5 w-full rounded-full text-red-600 py-2.5 font-medium border border-red-600 hover:bg-red-100 transition-all cursor-pointer">
+                    Connect
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </Card>
     </section>
   );
