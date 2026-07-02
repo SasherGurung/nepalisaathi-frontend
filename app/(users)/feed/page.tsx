@@ -22,7 +22,6 @@ const users = [
 
 function FeedClientPage() {
   const { user } = useAuthStore();
-  const { formData } = useProfileStore();
 
   return (
     <section className="min-h-screen py-8">
@@ -40,7 +39,7 @@ function FeedClientPage() {
             <div className="px-5 pb-2 text-center">
               <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
               <p className="text-sm text-gray-500">
-                {formData.profession}, at Skybase
+                {user?.profession}, at Skybase
               </p>
             </div>
 
