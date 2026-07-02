@@ -8,13 +8,15 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 function ChangePassword() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   return (
@@ -22,6 +24,7 @@ function ChangePassword() {
       <Card className="w-full max-w-md shadow-lg border">
         <CardHeader className="space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Change Password</h1>
+
           <CardDescription className="mb-5">
             Secure your account with a new password.
           </CardDescription>
@@ -29,77 +32,81 @@ function ChangePassword() {
 
         <CardContent>
           <form className="space-y-5">
-            <FieldGroup className="space-y-1">
+            <FieldGroup className="space-y-4">
               <div className="relative">
                 <FieldLabel htmlFor="currentPassword">
                   Current Password
                 </FieldLabel>
+
                 <Input
-                  id="currentpassword"
-                  className="h-10 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none mt-2"
+                  id="currentPassword"
+                  type={showCurrentPassword ? "text" : "password"}
+                  className="mt-2 h-10 bg-gray-50 border-gray-300 focus-visible:ring-1 focus-visible:border-red-600 focus-visible:outline-none pr-10"
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-12 -translate-y-1/2 text-md hover:text-zinc-500 text-zinc-400 cursor-pointer "
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-[42px] text-zinc-400 hover:text-zinc-600 cursor-pointer"
                 >
-                  {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                  {showCurrentPassword ? <FaRegEye /> : <FaRegEyeSlash />}
                 </button>
               </div>
 
               <div className="relative">
                 <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
+
                 <Input
-                  id="currentpassword"
-                  className="h-10 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none mt-2"
+                  id="newPassword"
+                  type={showNewPassword ? "text" : "password"}
+                  className="mt-2 h-10 bg-gray-50 border-gray-300 focus-visible:ring-1 focus-visible:border-red-600 focus-visible:outline-none pr-10"
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-12 -translate-y-1/2 text-md hover:text-zinc-500 text-zinc-400 cursor-pointer"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-[42px] text-zinc-400 hover:text-zinc-600 cursor-pointer"
                 >
-                  {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                  {showNewPassword ? <FaRegEye /> : <FaRegEyeSlash />}
                 </button>
               </div>
 
               <div className="relative">
-                <FieldLabel htmlFor="cofirmNewPassword">
+                <FieldLabel htmlFor="confirmPassword">
                   Confirm New Password
                 </FieldLabel>
+
                 <Input
-                  id="confirmnewpassword"
-                  className="h-10 bg-gray-100 focus-visible:ring-1 
-                   border-gray-300 focus-visible:border-red-600 focus-visible:outline-none mt-2"
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="mt-2 h-10 bg-gray-50 border-gray-300 focus-visible:ring-1 focus-visible:border-red-600 focus-visible:outline-none pr-10"
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-12 -translate-y-1/2 text-md hover:text-zinc-500 text-zinc-400 cursor-pointer"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-[42px] text-zinc-400 hover:text-zinc-600 cursor-pointer"
                 >
-                  {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                  {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
                 </button>
               </div>
             </FieldGroup>
 
-            <div className="flex justify-between gap-5 ">
+            <div className="flex gap-4">
               <Button
                 type="button"
                 variant="outline"
-                className="w-45 h-10 cursor-pointer"
+                className="flex-1 h-10 cursor-pointer"
               >
                 Cancel
               </Button>
 
               <Button
                 type="submit"
-                className="w-45 h-10 bg-(--brand-maroon) hover:bg-red-600 cursor-pointer"
+                disabled={loading}
+                className="flex-1 h-10 bg-(--brand-maroon) hover:bg-red-600 cursor-pointer"
               >
-                Change Password
+                {loading ? "Changing Password..." : "Change Password"}
               </Button>
             </div>
           </form>
