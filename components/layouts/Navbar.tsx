@@ -40,7 +40,7 @@ function Navbar() {
     <header className="flex justify-between px-10 py-2 items-center cursor-pointer sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b shadow-sm">
       <div onClick={() => router.push("/feed")} className="flex gap-5">
         <Image
-          src="/image.png"
+          src="/logo.png"
           alt="Nepali Saathi Logo"
           height={50}
           width={50}
