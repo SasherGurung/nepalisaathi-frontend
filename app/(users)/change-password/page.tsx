@@ -15,6 +15,7 @@ import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
 import { useAuthStore } from "@/lib/stores/authStores";
 import { ChangePasswordSchema } from "@/app/schema/changepasswordSchema";
+import { useRouter } from "next/navigation";
 
 function ChangePassword() {
   const { token } = useAuthStore();
@@ -26,20 +27,27 @@ function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
+
 
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const result = ChangePasswordSchema.safeParse({
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
 
     if (!currentPassword || !newPassword || !confirmPassword) {
       toast.error("All fields are required");
       return;
     }
 
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match");
+    if (!result.success) {
+      toast.error(result.error.issues[0].message);
       return;
     }
 
@@ -65,9 +73,13 @@ function ChangePassword() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      router.push("/feed");
     } catch (err: unknown) {
       console.log("Error:", err);
-      toast.error((err as ErrorEvent)?.message || "Something went wrong! Please try again")
+      toast.error(
+        (err as ErrorEvent)?.message ||
+          "Something went wrong! Please try again",
+      );
     } finally {
       setLoading(false);
     }
