@@ -86,7 +86,7 @@ function Navbar() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem className="cursor-pointer text-base font-light text-zinc-600">
+              <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer text-base font-light text-zinc-600">
                 Profile
               </DropdownMenuItem>
               <DropdownMenuItem
