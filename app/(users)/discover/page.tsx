@@ -114,8 +114,8 @@ function DiscoverPage() {
             <MdOutlineGroup className="w-20 h-20 text-zinc-400" />
             <h1 className="font-bold text-3xl">No User Found</h1>
             <p className="font-light text-zinc-500 text-sm line-clamp-3 w-sm">
-              We couldnt find any new people to connect with right now. Check
-              back later as our community grows!
+              We couldnt find any people matching this category. Try selecting a
+              different category to discover more connections.
             </p>
           </div>
         ) : (
@@ -128,13 +128,23 @@ function DiscoverPage() {
                 <div className="h-20 bg-(--brand-maroon)"></div>
 
                 <div className="flex flex-col items-center px-6 pb-6 -mt-12">
-                  <Image
-                    src={user.profilePicture || "/logo.png"}
-                    alt="Profile Image"
-                    width={96}
-                    height={96}
-                    className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
-                  />
+                  {user.profilePicture ? (
+                    <Image
+                      src={user.profilePicture || "/logo.png"}
+                      alt="Profile Image"
+                      width={96}
+                      height={96}
+                      className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full border-4 border-white object-cover bg-(--brand-maroon) shadow-md flex justify-center items-center">
+                      <span className="text-4xl font-bold text-white">
+                        {(user.name || user.displayName)
+                          ?.charAt(0)
+                          .toUpperCase()}
+                      </span>
+                    </div>
+                  )}
 
                   <h3 className="mt-3 text-lg font-semibold text-zinc-900">
                     {user.name || user.displayName}
