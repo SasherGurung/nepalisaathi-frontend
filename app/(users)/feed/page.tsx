@@ -62,12 +62,12 @@ function FeedClientPage() {
             <div className="p-5">
               <div className="flex justify-between px-3">
                 <p className="text-gray-500">Connections</p>
-                <p className="text-gray-500">0</p>
+                <p className="text-gray-500">{user?.connectionsCount}</p>
               </div>
 
               <div className="flex justify-between px-3">
                 <p className="text-gray-500">Total Posts</p>
-                <p className="text-gray-500">1</p>
+                <p className="text-gray-500">{user?.postsCount}</p>
               </div>
             </div>
           </div>
@@ -98,7 +98,7 @@ function FeedClientPage() {
                   </p>
                 </div>
               ) : (
-                discoverUser.slice(0, 6 ).map((user) => (
+                discoverUser.slice(0, 6).map((user) => (
                   <div
                     key={user.uid}
                     className="flex items-center justify-between"

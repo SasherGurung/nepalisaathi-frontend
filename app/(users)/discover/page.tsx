@@ -137,7 +137,7 @@ function DiscoverPage() {
                       className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full border-4 border-white object-cover bg-(--brand-maroon) shadow-md flex justify-center items-center">
+                    <div className="w-24 h-24 rounded-full border-4 border-white object-cover bg-red-700 shadow-md flex justify-center items-center">
                       <span className="text-4xl font-bold text-white">
                         {(user.name || user.displayName)
                           ?.charAt(0)
