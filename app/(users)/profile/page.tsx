@@ -5,10 +5,23 @@ import { Card } from "@/components/ui/card";
 import {
   BriefcaseBusiness,
   CalendarDays,
+  Copy,
   FileText,
+  Heart,
   MapPin,
+  MessageCircle,
+  Share2,
   Users,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/stores/authStores";
 import { useProfileStore } from "@/lib/stores/profileStore";
@@ -133,8 +146,71 @@ function ProfilePage() {
           <Card className="h-25 mb-5">
             <h2 className="text-2xl font-bold text-zinc-500">Activity</h2>
           </Card>
-          <Card>
+          <Card className="p-0">
+            <div className="flex justify-between m-5">
+              <div>
+                {/* <Image
+                  src={user?.profilePicture}
+                  alt={user?.displayName || user?.name}
+                  className="w-10 h-10"
+                /> */}
+                <p>{user?.name || user?.displayName}</p>
+                <div>
+                  <p>{user?.profession}</p>
+                  <p>S</p>
+                </div>
+              </div>
+              <div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="cursor-pointer text-zinc-400">
+                    •••
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuGroup className="p-1">
+                      <DropdownMenuItem className="cursor-pointer">
+                        Edit Post
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        variant="destructive"
+                      >
+                        Delete Post
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
 
+            <div className="flex flex-col gap-2 w-full">
+              <p className="mx-5 text-zinc-500">This is Post Description</p>
+
+              <div></div>
+            </div>
+            <p className="flex justify-end mx-5 text-sm text-zinc-500">
+              0 Comments
+            </p>
+            <div className="flex border-t px-2 py-2 gap-2">
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <Heart className="h-5 w-5" />
+                Like
+              </button>
+
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <MessageCircle className="h-5 w-5" />
+                Comment
+              </button>
+
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <Share2 className="h-5 w-5" />
+                Share
+              </button>
+
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <Copy className="h-5 w-5" />
+                Copy Link
+              </button>
+            </div>
           </Card>
         </div>
 
