@@ -5,12 +5,12 @@ export const loginSchema = z.object({
     password: z
       .string()
       .trim()
-      .min(6, "Password must be at least 6 characters."),
+      .min(8, "Password must be at least 8 characters."),
   });
 
 export const SignupSchema = z.object({
-  name: z.string().trim().min(2, "Name is required"),
+  name: z.string().trim().min(3, "Name is required"),
   email: z.email(),
-  password: z.string().trim().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().trim().min(6, "Confirm your password"),
+  password: z.string().trim().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string().trim().min(8, "Confirm your password"),
 });

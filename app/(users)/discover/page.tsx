@@ -20,6 +20,7 @@ type DiscoverUser = {
 
 function DiscoverPage() {
   const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState("All");
 
   useEffect(() => {
     const getDiscoverUsers = async () => {
@@ -34,6 +35,11 @@ function DiscoverPage() {
     };
     getDiscoverUsers();
   }, []);
+
+  const filterUsers =
+    selectedStatus === "All"
+      ? discoverUsers
+      : discoverUsers.filter((user) => user.status === selectedStatus);
 
   return (
     <section className="min-h-screen flex justify-center">
@@ -51,24 +57,59 @@ function DiscoverPage() {
           </div>
         </div>
         <div className="flex justify-center items-center gap-3">
-          <button className="border bg-(--brand-maroon) text-white px-4 py-1 rounded-3xl cursor-pointer">
+          <button
+            onClick={() => setSelectedStatus("All")}
+            className={
+              selectedStatus === "All"
+                ? "border bg-(--brand-maroon) text-white px-4 py-1 rounded-3xl cursor-pointer"
+                : "border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 duration-300 transition-all px-4 py-1 rounded-3xl cursor-pointer"
+            }
+          >
             All
           </button>
-          <button className="border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 duration-300 transition-all px-4 py-1 rounded-3xl cursor-pointer">
+          <button
+            onClick={() => setSelectedStatus("Student")}
+            className={
+              selectedStatus === "Student"
+                ? "border bg-(--brand-maroon) text-white px-4 py-1 rounded-3xl cursor-pointer"
+                : "border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 duration-300 transition-all px-4 py-1 rounded-3xl cursor-pointer"
+            }
+          >
             Student
           </button>
-          <button className="border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 px-4 py-1 rounded-3xl cursor-pointer">
+          <button
+            onClick={() => setSelectedStatus("Working Professonal")}
+            className={
+              selectedStatus === "Working Professonal"
+                ? "border bg-(--brand-maroon) text-white px-4 py-1 rounded-3xl cursor-pointer"
+                : "border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 duration-300 transition-all px-4 py-1 rounded-3xl cursor-pointer"
+            }
+          >
             Working Professonal
           </button>
-          <button className="border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 px-4 py-1 rounded-3xl cursor-pointer">
+          <button
+            onClick={() => setSelectedStatus("Business Owner")}
+            className={
+              selectedStatus === "Business Owner"
+                ? "border bg-(--brand-maroon) text-white px-4 py-1 rounded-3xl cursor-pointer"
+                : "border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 duration-300 transition-all px-4 py-1 rounded-3xl cursor-pointer"
+            }
+          >
             Business Owner
           </button>
-          <button className="border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 px-4 py-1 rounded-3xl cursor-pointer">
+          <button
+            onClick={() => setSelectedStatus("Planning To Relocate")}
+            className={
+              selectedStatus === "Planning To Relocate"
+                ? "border bg-(--brand-maroon) text-white px-4 py-1 rounded-3xl cursor-pointer"
+                : "border bg-zinc-100 text-zinc-500 hover:bg-zinc-200 duration-300 transition-all px-4 py-1 rounded-3xl cursor-pointer"
+            }
+          >
             Planning To Relocate
           </button>
         </div>
 
-        {discoverUsers.length <= 3 ? (
+        {filterUsers.length <= 3 ? (
           <div className="flex justify-center items-center flex-col text-center mt-17">
             <MdOutlineGroup className="w-20 h-20 text-zinc-400" />
             <h1 className="font-bold text-3xl">No User Found</h1>
@@ -79,7 +120,7 @@ function DiscoverPage() {
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-2 mt-5">
-            {discoverUsers.map((user) => (
+            {filterUsers.map((user) => (
               <div
                 key={user.uid}
                 className="w-sm rounded-2xl bg-white border border-zinc-200 overflow-hidden transition-all duration-100 hover:shadow-md"

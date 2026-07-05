@@ -13,12 +13,12 @@ import { Input } from "@/components/ui/input";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
-import { useAuthStore } from "@/lib/stores/authStores";
 import { ChangePasswordSchema } from "@/app/schema/changepasswordSchema";
 import { useRouter } from "next/navigation";
 
+
+
 function ChangePassword() {
-  const { token } = useAuthStore();
 
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -61,15 +61,9 @@ function ChangePassword() {
           password: newPassword,
           password_confirmation: confirmPassword,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
       toast.success("Password changed successfully");
-
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");

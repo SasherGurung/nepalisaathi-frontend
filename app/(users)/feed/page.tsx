@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGroup } from "react-icons/md";
 import Image from "next/image";
+import { useProfileStore } from "@/lib/stores/profileStore";
 
 type DiscoverUser = {
   uid: string;
@@ -19,6 +20,7 @@ type DiscoverUser = {
 };
 
 function FeedClientPage() {
+  const { formData } = useProfileStore();
   const { user } = useAuthStore();
   const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
   const router = useRouter();
@@ -53,7 +55,7 @@ function FeedClientPage() {
             <div className="px-5 pb-2 text-center">
               <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
               <p className="text-sm text-gray-500">
-                {user?.profession}, at Skybase
+                {formData?.profession || user?.profession}, at Skybase
               </p>
             </div>
 
@@ -163,7 +165,7 @@ function FeedClientPage() {
               </div>
 
               <div>
-                <p className="font-semibold">{user?.name}</p>
+                <p className="font-semibold text-xl">{user?.name}</p>
               </div>
             </div>
 

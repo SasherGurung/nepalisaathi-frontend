@@ -16,10 +16,12 @@ import {
 } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/stores/authStores";
+import { useProfileStore } from "@/lib/stores/profileStore";
 
 function ProfilePage() {
 
   const { user } = useAuthStore();
+  const { formData } = useProfileStore();
 
   return (
     <section className="min-h-screen my-5 mx-10">
@@ -39,23 +41,23 @@ function ProfilePage() {
                   {user?.name || user?.displayName}
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  {user?.profession}, at Skybase
+                  {formData?.profession || user?.profession}, at Skybase
                 </p>
               </div>
 
               <p className="max-w-xl text-sm text-muted-foreground">
-                {user?.bio}.
+                {formData?.bio ||  user?.bio}.
               </p>
 
               <div className="flex flex-wrap gap-5 pt-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <BriefcaseBusiness className="h-4 w-4" />
-                  Skybase
+                  {user?.profession || formData?.profession}, at Skybase
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />``
-                  {user?.homeCity}
+                  <MapPin className="h-4 w-4" />
+                  {user?.homeCity ?? formData?.homeCity}
                 </div>
 
                 <div className="flex items-center gap-2">
