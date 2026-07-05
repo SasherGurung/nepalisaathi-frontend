@@ -1,28 +1,34 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/authStores";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGroup } from "react-icons/md";
+import Image from "next/image";
 
 type DiscoverUser = {
   uid: string;
   name: string;
   profession: string;
+  displayName: string;
+  profilePicture: string | null;
 };
 
 function FeedClientPage() {
   const { user } = useAuthStore();
   const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const getDiscoverUser = async () => {
       try {
-        const { data } = await api.get("/discover");
+        const res = await api.get("/discover");
 
-        setDiscoverUser(data);
+        setDiscoverUser(res.data.data);
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong! Please try again");
@@ -54,21 +60,30 @@ function FeedClientPage() {
             <div className="p-5">
               <div className="flex justify-between px-3">
                 <p className="text-gray-500">Connections</p>
-                <p className="text-gray-500">0</p>``
+                <p className="text-gray-500">0</p>
               </div>
 
               <div className="flex justify-between px-3">
-                <p className="text-gray-500">Profile Views</p>
+                <p className="text-gray-500">Total Posts</p>
                 <p className="text-gray-500">1</p>
               </div>
             </div>
           </div>
 
           <div className="rounded-2xl bg-white shadow-sm border p-5">
-            <h3 className="mb-5 text-lg font-semibold flex gap-2 items-center text-black">
-              <MdOutlineGroup className="h-6 w-6 text-zinc-500" /> People you
-              may know
-            </h3>
+            <div className="flex justify-between">
+              <h3 className="mb-5 text-lg font-semibold flex gap-2 items-center text-black line-clamp-2">
+                <MdOutlineGroup className="h-8 w-8 text-zinc-500" /> Suggested
+                for you
+              </h3>
+              <Button
+                onClick={() => router.push("/discover")}
+                variant="link"
+                className="text-sm cursor-pointer text-zinc-500"
+              >
+                See All
+              </Button>
+            </div>
 
             <div className="space-y-5">
               {discoverUser.length <= 3 ? (
@@ -81,13 +96,21 @@ function FeedClientPage() {
                   </p>
                 </div>
               ) : (
-                discoverUser.slice(0, 3).map((user) => (
+                discoverUser.slice(0, 6 ).map((user) => (
                   <div
                     key={user.uid}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-11 w-11 rounded-full bg-gray-300" />
+                      <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
+                        <Image
+                          src={user.profilePicture || "/logo.png"}
+                          alt={user.name || user.displayName}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+
                       <div>
                         <p className="font-medium">{user.name}</p>
                         <p className="text-xs text-gray-500">
@@ -95,13 +118,13 @@ function FeedClientPage() {
                         </p>
                       </div>
                     </div>
-                    <button className=" text-blue-600 hover:text-blue-700 px-4 py-1.5 text-sm transition cursor-pointer">
+
+                    <button className="text-blue-600 hover:text-blue-700 px-4 py-1.5 text-sm transition cursor-pointer">
                       Follow
                     </button>
                   </div>
                 ))
               )}
-              {}
             </div>
           </div>
         </div>
