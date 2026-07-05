@@ -1,26 +1,35 @@
 "use client";
 
+import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/authStores";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGroup } from "react-icons/md";
 
-const users = [
-  {
-    name: "John Doe",
-    role: "UI Designer",
-  },
-  {
-    name: "Jane Smith",
-    role: "Backend Developer",
-  },
-  {
-    name: "Alex Kim",
-    role: "Product Designer",
-  },
-];
+type DiscoverUser = {
+  uid: string;
+  name: string;
+  profession: string;
+};
 
 function FeedClientPage() {
   const { user } = useAuthStore();
+  const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
+
+  useEffect(() => {
+    const getDiscoverUser = async () => {
+      try {
+        const { data } = await api.get("/discover");
+
+        setDiscoverUser(data);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong! Please try again");
+      }
+    };
+    getDiscoverUser();
+  }, []);
 
   return (
     <section className="min-h-screen py-8">
@@ -45,7 +54,7 @@ function FeedClientPage() {
             <div className="p-5">
               <div className="flex justify-between px-3">
                 <p className="text-gray-500">Connections</p>
-                <p className="text-gray-500">0</p>
+                <p className="text-gray-500">0</p>``
               </div>
 
               <div className="flex justify-between px-3">
@@ -62,23 +71,37 @@ function FeedClientPage() {
             </h3>
 
             <div className="space-y-5">
-              {users.map((user) => (
-                <div
-                  key={user.name}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-11 w-11 rounded-full bg-gray-300" />
-                    <div>
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-xs text-gray-500">{user.role}</p>
-                    </div>
-                  </div>
-                  <button className=" text-blue-600 hover:text-blue-700 px-4 py-1.5 text-sm transition cursor-pointer">
-                    Follow
-                  </button>
+              {discoverUser.length <= 3 ? (
+                <div className="flex justify-center items-center flex-col text-center mt-10">
+                  <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
+                  <h1 className="font-bold text-2xl">No User Found</h1>
+                  <p className="font-light text-zinc-500 text-sm line-clamp-4 w-xs">
+                    We couldnt find any new people to connect with right now.
+                    Check back later as our community grows!
+                  </p>
                 </div>
-              ))}
+              ) : (
+                discoverUser.slice(0, 3).map((user) => (
+                  <div
+                    key={user.uid}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-11 w-11 rounded-full bg-gray-300" />
+                      <div>
+                        <p className="font-medium">{user.name}</p>
+                        <p className="text-xs text-gray-500">
+                          {user.profession}
+                        </p>
+                      </div>
+                    </div>
+                    <button className=" text-blue-600 hover:text-blue-700 px-4 py-1.5 text-sm transition cursor-pointer">
+                      Follow
+                    </button>
+                  </div>
+                ))
+              )}
+              {}
             </div>
           </div>
         </div>
