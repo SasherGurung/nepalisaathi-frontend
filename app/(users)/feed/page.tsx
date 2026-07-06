@@ -14,6 +14,13 @@ import { usePostStore } from "@/lib/stores/postStores";
 import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
 import { Copy, Heart, MessageCircle, Share2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type DiscoverUser = {
   uid: string;
@@ -270,60 +277,108 @@ function FeedClientPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
-            <div className="flex items-center gap-4 p-5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) font-bold text-white">
-                S
-              </div>
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
+            >
+              <div className="flex items-start justify-between p-5">
+                <div className="flex items-center gap-3">
+                  {post.author?.avatar ? (
+                    <Image
+                      src={post.author.avatar}
+                      alt={post.author.name}
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
+                      {(post.author?.name || user?.name || "S")[0]}
+                    </div>
+                  )}
 
-              <div className="flex flex-col">
-                <p className="font-semibold text-xl">{user?.name}</p>
-                <div className="flex gap-1 items-center">
-                  <p className="text-sm text-zinc-500">{user?.profession}</p>
-                  <span className="text-zinc-500">•</span>
-                  <p className="text-sm text-zinc-500">{posts[0]?.time}</p>
+                  <div>
+                    <h3 className="font-semibold text-[17px] text-zinc-900">
+                      {post.author?.name || user?.name}
+                    </h3>
+
+                    <div className="flex items-center gap-1 text-sm text-zinc-500">
+                      <span>{user?.profession}</span>
+                      <span>•</span>
+                      <span>{post.time}</span>
+                    </div>
+                  </div>
                 </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
+                      •••
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>Edit Post</DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        variant="destructive"
+                        className="cursor-pointer"
+                      >
+                        Delete Post
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {post.content && (
+                <p className="px-5 pb-4 whitespace-pre-wrap leading-7 text-zinc-700">
+                  {post.content}
+                </p>
+              )}
+
+              {post.image && (
+                <div className="border-y bg-zinc-100">
+                  <Image
+                    src={post.image}
+                    alt="Post"
+                    width={1200}
+                    height={800}
+                    className="max-h-[550px] w-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
+                <span>0 Likes</span>
+                <span>0 Comments</span>
+              </div>
+
+              <div className="grid grid-cols-4 border-t">
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <Heart className="h-5 w-5" />
+                  Like
+                </button>
+
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <MessageCircle className="h-5 w-5" />
+                  Comment
+                </button>
+
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <Share2 className="h-5 w-5" />
+                  Share
+                </button>
+
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <Copy className="h-5 w-5" />
+                  Copy Link
+                </button>
               </div>
             </div>
-
-            <p className="px-5 pb-5 text-gray-800">{posts[0]?.content}</p>
-
-            <div className="h-96 w-full bg-gray-200 flex items-center justify-center text-gray-500">
-              {posts[0]?.image && (
-                <Image
-                  src={posts[0].image}
-                  alt="Post"
-                  width={800}
-                  height={500}
-                  className="w-full object-cover"
-                />
-              )}
-            </div>
-            <p className="flex justify-end mx-5 mt-5 mb-3 text-sm text-zinc-500">
-              0 Comments
-            </p>
-            <div className="flex border-t px-2 py-2 gap-2">
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <Heart className="h-5 w-5" />
-                Like
-              </button>
-
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <MessageCircle className="h-5 w-5" />
-                Comment
-              </button>
-
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <Share2 className="h-5 w-5" />
-                Share
-              </button>
-
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <Copy className="h-5 w-5" />
-                Copy Link
-              </button>
-            </div>
-          </div>
+          ))}
         </main>
       </div>
     </section>
