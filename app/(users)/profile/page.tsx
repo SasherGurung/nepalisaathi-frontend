@@ -144,33 +144,55 @@ function ProfilePage() {
           <Card className="h-25 mb-5">
             <h2 className="text-2xl font-bold text-zinc-500">Activity</h2>
           </Card>
-          <Card className="p-0">
-            <div className="flex justify-between m-5">
-              <div>
-                {/* <Image
-                  src={user?.profilePicture}
-                  alt={user?.displayName || user?.name}
-                  className="w-10 h-10"
-                /> */}
-                <p>{user?.name || user?.displayName}</p>
-                <div>
-                  <p>{user?.profession}</p>
-                  <p>S</p>
+          {/* <Card className="p-0">
+            <div
+              key={post.id}
+              className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
+            >
+              <div className="flex items-start justify-between p-5">
+                <div className="flex items-center gap-3">
+                  {post.author?.avatar ? (
+                    <Image
+                      src={post.author.avatar}
+                      alt={post.author.name}
+                      width={30}
+                      height={30}
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
+                      {(post.author?.name || user?.name || "S")[0]}
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className="font-semibold text-[17px] text-zinc-900">
+                      {post.author?.name || user?.name}
+                    </h3>
+
+                    <div className="flex items-center gap-1 text-sm text-zinc-500">
+                      <span>{user?.profession}</span>
+                      <span>•</span>
+                      <span>{post.time}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div>
+
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="cursor-pointer text-zinc-400">
-                    •••
+                  <DropdownMenuTrigger asChild>
+                    <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
+                      •••
+                    </button>
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent align="end">
-                    <DropdownMenuGroup className="p-1">
-                      <DropdownMenuItem className="cursor-pointer">
-                        Edit Post
-                      </DropdownMenuItem>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>Edit Post</DropdownMenuItem>
+
                       <DropdownMenuItem
-                        className="cursor-pointer"
+                        onClick={() => handleDeletePost(post.id)}
                         variant="destructive"
+                        className="cursor-pointer"
                       >
                         Delete Post
                       </DropdownMenuItem>
@@ -178,45 +200,60 @@ function ProfilePage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+
+              {post.content && (
+                <p className="px-5 pb-4 whitespace-pre-wrap leading-7 text-zinc-700">
+                  {post.content}
+                </p>
+              )}
+
+              {post.image && (
+                <div className="border-y bg-zinc-100">
+                  <Image
+                    src={post.image}
+                    alt="Post"
+                    width={1200}
+                    height={800}
+                    className="max-h-[550px] w-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
+                <span>{post?.likes} Likes</span>
+                <span>{post?.initialComments} Comments</span>
+              </div>
+
+              <div className="grid grid-cols-4 border-t">
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <Heart className="h-5 w-5" />
+                  Like
+                </button>
+
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <MessageCircle className="h-5 w-5" />
+                  Comment
+                </button>
+
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <Share2 className="h-5 w-5" />
+                  Share
+                </button>
+
+                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                  <Copy className="h-5 w-5" />
+                  Copy Link
+                </button>
+              </div>
             </div>
-<p className="flex justify-end mx-5 text-sm text-zinc-500">
-              0 Comments
-            </p>
-            <div className="flex flex-col gap-2 w-full">
-              <p className="mx-5 text-zinc-500">This is Post Description</p>
-
-              <div></div>
-            </div>
-            
-            <div className="flex border-t px-2 py-2 gap-2">
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <Heart className="h-5 w-5" />
-                Like
-              </button>
-
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <MessageCircle className="h-5 w-5" />
-                Comment
-              </button>
-
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <Share2 className="h-5 w-5" />
-                Share
-              </button>
-
-              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
-                <Copy className="h-5 w-5" />
-                Copy Link
-              </button>
-            </div>
-          </Card>
+          </Card> */}
         </div>
 
         <Card className="p-6 space-y-5 mr-5 mt-5">
           <div className="flex justify-between">
             <h2 className="text-2xl font-bold text-zinc-500">Connections</h2>
             <Button
-              onClick={() => router.push("/connections")}
+              onClick={() => router.push("/connection")}
               variant="link"
               className="cursor-pointer text-md text-zinc-600"
             >

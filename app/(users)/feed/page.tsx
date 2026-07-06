@@ -30,6 +30,20 @@ type DiscoverUser = {
   profilePicture: string | null;
 };
 
+type Post = {
+  id: string;
+  content: string;
+  image: string | null;
+  likes: number;
+  initialComments: number;
+  hasLiked: boolean;
+  time: string;
+  author: {
+    name: string;
+    avatar: string | null;
+  };
+};
+
 function FeedClientPage() {
   const router = useRouter();
   const { formData } = useProfileStore();
@@ -47,6 +61,8 @@ function FeedClientPage() {
 
   const { deletePost } = usePostStore();
 
+  const [fetchPosts, setFetchPosts] = useState<Post[]>([]);
+
   useEffect(() => {
     const getDiscoverUser = async () => {
       try {
@@ -59,6 +75,21 @@ function FeedClientPage() {
       }
     };
     getDiscoverUser();
+  }, []);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      try {
+        const res = await api.get("/posts");
+        console.log("Posts:", res.data);
+        setFetchPosts(res.data.data);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong!");
+      }
+    };
+
+    getPosts();
   }, []);
 
   const handlePost = async () => {
@@ -118,6 +149,20 @@ function FeedClientPage() {
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong! Please try again");
+    }
+  };
+
+  const handleLike = async (postId: string) => {
+    try {
+      const res = await api.post(`/posts/${postId}/like`);
+
+      usePostStore.getState().updatePost(postId, {
+        likes: res.data.likesCount,
+        hasLiked: res.data.hasLiked,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
 
@@ -295,7 +340,7 @@ function FeedClientPage() {
             </div>
           </div>
 
-          {posts.map((post) => (
+          {fetchPosts.map((post) => (
             <div
               key={post.id}
               className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
@@ -306,9 +351,9 @@ function FeedClientPage() {
                     <Image
                       src={post.author.avatar}
                       alt={post.author.name}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full object-cover"
+                      width={30}
+                      height={30}
+                      className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
@@ -376,22 +421,30 @@ function FeedClientPage() {
               </div>
 
               <div className="grid grid-cols-4 border-t">
-                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                  <Heart className="h-5 w-5" />
+                <button
+                  onClick={() => handleLike(post.id)}
+                  className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600"
+                >
+                  <Heart
+                    fill={post.hasLiked ? "currentColor" : "none"}
+                    className={`h-5 w-5 ${
+                      post.hasLiked ? "text-red-500" : "text-zinc-600"
+                    }`}
+                  />
                   Like
                 </button>
 
-                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
                   <MessageCircle className="h-5 w-5" />
                   Comment
                 </button>
 
-                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
                   <Share2 className="h-5 w-5" />
                   Share
                 </button>
 
-                <button className="flex items-center justify-center gap-2 py-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
                   <Copy className="h-5 w-5" />
                   Copy Link
                 </button>
