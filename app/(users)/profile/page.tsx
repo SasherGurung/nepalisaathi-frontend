@@ -179,15 +179,15 @@ function ProfilePage() {
                 </DropdownMenu>
               </div>
             </div>
-
+<p className="flex justify-end mx-5 text-sm text-zinc-500">
+              0 Comments
+            </p>
             <div className="flex flex-col gap-2 w-full">
               <p className="mx-5 text-zinc-500">This is Post Description</p>
 
               <div></div>
             </div>
-            <p className="flex justify-end mx-5 text-sm text-zinc-500">
-              0 Comments
-            </p>
+            
             <div className="flex border-t px-2 py-2 gap-2">
               <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
                 <Heart className="h-5 w-5" />

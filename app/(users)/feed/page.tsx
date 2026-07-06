@@ -13,6 +13,7 @@ import { useProfileStore } from "@/lib/stores/profileStore";
 import { usePostStore } from "@/lib/stores/postStores";
 import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
+import { Copy, Heart, MessageCircle, Share2 } from "lucide-react";
 
 type DiscoverUser = {
   uid: string;
@@ -29,6 +30,7 @@ function FeedClientPage() {
   const [loading, setLoading] = useState(false);
   const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
 
+  const { posts } = usePostStore();
   const { addPost } = usePostStore();
   const [postPreview, setPostPreview] = useState<string | null>(null);
   const [postData, setPostData] = useState({
@@ -253,7 +255,7 @@ function FeedClientPage() {
               <button
                 type="button"
                 onClick={() => postInputRef.current?.click()}
-                className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1"
+                className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-3 rounded-xl flex items-center gap-1"
               >
                 <CiImageOn className="h-5 w-5 text-green-400" />
                 Photos
@@ -261,7 +263,7 @@ function FeedClientPage() {
               <Button
                 onClick={handlePost}
                 disabled={loading}
-                className="rounded-xl bg-(--brand-maroon) hover:bg`-red-600 text-base px-8 py-5 cursor-pointer"
+                className="rounded-xl bg-(--brand-maroon) hover:bg-red-600 text-base px-8 py-5 cursor-pointer"
               >
                 {loading ? "Posting..." : "Post"}
               </Button>
@@ -274,31 +276,51 @@ function FeedClientPage() {
                 S
               </div>
 
-              <div>
+              <div className="flex flex-col">
                 <p className="font-semibold text-xl">{user?.name}</p>
-                <p></p>
+                <div className="flex gap-1 items-center">
+                  <p className="text-sm text-zinc-500">{user?.profession}</p>
+                  <span className="text-zinc-500">•</span>
+                  <p className="text-sm text-zinc-500">{posts[0]?.time}</p>
+                </div>
               </div>
             </div>
 
-            <p className="px-5 pb-5 text-gray-800">
-              Just finished building my social media app with Next.js, Tailwind
-              CSS, Zustand, and Node.js
-            </p>
+            <p className="px-5 pb-5 text-gray-800">{posts[0]?.content}</p>
 
             <div className="h-96 w-full bg-gray-200 flex items-center justify-center text-gray-500">
-              Post Image
+              {posts[0]?.image && (
+                <Image
+                  src={posts[0].image}
+                  alt="Post"
+                  width={800}
+                  height={500}
+                  className="w-full object-cover"
+                />
+              )}
             </div>
-            <div className="flex justify-around border-t py-4">
-              <button className="rounded-lg px-6 py-2 hover:bg-gray-100 transition">
+            <p className="flex justify-end mx-5 mt-5 mb-3 text-sm text-zinc-500">
+              0 Comments
+            </p>
+            <div className="flex border-t px-2 py-2 gap-2">
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <Heart className="h-5 w-5" />
                 Like
               </button>
 
-              <button className="rounded-lg px-6 py-2 hover:bg-gray-100 transition">
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <MessageCircle className="h-5 w-5" />
                 Comment
               </button>
 
-              <button className="rounded-lg px-6 py-2 hover:bg-gray-100 transition">
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <Share2 className="h-5 w-5" />
                 Share
+              </button>
+
+              <button className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600 cursor-pointer">
+                <Copy className="h-5 w-5" />
+                Copy Link
               </button>
             </div>
           </div>
