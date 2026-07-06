@@ -261,7 +261,7 @@ function FeedClientPage() {
               <Button
                 onClick={handlePost}
                 disabled={loading}
-                className="rounded-full bg-blue-600 px-8 py-4 cursor-pointer"
+                className="rounded-xl bg-(--brand-maroon) hover:bg`-red-600 text-base px-8 py-5 cursor-pointer"
               >
                 {loading ? "Posting..." : "Post"}
               </Button>
@@ -276,6 +276,7 @@ function FeedClientPage() {
 
               <div>
                 <p className="font-semibold text-xl">{user?.name}</p>
+                <p></p>
               </div>
             </div>
 
