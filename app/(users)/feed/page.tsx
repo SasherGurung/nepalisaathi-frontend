@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/authStores";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGroup } from "react-icons/md";
 import Image from "next/image";
 import { useProfileStore } from "@/lib/stores/profileStore";
+import { usePostStore } from "@/lib/stores/postStores";
+import { BiGroup } from "react-icons/bi";
+import { RxCross2 } from "react-icons/rx";
 
 type DiscoverUser = {
   uid: string;
@@ -20,10 +23,18 @@ type DiscoverUser = {
 };
 
 function FeedClientPage() {
+  const router = useRouter();
   const { formData } = useProfileStore();
   const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
-  const router = useRouter();
+
+  const { addPost } = usePostStore();
+  const [postPreview, setPostPreview] = useState<string | null>(null);
+  const [postData, setPostData] = useState({
+    body: "",
+    image: null as File | null,
+  });
 
   useEffect(() => {
     const getDiscoverUser = async () => {
@@ -38,6 +49,50 @@ function FeedClientPage() {
     };
     getDiscoverUser();
   }, []);
+
+  const handlePost = async () => {
+    try {
+      setLoading(true);
+      console.log(postData);
+      const formData = new FormData();
+
+      formData.append("body", postData.body);
+      if (postData.image) {
+        formData.append("imageUrl", postData.image);
+      }
+
+      const res = await api.post("/posts", formData);
+
+      addPost(res.data.post);
+
+      setPostData({
+        body: "",
+        image: null,
+      });
+
+      console.log("Data:", res.data);
+      toast.success("Post Posted Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! Please try again!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const postInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePostImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setPostData((prev) => ({
+      ...prev,
+      image: file,
+    }));
+
+    setPostPreview(URL.createObjectURL(file));
+  };
 
   return (
     <section className="min-h-screen py-8">
@@ -139,22 +194,77 @@ function FeedClientPage() {
               </p>
               <div>
                 <p className="font-bold text-lg">{user?.name}</p>
-                <p className="text-zinc-400 text-sm">Friends</p>
+                <p className="text-zinc-400 text-sm flex items-center">
+                  <BiGroup className="h-4 w-4" /> Friends
+                </p>
               </div>
             </div>
             <div className="flex gap-4">
               <textarea
-                placeholder="What's on your mind, Sasher?"
+                value={postData.body}
+                onChange={(e) =>
+                  setPostData((prev) => ({
+                    ...prev,
+                    body: e.target.value,
+                  }))
+                }
+                placeholder={`What's on your mind, ${user?.name || user?.displayName}?`}
                 className="w-full h-32 p-3 rounded-lg mt-3 border focus:outline-none focus:ring-1 focus:ring-red-400"
               />
             </div>
+
+            {postPreview && (
+              <div className="relative mt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPostPreview(null);
+                    setPostData((prev) => ({
+                      ...prev,
+                      image: null,
+                    }));
+
+                    if (postInputRef.current) {
+                      postInputRef.current.value = "";
+                    }
+                  }}
+                  className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-gray-100 cursor-pointer"
+                >
+                  <RxCross2 className="h-4 w-4 text-black" />
+                </button>
+
+                <Image
+                  src={postPreview}
+                  alt="Selected image"
+                  width={500}
+                  height={300}
+                  className="w-full max-h-80 rounded-lg border object-cover"
+                />
+              </div>
+            )}
             <div className="mt-2 flex items-center justify-between pt-5">
-              <button className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1">
-                <CiImageOn className="h-5 w-5 text-green-400" /> Photos
+              <input
+                ref={postInputRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handlePostImage}
+              />
+              <button
+                type="button"
+                onClick={() => postInputRef.current?.click()}
+                className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1"
+              >
+                <CiImageOn className="h-5 w-5 text-green-400" />
+                Photos
               </button>
-              <button className="rounded-full bg-blue-600 px-8 py-2 font-medium text-white hover:bg-blue-700 transition cursor-pointer">
-                Post
-              </button>
+              <Button
+                onClick={handlePost}
+                disabled={loading}
+                className="rounded-full bg-blue-600 px-8 py-4 cursor-pointer"
+              >
+                {loading ? "Posting..." : "Post"}
+              </Button>
             </div>
           </div>
 
