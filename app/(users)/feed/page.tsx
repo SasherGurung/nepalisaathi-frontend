@@ -45,6 +45,8 @@ function FeedClientPage() {
     image: null as File | null,
   });
 
+  const { deletePost } = usePostStore();
+
   useEffect(() => {
     const getDiscoverUser = async () => {
       try {
@@ -101,6 +103,22 @@ function FeedClientPage() {
     }));
 
     setPostPreview(URL.createObjectURL(file));
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    try {
+      const res = await api.delete(`/posts/${postId}`);
+      console.log("Response:", res.data.deletedId);
+      console.log(
+        "Store IDs:",
+        posts.map((p) => p.id),
+      );
+      deletePost(res.data.deletedId);
+      toast.success(res.data.message || "Post deleted Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! Please try again");
+    }
   };
 
   return (
@@ -323,6 +341,7 @@ function FeedClientPage() {
                       <DropdownMenuItem>Edit Post</DropdownMenuItem>
 
                       <DropdownMenuItem
+                        onClick={() => handleDeletePost(post.id)}
                         variant="destructive"
                         className="cursor-pointer"
                       >
@@ -352,8 +371,8 @@ function FeedClientPage() {
               )}
 
               <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
-                <span>0 Likes</span>
-                <span>0 Comments</span>
+                <span>{post?.likes} Likes</span>
+                <span>{post?.initialComments} Comments</span>
               </div>
 
               <div className="grid grid-cols-4 border-t">

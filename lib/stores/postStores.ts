@@ -34,36 +34,40 @@ type PostState = {
 };
 
 export const usePostStore = create<PostState>()(
-  persist(
-    (set) => ({
-      posts: [],
+  (set) => ({
+    posts: [],
 
-      setPosts: (posts) => set({ posts }),
+    setPosts: (posts) => set({ posts }),
 
-      addPost: (post) =>
-        set((state) => ({
-          posts: [post, ...state.posts],
-        })),
+    addPost: (post) =>
+      set((state) => ({
+        posts: [post, ...state.posts],
+      })),
 
-      updatePost: (id, data) =>
-        set((state) => ({
-          posts: state.posts.map((post) =>
-            post.id === id
-              ? {
-                  ...post,
-                  ...data,
-                }
-              : post,
-          ),
-        })),
+    updatePost: (id, data) =>
+      set((state) => ({
+        posts: state.posts.map((post) =>
+          post.id === id
+            ? {
+                ...post,
+                ...data,
+              }
+            : post,
+        ),
+      })),
 
       deletePost: (id) =>
-        set((state) => ({
-          posts: state.posts.filter((post) => post.id !== id),
-        })),
-    }),
-    {
-      name: "post-storage",
-    },
-  ),
+        set((state) => {
+          console.log("Deleting:", id);
+          console.log("Before:", state.posts);
+      
+          const updated = state.posts.filter((post) => post.id !== id);
+      
+          console.log("After:", updated);
+      
+          return {
+            posts: updated,
+          };
+        }),
+  }),
 );
