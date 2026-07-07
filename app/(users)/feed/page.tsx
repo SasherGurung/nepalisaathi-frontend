@@ -36,20 +36,6 @@ type DiscoverUser = {
   profilePicture: string | null;
 };
 
-type Post = {
-  id: string;
-  content: string;
-  image: string | null;
-  likes: number;
-  initialComments: number;
-  hasLiked: boolean;
-  time: string;
-  author: {
-    name: string;
-    avatar: string | null;
-  };
-};
-
 type Comment = {
   id: string;
   postId: string;
@@ -71,19 +57,15 @@ function FeedClientPage() {
   const [loading, setLoading] = useState(false);
   const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
 
-  const { posts } = usePostStore();
-  const { addPost } = usePostStore();
+  const { posts, addPost, fetchPosts, deletePost } = usePostStore();
   const [postPreview, setPostPreview] = useState<string | null>(null);
   const [postData, setPostData] = useState({
     body: "",
     image: null as File | null,
   });
 
-  const { deletePost } = usePostStore();
-
-  const [fetchPosts, setFetchPosts] = useState<Post[]>([]);
-
   const [fetchComments, setFetchComments] = useState<Comment[]>([]);
+  const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
     const getDiscoverUser = async () => {
@@ -100,26 +82,15 @@ function FeedClientPage() {
   }, []);
 
   useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const res = await api.get("/posts");
-        console.log("Posts:", res.data);
-        setFetchPosts(res.data.data);
-      } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong!");
-      }
-    };
-
-    getPosts();
-  });
+    fetchPosts();
+  }, [fetchPosts]);
 
   useEffect(() => {
     const getComments = async (postId: string) => {
       try {
-        const res = await api.get(`/posts/${postId}/comments`);
-        console.log("Posts:", res.data);
-        setFetchComments(res.data.data);
+        const {data} = await api.get(`/posts/${postId}/comments`);
+        console.log("Posts:", data);
+        setFetchComments(data.data);
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong! Please try again");
@@ -138,17 +109,18 @@ function FeedClientPage() {
         formData.append("imageUrl", postData.image);
       }
 
-      const res = await api.post("/posts", formData);
+      const {data} = await api.post("/posts", formData);
 
-      addPost(res.data.post);
+      addPost(data.post);
 
       setPostData({
         body: "",
         image: null,
       });
 
-      console.log("Data:", res.data);
-      toast.success("Post Posted Successfully");
+      console.log("Data:", data);
+      toast.success(data.message || "Post created successfully");
+      fetchPosts();
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong! Please try again!");
@@ -201,19 +173,18 @@ function FeedClientPage() {
     }
   };
 
-  // const handleComment = async (postId: string) => {
-  //   try {
-  //     const res = await api.post(`/posts/${postId}/comments`);
-
-  //     usePostStore.getState().updatePost(postId, {
-  //       initialComments: res.data.initialComments,
-  //       hasCommented: res.data.hasCommented,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("Something went wrong! Please try again");
-  //   }
-  // };
+  const handleComment = async (postId: string) => {
+    try {
+      await api.post(`/posts/${postId}/comments`, {
+        body: commentText,
+      });
+      toast.success("Commented Successfully")
+      setCommentText("");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! Please try again");
+    }
+  };
 
   return (
     <section className="min-h-screen py-8">
@@ -269,7 +240,7 @@ function FeedClientPage() {
                   <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
                   <h1 className="font-bold text-2xl">No User Found</h1>
                   <p className="font-light text-zinc-500 text-sm line-clamp-4 w-xs">
-                    We couldnt find any new people to connect with right now.
+                    We could not find any new people to connect with right now.
                     Check back later as our community grows!
                   </p>
                 </div>
@@ -389,7 +360,7 @@ function FeedClientPage() {
             </div>
           </div>
 
-          {fetchPosts.length === 0 ? (
+          {posts.length === 0 ? (
             <div className="flex flex-col h-80 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20">
               <div className="flex flex-col text-center items-center">
                 <LuMessageSquareDashed className="w-20 h-20 text-zinc-400" />
@@ -409,7 +380,7 @@ function FeedClientPage() {
               </div>
             </div>
           ) : (
-            fetchPosts.map((post) => (
+            posts.map((post) => (
               <div
                 key={post.id}
                 className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
@@ -503,12 +474,14 @@ function FeedClientPage() {
                     Like
                   </button>
 
-                  {fetchPosts.map((post) => (
-                    <div key={post.id} className="flex items-center justify-center">
+                  <div
+                      key={post.id}
+                      className="flex items-center justify-center"
+                    >
                       <Dialog>
                         <DialogTrigger asChild>
-                        <button className="flex items-center gap-2 px-13 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-red-600 cursor-pointer">
-                        <MessageCircle className="h-5 w-5" />
+                          <button className="flex items-center gap-2 px-13 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-red-600 cursor-pointer">
+                            <MessageCircle className="h-5 w-5" />
                             Comment
                           </button>
                         </DialogTrigger>
@@ -593,48 +566,44 @@ function FeedClientPage() {
                             </div>
                             <div className="h-full w-70 border border-zinc-100 rounded-xl mr-8">
                               <div>
-                                {fetchComments.map((comment) => (
-                                  <div key={comment.id}>
-                                    <div className="flex justify-between">
-                                      <div className="space-y-5">
-                                        {fetchComments.length === 0 ? (
-                                          <div></div>
-                                        ) : (
-                                          fetchComments.map((comment) => (
-                                            <div
-                                              key={comment.authorId}
-                                              className="flex items-center justify-between"
-                                            >
-                                              <div className="flex items-center gap-3">
-                                                <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
-                                                  <Image
-                                                    src={
-                                                      comment.authorProfilePicture ||
-                                                      "/logo.png"
-                                                    }
-                                                    alt={comment.authorName}
-                                                    fill
-                                                    className="object-cover"
-                                                  />
-                                                </div>
-
-                                                <div>
-                                                  <p className="font-medium">
-                                                    {comment.authorName}
-                                                  </p>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          ))
-                                        )}
-                                      </div>
-                                      <div></div>
-                                    </div>
+                                {fetchComments.length === 0 ? (
+                                  <div className="py-8 text-center text-zinc-500">
+                                    No comments yet.
                                   </div>
-                                ))}
+                                ) : (
+                                  fetchComments.map((comment) => (
+                                    <div
+                                      key={comment.id}
+                                      className="flex items-center justify-between py-3"
+                                    >
+                                      <div className="flex items-center gap-3">
+                                        <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
+                                          <Image
+                                            src={
+                                              comment.authorProfilePicture ||
+                                              "/logo.png"
+                                            }
+                                            alt={comment.authorName}
+                                            fill
+                                            className="object-cover"
+                                          />
+                                        </div>
+
+                                        <div>
+                                          <p className="font-medium">
+                                            {comment.authorName}
+                                          </p>
+                                          <p className="text-sm text-zinc-600">
+                                            {comment.body}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))
+                                )}
                               </div>
                             </div>
-                            <div className="mt-auto border-t">
+                            <div className="mt-auto">
                               <div className="flex items-center gap-4 px-3 pt-3">
                                 <button
                                   onClick={() => handleLike(post.id)}
@@ -654,16 +623,21 @@ function FeedClientPage() {
 
                                 <Send className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
                               </div>
-                              <div className="border-t px-3 py-3">
+                              <div className="border-t mt-3 px-3 py-3">
                                 <Field>
                                   <div className="flex items-center gap-3">
                                     <Input
+                                      value={commentText}
+                                      onChange={(e) =>
+                                        setCommentText(e.target.value)
+                                      }
                                       placeholder="Add a comment..."
                                       className=" pl-4 bg-gray-50 focus-visible:ring-1 
                     focus-visible:border-red-600 focus-visible:outline-none"
                                     />
 
                                     <button
+                                      onClick={() => handleComment(post.id)}
                                       type="button"
                                       className="font-semibold text-base text-(--brand-maroon) transition hover:text-red-600 cursor-pointer"
                                     >
@@ -677,7 +651,8 @@ function FeedClientPage() {
                         </DialogContent>
                       </Dialog>
                     </div>
-                  ))}
+
+                 
 
                   <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
                     <Share2 className="h-5 w-5" />

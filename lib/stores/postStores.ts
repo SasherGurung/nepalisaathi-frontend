@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { api } from "@/lib/api/config";
+import toast from "react-hot-toast";
 
 type Post = {
   id: string;
@@ -26,6 +27,8 @@ type PostState = {
 
   setPosts: (posts: Post[]) => void;
 
+  fetchPosts: () => Promise<void>;
+
   addPost: (post: Post) => void;
 
   updatePost: (id: string, data: Partial<Post>) => void;
@@ -38,6 +41,16 @@ export const usePostStore = create<PostState>()(
     posts: [],
 
     setPosts: (posts) => set({ posts }),
+
+    fetchPosts: async () => {
+      try {
+        const {data} = await api.get("/posts");
+        set({ posts: data.data });
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong!");
+      }
+    },
 
     addPost: (post) =>
       set((state) => ({
