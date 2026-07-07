@@ -58,13 +58,7 @@ export const usePostStore = create<PostState>()(
 
       deletePost: (id) =>
         set((state) => {
-          console.log("Deleting:", id);
-          console.log("Before:", state.posts);
-      
           const updated = state.posts.filter((post) => post.id !== id);
-      
-          console.log("After:", updated);
-      
           return {
             posts: updated,
           };

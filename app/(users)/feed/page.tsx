@@ -14,6 +14,7 @@ import { usePostStore } from "@/lib/stores/postStores";
 import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
 import { Copy, Heart, MessageCircle, Share2 } from "lucide-react";
+import { LuMessageSquareDashed } from "react-icons/lu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -90,7 +91,7 @@ function FeedClientPage() {
     };
 
     getPosts();
-  }, []);
+  });
 
   const handlePost = async () => {
     try {
@@ -165,6 +166,19 @@ function FeedClientPage() {
       toast.error("Something went wrong!");
     }
   };
+
+  const handleComment = async (postId: string) => {
+    try {
+      const res = await api.post(`/posts/${postId}/comments`);
+
+      usePostStore.getState().updatePost(postId, {
+        
+      })
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! Please try again")
+    }
+  }
 
   return (
     <section className="min-h-screen py-8">
@@ -340,117 +354,132 @@ function FeedClientPage() {
             </div>
           </div>
 
-          {fetchPosts.map((post) => (
-            <div
-              key={post.id}
-              className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
-            >
-              <div className="flex items-start justify-between p-5">
-                <div className="flex items-center gap-3">
-                  {post.author?.avatar ? (
-                    <Image
-                      src={post.author.avatar}
-                      alt={post.author.name}
-                      width={30}
-                      height={30}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
-                      {(post.author?.name || user?.name || "S")[0]}
-                    </div>
-                  )}
-
-                  <div>
-                    <h3 className="font-semibold text-[17px] text-zinc-900">
-                      {post.author?.name || user?.name}
-                    </h3>
-
-                    <div className="flex items-center gap-1 text-sm text-zinc-500">
-                      <span>{user?.profession}</span>
-                      <span>•</span>
-                      <span>{post.time}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
-                      •••
-                    </button>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>Edit Post</DropdownMenuItem>
-
-                      <DropdownMenuItem
-                        onClick={() => handleDeletePost(post.id)}
-                        variant="destructive"
-                        className="cursor-pointer"
-                      >
-                        Delete Post
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-
-              {post.content && (
-                <p className="px-5 pb-4 whitespace-pre-wrap leading-7 text-zinc-700">
-                  {post.content}
+          {fetchPosts.length === 0 ? (
+            <div className="flex flex-col h-105 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20">
+              <LuMessageSquareDashed className="w-25 h-25 text-zinc-400" />
+              <div className="text-center">
+                <h2 className="text-3xl font-bold tracking-tight text-zinc-700 m-2">
+                  No posts yet
+                </h2>
+                <p className="mt-1 text-md text-zinc-400 line-clamp-3 w-xs">
+                Your feed is empty. Be the first to share your thoughts, or connect with more people to see their updates!
                 </p>
-              )}
-
-              {post.image && (
-                <div className="border-y bg-zinc-100">
-                  <Image
-                    src={post.image}
-                    alt="Post"
-                    width={1200}
-                    height={800}
-                    className="max-h-[550px] w-full object-cover"
-                  />
-                </div>
-              )}
-
-              <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
-                <span>{post?.likes} Likes</span>
-                <span>{post?.initialComments} Comments</span>
-              </div>
-
-              <div className="grid grid-cols-4 border-t">
-                <button
-                  onClick={() => handleLike(post.id)}
-                  className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600"
-                >
-                  <Heart
-                    fill={post.hasLiked ? "currentColor" : "none"}
-                    className={`h-5 w-5 ${
-                      post.hasLiked ? "text-red-500" : "text-zinc-600"
-                    }`}
-                  />
-                  Like
-                </button>
-
-                <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                  <MessageCircle className="h-5 w-5" />
-                  Comment
-                </button>
-
-                <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                  <Share2 className="h-5 w-5" />
-                  Share
-                </button>
-
-                <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                  <Copy className="h-5 w-5" />
-                  Copy Link
-                </button>
+                <button className="px-4 py-3 bg-(--brand-blue) rounded-2xl text-white mt-5 cursor-pointer hover:bg-blue-900">Find Connections</button>
               </div>
             </div>
-          ))}
+          ) : (
+            fetchPosts.map((post) => (
+              <div
+                key={post.id}
+                className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
+              >
+                <div className="flex items-start justify-between p-5">
+                  <div className="flex items-center gap-3">
+                    {post.author?.avatar ? (
+                      <Image
+                        src={post.author.avatar}
+                        alt={post.author.name}
+                        width={30}
+                        height={30}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
+                        {(post.author?.name || user?.name || "S")[0]}
+                      </div>
+                    )}
+
+                    <div>
+                      <h3 className="font-semibold text-[17px] text-zinc-900">
+                        {post.author?.name || user?.name}
+                      </h3>
+
+                      <div className="flex items-center gap-1 text-sm text-zinc-500">
+                        <span>{user?.profession}</span>
+                        <span>•</span>
+                        <span>{post.time}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
+                        •••
+                      </button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>Edit Post</DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          onClick={() => handleDeletePost(post.id)}
+                          variant="destructive"
+                          className="cursor-pointer"
+                        >
+                          Delete Post
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {post.content && (
+                  <p className="px-5 pb-4 whitespace-pre-wrap leading-7 text-zinc-700">
+                    {post.content}
+                  </p>
+                )}
+
+                {post.image && (
+                  <div className="border-y bg-zinc-100">
+                    <Image
+                      src={post.image}
+                      alt="Post"
+                      width={1200}
+                      height={800}
+                      className="max-h-[550px] w-full object-cover"
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
+                  <span>{post?.likes} Likes</span>
+                  <span>{post?.initialComments} Comments</span>
+                </div>
+
+                <div className="grid grid-cols-4 border-t">
+                  <button
+                    onClick={() => handleLike(post.id)}
+                    className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600"
+                  >
+                    <Heart
+                      fill={post.hasLiked ? "currentColor" : "none"}
+                      className={`h-5 w-5 ${
+                        post.hasLiked ? "text-red-500" : ""
+                      }`}
+                    />
+                    Like
+                  </button>
+
+                  <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                    <MessageCircle className="h-5 w-5" />
+                    Comment
+                  </button>
+
+                  <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                    <Share2 className="h-5 w-5" />
+                    Share
+                  </button>
+
+                  <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                    <Copy className="h-5 w-5" />
+                    Copy Link
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </main>
       </div>
     </section>
