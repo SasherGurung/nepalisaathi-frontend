@@ -13,8 +13,10 @@ import { useProfileStore } from "@/lib/stores/profileStore";
 import { usePostStore } from "@/lib/stores/postStores";
 import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
-import { Copy, Heart, MessageCircle, Share2 } from "lucide-react";
+import { Copy, Heart, MessageCircle, Send, Share2 } from "lucide-react";
 import { LuMessageSquareDashed } from "react-icons/lu";
+import { RiDeleteBin5Line } from "react-icons/ri";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +24,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 type DiscoverUser = {
   uid: string;
@@ -45,6 +50,20 @@ type Post = {
   };
 };
 
+type Comment = {
+  id: string;
+  postId: string;
+  authorId: string;
+  authorName: string;
+  authorLocation: string;
+  authorProfilePicture: string;
+  body: string;
+  createdAt: string;
+  likedBy: string[];
+  likesCount: number;
+  hasLiked: boolean;
+};
+
 function FeedClientPage() {
   const router = useRouter();
   const { formData } = useProfileStore();
@@ -63,6 +82,8 @@ function FeedClientPage() {
   const { deletePost } = usePostStore();
 
   const [fetchPosts, setFetchPosts] = useState<Post[]>([]);
+
+  const [fetchComments, setFetchComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     const getDiscoverUser = async () => {
@@ -91,6 +112,19 @@ function FeedClientPage() {
     };
 
     getPosts();
+  });
+
+  useEffect(() => {
+    const getComments = async (postId: string) => {
+      try {
+        const res = await api.get(`/posts/${postId}/comments`);
+        console.log("Posts:", res.data);
+        setFetchComments(res.data.data);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong! Please try again");
+      }
+    };
   });
 
   const handlePost = async () => {
@@ -167,18 +201,19 @@ function FeedClientPage() {
     }
   };
 
-  const handleComment = async (postId: string) => {
-    try {
-      const res = await api.post(`/posts/${postId}/comments`);
+  // const handleComment = async (postId: string) => {
+  //   try {
+  //     const res = await api.post(`/posts/${postId}/comments`);
 
-      usePostStore.getState().updatePost(postId, {
-        
-      })
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong! Please try again")
-    }
-  }
+  //     usePostStore.getState().updatePost(postId, {
+  //       initialComments: res.data.initialComments,
+  //       hasCommented: res.data.hasCommented,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Something went wrong! Please try again");
+  //   }
+  // };
 
   return (
     <section className="min-h-screen py-8">
@@ -355,16 +390,22 @@ function FeedClientPage() {
           </div>
 
           {fetchPosts.length === 0 ? (
-            <div className="flex flex-col h-105 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20">
-              <LuMessageSquareDashed className="w-25 h-25 text-zinc-400" />
-              <div className="text-center">
+            <div className="flex flex-col h-80 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20">
+              <div className="flex flex-col text-center items-center">
+                <LuMessageSquareDashed className="w-20 h-20 text-zinc-400" />
                 <h2 className="text-3xl font-bold tracking-tight text-zinc-700 m-2">
                   No posts yet
                 </h2>
-                <p className="mt-1 text-md text-zinc-400 line-clamp-3 w-xs">
-                Your feed is empty. Be the first to share your thoughts, or connect with more people to see their updates!
+                <p className="mt-1 text-sm text-zinc-400 line-clamp-3 w-xs">
+                  Your feed is empty. Be the first to share your thoughts, or
+                  connect with more people to see their updates!
                 </p>
-                <button className="px-4 py-3 bg-(--brand-blue) rounded-2xl text-white mt-5 cursor-pointer hover:bg-blue-900">Find Connections</button>
+                <button
+                  onClick={() => router.push("/discover")}
+                  className="px-4 py-3 bg-(--brand-blue) rounded-xl text-sm text-white mt-3 cursor-pointer hover:bg-blue-900"
+                >
+                  Find Connections
+                </button>
               </div>
             </div>
           ) : (
@@ -418,7 +459,7 @@ function FeedClientPage() {
                           variant="destructive"
                           className="cursor-pointer"
                         >
-                          Delete Post
+                          <RiDeleteBin5Line /> Delete Post
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
@@ -462,10 +503,181 @@ function FeedClientPage() {
                     Like
                   </button>
 
-                  <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                    <MessageCircle className="h-5 w-5" />
-                    Comment
-                  </button>
+                  {fetchPosts.map((post) => (
+                    <div key={post.id} className="flex items-center justify-center">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                        <button className="flex items-center gap-2 px-13 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-red-600 cursor-pointer">
+                        <MessageCircle className="h-5 w-5" />
+                            Comment
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="h-11/12 w-full flex">
+                          <div>
+                            {post.image && (
+                              <Image
+                                src={post.image}
+                                alt="Post"
+                                width={800}
+                                height={800}
+                                priority
+                                className="h-full w-full object-cover"
+                              />
+                            )}
+                          </div>
+
+                          <div className="flex flex-col">
+                            <div className="flex items-start w-full justify-between pt-3 pr-6">
+                              <div className="flex items-center gap-2">
+                                {post.author?.avatar ? (
+                                  <Image
+                                    src={post.author.avatar}
+                                    alt={post.author.name}
+                                    width={30}
+                                    height={30}
+                                    className="h-10 w-10 rounded-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
+                                    {
+                                      (post.author?.name ||
+                                        user?.name ||
+                                        "S")[0]
+                                    }
+                                  </div>
+                                )}
+
+                                <div className="flex flex-col">
+                                  <h3 className="font-semibold text-[17px] text-zinc-900">
+                                    {post.author?.name || user?.name}
+                                  </h3>
+
+                                  <div className="flex items-center gap-1 text-sm text-zinc-500">
+                                    <span>{user?.profession}</span>
+                                    <span>•</span>
+                                    <span>{post.time}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
+                                    •••
+                                  </button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuGroup>
+                                    <DropdownMenuItem>
+                                      Edit Post
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem
+                                      onClick={() => handleDeletePost(post.id)}
+                                      variant="destructive"
+                                      className="cursor-pointer"
+                                    >
+                                      <RiDeleteBin5Line /> Delete Post
+                                    </DropdownMenuItem>
+                                  </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                            <div className="mt-3 w-full pt-2 mr-7">
+                              {post.content && (
+                                <p className="pb-4 text-sm text-zinc-600">
+                                  {post.content}
+                                </p>
+                              )}
+                            </div>
+                            <div className="h-full w-70 border border-zinc-100 rounded-xl mr-8">
+                              <div>
+                                {fetchComments.map((comment) => (
+                                  <div key={comment.id}>
+                                    <div className="flex justify-between">
+                                      <div className="space-y-5">
+                                        {fetchComments.length === 0 ? (
+                                          <div></div>
+                                        ) : (
+                                          fetchComments.map((comment) => (
+                                            <div
+                                              key={comment.authorId}
+                                              className="flex items-center justify-between"
+                                            >
+                                              <div className="flex items-center gap-3">
+                                                <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
+                                                  <Image
+                                                    src={
+                                                      comment.authorProfilePicture ||
+                                                      "/logo.png"
+                                                    }
+                                                    alt={comment.authorName}
+                                                    fill
+                                                    className="object-cover"
+                                                  />
+                                                </div>
+
+                                                <div>
+                                                  <p className="font-medium">
+                                                    {comment.authorName}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          ))
+                                        )}
+                                      </div>
+                                      <div></div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="mt-auto border-t">
+                              <div className="flex items-center gap-4 px-3 pt-3">
+                                <button
+                                  onClick={() => handleLike(post.id)}
+                                  className="cursor-pointer"
+                                >
+                                  <Heart
+                                    fill={
+                                      post.hasLiked ? "currentColor" : "none"
+                                    }
+                                    className={`h-5 w-5 ${
+                                      post.hasLiked ? "text-red-500" : ""
+                                    }`}
+                                  />
+                                </button>
+
+                                <Share2 className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+
+                                <Send className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+                              </div>
+                              <div className="border-t px-3 py-3">
+                                <Field>
+                                  <div className="flex items-center gap-3">
+                                    <Input
+                                      placeholder="Add a comment..."
+                                      className=" pl-4 bg-gray-50 focus-visible:ring-1 
+                    focus-visible:border-red-600 focus-visible:outline-none"
+                                    />
+
+                                    <button
+                                      type="button"
+                                      className="font-semibold text-base text-(--brand-maroon) transition hover:text-red-600 cursor-pointer"
+                                    >
+                                      Post
+                                    </button>
+                                  </div>
+                                </Field>
+                              </div>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  ))}
 
                   <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
                     <Share2 className="h-5 w-5" />
