@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CiImageOn } from "react-icons/ci";
-import { MdOutlineGroup } from "react-icons/md";
 import Image from "next/image";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { usePostStore } from "@/lib/stores/postStores";
@@ -25,8 +24,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import SuggestedUsers from "@/components/feed/(suggestedUser)/SuggestedUser";
 
 type DiscoverUser = {
   uid: string;
@@ -50,12 +50,12 @@ type Comment = {
   hasLiked: boolean;
 };
 
-function FeedClientPage() {
+export default function FeedClientPage() {
   const router = useRouter();
   const { formData } = useProfileStore();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const [discoverUser, setDiscoverUser] = useState<DiscoverUser[]>([]);
+  const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
 
   const { posts, addPost, fetchPosts, deletePost } = usePostStore();
   const [postPreview, setPostPreview] = useState<string | null>(null);
@@ -68,17 +68,17 @@ function FeedClientPage() {
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
-    const getDiscoverUser = async () => {
+    const getDiscoverUsers = async () => {
       try {
-        const res = await api.get("/discover");
+        const {data} = await api.get("/discover");
 
-        setDiscoverUser(res.data.data);
+        setDiscoverUsers(data.data);
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong! Please try again");
       }
     };
-    getDiscoverUser();
+    getDiscoverUsers();
   }, []);
 
   useEffect(() => {
@@ -219,63 +219,7 @@ function FeedClientPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl bg-white shadow-sm border p-5">
-            <div className="flex justify-between">
-              <h3 className="mb-5 text-lg font-semibold flex gap-2 items-center text-black line-clamp-2">
-                <MdOutlineGroup className="h-8 w-8 text-zinc-500" /> Suggested
-                for you
-              </h3>
-              <Button
-                onClick={() => router.push("/discover")}
-                variant="link"
-                className="text-sm cursor-pointer text-zinc-500"
-              >
-                See All
-              </Button>
-            </div>
-
-            <div className="space-y-5">
-              {discoverUser.length <= 3 ? (
-                <div className="flex justify-center items-center flex-col text-center mt-10">
-                  <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
-                  <h1 className="font-bold text-2xl">No User Found</h1>
-                  <p className="font-light text-zinc-500 text-sm line-clamp-4 w-xs">
-                    We could not find any new people to connect with right now.
-                    Check back later as our community grows!
-                  </p>
-                </div>
-              ) : (
-                discoverUser.slice(0, 6).map((user) => (
-                  <div
-                    key={user.uid}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
-                        <Image
-                          src={user.profilePicture || "/logo.png"}
-                          alt={user.name || user.displayName}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-
-                      <div>
-                        <p className="font-medium">{user.name}</p>
-                        <p className="text-xs text-gray-500">
-                          {user.profession}
-                        </p>
-                      </div>
-                    </div>
-
-                    <button className="text-blue-600 hover:text-blue-700 px-4 py-1.5 text-sm transition cursor-pointer">
-                      Follow
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          <SuggestedUsers users={discoverUsers} />
         </div>
 
         <main className="flex-1 max-w-3xl space-y-6">
@@ -672,5 +616,3 @@ function FeedClientPage() {
     </section>
   );
 }
-
-export default FeedClientPage;
