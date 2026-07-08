@@ -2,12 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import Image from "next/image";
 import { FaRegCompass } from "react-icons/fa6";
 import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
-import { MdOutlineGroup } from "react-icons/md";
-import DiscoverUsers from "@/components/feed/(discoverUsers)/DiscoverUser";
+import DiscoverUsers from "@/components/discover/DiscoverUser";
 
 type DiscoverUser = {
   id: number;

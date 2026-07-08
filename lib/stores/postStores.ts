@@ -7,7 +7,7 @@ type Post = {
   time: string;
   content: string;
   image: string | null;
-  likes: number;
+  likes: number | 0;
   hasLiked: boolean;
   initialComments: [];
   author: Author;

@@ -70,7 +70,7 @@ export default function FeedClientPage() {
   useEffect(() => {
     const getDiscoverUsers = async () => {
       try {
-        const {data} = await api.get("/discover");
+        const { data } = await api.get("/discover");
 
         setDiscoverUsers(data.data);
       } catch (error) {
@@ -85,18 +85,17 @@ export default function FeedClientPage() {
     fetchPosts();
   }, [fetchPosts]);
 
-  useEffect(() => {
-    const getComments = async (postId: string) => {
-      try {
-        const {data} = await api.get(`/posts/${postId}/comments`);
-        console.log("Posts:", data);
-        setFetchComments(data.data);
-      } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong! Please try again");
-      }
-    };
-  });
+  const getComments = async (postId: string) => {
+    try {
+      const { data } = await api.get(`/posts/${postId}/comments`);
+      setFetchComments(data.data);
+      console.log("data", data);
+      getComments(postId);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+    }
+  };
 
   const handlePost = async () => {
     try {
@@ -109,7 +108,7 @@ export default function FeedClientPage() {
         formData.append("imageUrl", postData.image);
       }
 
-      const {data} = await api.post("/posts", formData);
+      const { data } = await api.post("/posts", formData);
 
       addPost(data.post);
 
@@ -175,10 +174,12 @@ export default function FeedClientPage() {
 
   const handleComment = async (postId: string) => {
     try {
-      await api.post(`/posts/${postId}/comments`, {
+      const res = await api.post(`/posts/${postId}/comments`, {
         body: commentText,
       });
-      toast.success("Commented Successfully")
+
+      console.log("data:", res.data.data);
+      toast.success("Commented Successfully");
       setCommentText("");
     } catch (error) {
       console.log(error);
@@ -194,9 +195,21 @@ export default function FeedClientPage() {
             <div className="h-24 bg-red-400" />
 
             <div className="-mt-10 flex justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-zinc-100 bg-(--brand-maroon) text-3xl font-bold text-white shadow cursor-pointer">
-                S
-              </div>
+              {user?.profilePicture ? (
+                <Image
+                  src={user.profilePicture}
+                  alt="Profile Image"
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+                />
+              ) : (
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-zinc-100 bg-(--brand-maroon) text-3xl font-bold text-white shadow cursor-pointer">
+                  <span className="text-4xl font-bold text-white">
+                    {(user?.name || user?.displayName)?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="px-5 pb-2 text-center">
@@ -225,9 +238,21 @@ export default function FeedClientPage() {
         <main className="flex-1 max-w-3xl space-y-6">
           <div className="rounded-2xl border bg-white shadow-sm p-6">
             <div className="flex gap-3">
-              <p className="bg-(--brand-maroon) h-11 w-11 text-lg font-bold rounded-full text-white text-center pt-2 cursor-pointer">
-                S
-              </p>
+              {user?.profilePicture ? (
+                <Image
+                  src={user.profilePicture}
+                  alt="Profile Image"
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+                />
+              ) : (
+                <div className="bg-(--brand-maroon) h-11 w-11 font-bold rounded-full text-white text-center pt-2 cursor-pointer">
+                  <span className="text-lg font-bold text-white">
+                    {(user?.name || user?.displayName)?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
               <div>
                 <p className="font-bold text-lg">{user?.name}</p>
                 <p className="text-zinc-400 text-sm flex items-center">
@@ -400,8 +425,24 @@ export default function FeedClientPage() {
                 )}
 
                 <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
-                  <span>{post?.likes} Likes</span>
-                  <span>{post?.initialComments} Comments</span>
+                  {post.likes === 0 ? (
+                    <span>No Likes</span>
+                  ) : (
+                    <span className="flex gap-1 items-center">
+                      <span className="font-semibold text-zinc-400">
+                        {post?.likes}
+                      </span>
+                      <Heart className="h-4 w-4 text-red-600 fill-red-600" />
+                    </span>
+                  )}
+
+                  {fetchComments.length === 0 ? (
+                    <span>No Comments</span>
+                  ) : (
+                    <span className="font-semibold text-zinc-400">
+                      {fetchComments.length} Comments
+                    </span>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-4 border-t">
@@ -419,184 +460,180 @@ export default function FeedClientPage() {
                   </button>
 
                   <div
-                      key={post.id}
-                      className="flex items-center justify-center"
+                    key={post.id}
+                    className="flex items-center justify-center"
+                  >
+                    <Dialog
+                      onOpenChange={(open) => {
+                        if (open) {
+                          getComments(post.id);
+                        }
+                      }}
                     >
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <button className="flex items-center gap-2 px-13 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-red-600 cursor-pointer">
-                            <MessageCircle className="h-5 w-5" />
-                            Comment
-                          </button>
-                        </DialogTrigger>
-                        <DialogContent className="h-11/12 w-full flex">
-                          <div>
-                            {post.image && (
-                              <Image
-                                src={post.image}
-                                alt="Post"
-                                width={800}
-                                height={800}
-                                priority
-                                className="h-full w-full object-cover"
-                              />
-                            )}
-                          </div>
+                      <DialogTrigger asChild>
+                        <button className="flex items-center gap-2 px-13 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-red-600 cursor-pointer">
+                          <MessageCircle className="h-5 w-5" />
+                          Comment
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="h-11/12 w-full flex">
+                        <div>
+                          {post.image && (
+                            <Image
+                              src={post.image}
+                              alt="Post"
+                              width={800}
+                              height={800}
+                              priority
+                              className="h-full w-full object-cover"
+                            />
+                          )}
+                        </div>
 
-                          <div className="flex flex-col">
-                            <div className="flex items-start w-full justify-between pt-3 pr-6">
-                              <div className="flex items-center gap-2">
-                                {post.author?.avatar ? (
-                                  <Image
-                                    src={post.author.avatar}
-                                    alt={post.author.name}
-                                    width={30}
-                                    height={30}
-                                    className="h-10 w-10 rounded-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
-                                    {
-                                      (post.author?.name ||
-                                        user?.name ||
-                                        "S")[0]
-                                    }
-                                  </div>
-                                )}
+                        <div className="flex flex-col">
+                          <div className="flex items-start w-full justify-between pt-3 pr-6">
+                            <div className="flex items-center gap-2">
+                              {post.author?.avatar ? (
+                                <Image
+                                  src={post.author.avatar}
+                                  alt={post.author.name}
+                                  width={30}
+                                  height={30}
+                                  className="h-10 w-10 rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
+                                  {(post.author?.name || user?.name || "S")[0]}
+                                </div>
+                              )}
 
-                                <div className="flex flex-col">
-                                  <h3 className="font-semibold text-[17px] text-zinc-900">
-                                    {post.author?.name || user?.name}
-                                  </h3>
+                              <div className="flex flex-col">
+                                <h3 className="font-semibold text-[17px] text-zinc-900">
+                                  {post.author?.name || user?.name}
+                                </h3>
 
-                                  <div className="flex items-center gap-1 text-sm text-zinc-500">
-                                    <span>{user?.profession}</span>
-                                    <span>•</span>
-                                    <span>{post.time}</span>
-                                  </div>
+                                <div className="flex items-center gap-1 text-sm text-zinc-500">
+                                  <span>{user?.profession}</span>
+                                  <span>•</span>
+                                  <span>{post.time}</span>
                                 </div>
                               </div>
-
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
-                                    •••
-                                  </button>
-                                </DropdownMenuTrigger>
-
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                      Edit Post
-                                    </DropdownMenuItem>
-
-                                    <DropdownMenuItem
-                                      onClick={() => handleDeletePost(post.id)}
-                                      variant="destructive"
-                                      className="cursor-pointer"
-                                    >
-                                      <RiDeleteBin5Line /> Delete Post
-                                    </DropdownMenuItem>
-                                  </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
                             </div>
-                            <div className="mt-3 w-full pt-2 mr-7">
-                              {post.content && (
-                                <p className="pb-4 text-sm text-zinc-600">
-                                  {post.content}
-                                </p>
-                              )}
-                            </div>
-                            <div className="h-full w-70 border border-zinc-100 rounded-xl mr-8">
-                              <div>
-                                {fetchComments.length === 0 ? (
-                                  <div className="py-8 text-center text-zinc-500">
-                                    No comments yet.
-                                  </div>
-                                ) : (
-                                  fetchComments.map((comment) => (
-                                    <div
-                                      key={comment.id}
-                                      className="flex items-center justify-between py-3"
-                                    >
-                                      <div className="flex items-center gap-3">
-                                        <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
-                                          <Image
-                                            src={
-                                              comment.authorProfilePicture ||
-                                              "/logo.png"
-                                            }
-                                            alt={comment.authorName}
-                                            fill
-                                            className="object-cover"
-                                          />
-                                        </div>
 
-                                        <div>
-                                          <p className="font-medium">
-                                            {comment.authorName}
-                                          </p>
-                                          <p className="text-sm text-zinc-600">
-                                            {comment.body}
-                                          </p>
-                                        </div>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="rounded-lg cursor-pointer p-2 transition hover:bg-zinc-100">
+                                  •••
+                                </button>
+                              </DropdownMenuTrigger>
+
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuGroup>
+                                  <DropdownMenuItem>Edit Post</DropdownMenuItem>
+
+                                  <DropdownMenuItem
+                                    onClick={() => handleDeletePost(post.id)}
+                                    variant="destructive"
+                                    className="cursor-pointer"
+                                  >
+                                    <RiDeleteBin5Line /> Delete Post
+                                  </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                          <div className="mt-3 w-full pt-2 mr-7">
+                            {post.content && (
+                              <p className="pb-4 text-sm text-zinc-600">
+                                {post.content}
+                              </p>
+                            )}
+                          </div>
+                          <div className="h-full w-70 border border-zinc-100 rounded-xl mr-8">
+                            <div>
+                              {fetchComments.length === 0 ? (
+                                <div className="py-8 text-center text-zinc-500">
+                                  No comments yet.
+                                </div>
+                              ) : (
+                                fetchComments.map((comment) => (
+                                  <div
+                                    key={comment.id}
+                                    className="flex items-center justify-between py-2"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
+                                        <Image
+                                          src={
+                                            comment.authorProfilePicture ||
+                                            "/logo.png"
+                                          }
+                                          alt={comment.authorName}
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <p className="text-sm font-semibold">
+                                          {comment.authorName}
+                                        </p>
+                                        <p className="text-xs font-medium text-zinc-600">
+                                          {comment.body}
+                                        </p>
                                       </div>
                                     </div>
-                                  ))
-                                )}
-                              </div>
-                            </div>
-                            <div className="mt-auto">
-                              <div className="flex items-center gap-4 px-3 pt-3">
-                                <button
-                                  onClick={() => handleLike(post.id)}
-                                  className="cursor-pointer"
-                                >
-                                  <Heart
-                                    fill={
-                                      post.hasLiked ? "currentColor" : "none"
-                                    }
-                                    className={`h-5 w-5 ${
-                                      post.hasLiked ? "text-red-500" : ""
-                                    }`}
-                                  />
-                                </button>
-
-                                <Share2 className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
-
-                                <Send className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
-                              </div>
-                              <div className="border-t mt-3 px-3 py-3">
-                                <Field>
-                                  <div className="flex items-center gap-3">
-                                    <Input
-                                      value={commentText}
-                                      onChange={(e) =>
-                                        setCommentText(e.target.value)
-                                      }
-                                      placeholder="Add a comment..."
-                                      className=" pl-4 bg-gray-50 focus-visible:ring-1 
-                    focus-visible:border-red-600 focus-visible:outline-none"
-                                    />
-
-                                    <button
-                                      onClick={() => handleComment(post.id)}
-                                      type="button"
-                                      className="font-semibold text-base text-(--brand-maroon) transition hover:text-red-600 cursor-pointer"
-                                    >
-                                      Post
-                                    </button>
                                   </div>
-                                </Field>
-                              </div>
+                                ))
+                              )}
                             </div>
                           </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
+                          <div className="mt-auto">
+                            <div className="flex items-center gap-4 px-3 pt-3">
+                              <button
+                                onClick={() => handleLike(post.id)}
+                                className="cursor-pointer"
+                              >
+                                <Heart
+                                  fill={post.hasLiked ? "currentColor" : "none"}
+                                  className={`h-5 w-5 ${
+                                    post.hasLiked ? "text-red-500" : ""
+                                  }`}
+                                />
+                              </button>
 
-                 
+                              <Share2 className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+
+                              <Send className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+                            </div>
+                            <div className="border-t mt-3 px-3 py-3">
+                              <Field>
+                                <div className="flex items-center gap-3">
+                                  <Input
+                                    value={commentText}
+                                    onChange={(e) =>
+                                      setCommentText(e.target.value)
+                                    }
+                                    placeholder="Add a comment..."
+                                    className=" pl-4 bg-gray-50 focus-visible:ring-1 
+                    focus-visible:border-red-600 focus-visible:outline-none"
+                                  />
+
+                                  <button
+                                    onClick={() => handleComment(post.id)}
+                                    type="button"
+                                    className="font-semibold text-base text-(--brand-maroon) transition hover:text-red-600 cursor-pointer"
+                                  >
+                                    Post
+                                  </button>
+                                </div>
+                              </Field>
+                            </div>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
 
                   <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
                     <Share2 className="h-5 w-5" />
