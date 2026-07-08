@@ -12,7 +12,7 @@ import { useProfileStore } from "@/lib/stores/profileStore";
 import { usePostStore } from "@/lib/stores/postStores";
 import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
-import { Copy, Heart, MessageCircle, Send, Share2, Trash2 } from "lucide-react";
+import { Copy, Heart, MessageCircle, Share2, Trash2 } from "lucide-react";
 import { LuMessageSquareDashed } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { BiRepost } from "react-icons/bi";
@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import SuggestedUsers from "@/components/feed/(suggestedUser)/SuggestedUser";
 import { useCommentStore } from "@/lib/stores/commentStore";
 import { useCopyLinkStore } from "@/lib/stores/copyLinkStores";
+import { Card } from "@/components/ui/card";
 
 type DiscoverUser = {
   uid: string;
@@ -192,16 +193,18 @@ export default function FeedClientPage() {
               </p>
             </div>
 
-            <div className="p-5">
-              <div className="flex justify-between px-3">
-                <p className="text-gray-500">Connections</p>
-                <p className="text-gray-500">{user?.connectionsCount}</p>
-              </div>
+            <div className="p-3">
+              <Card className="shadow-sm">
+                <div className="flex justify-between">
+                  <p className="text-gray-500">Connections</p>
+                  <p className="text-gray-500">{user?.connectionsCount}</p>
+                </div>
 
-              <div className="flex justify-between px-3">
-                <p className="text-gray-500">Total Posts</p>
-                <p className="text-gray-500">{user?.postsCount}</p>
-              </div>
+                <div className="flex justify-between">
+                  <p className="text-gray-500">Total Posts</p>
+                  <p className="text-gray-500">{user?.postsCount}</p>
+                </div>
+              </Card>
             </div>
           </div>
 
@@ -227,7 +230,7 @@ export default function FeedClientPage() {
                 </div>
               )}
               <div>
-                <p className="font-bold text-lg">{user?.name}</p>
+                <p className="font-semibold text-md">{user?.name}</p>
                 <p className="text-zinc-400 text-sm flex items-center">
                   <BiGroup className="h-4 w-4" /> Friends
                 </p>
@@ -243,7 +246,7 @@ export default function FeedClientPage() {
                   }))
                 }
                 placeholder={`What's on your mind, ${user?.name || user?.displayName}?`}
-                className="w-full h-32 p-3 rounded-lg mt-3 border focus:outline-none focus:ring-1 focus:ring-red-400"
+                className="w-full h-32 p-3 rounded-lg mt-3 border focus:outline-none focus:ring-1 focus:ring-red-400 text-sm shadow-sm"
               />
             </div>
 
@@ -264,7 +267,7 @@ export default function FeedClientPage() {
                   }}
                   className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-gray-100 cursor-pointer"
                 >
-                  <RxCross2 className="h-4 w-4 text-black" />
+                  <RxCross2 className="h-3 w-3 text-black" />
                 </button>
 
                 <Image
@@ -276,7 +279,7 @@ export default function FeedClientPage() {
                 />
               </div>
             )}
-            <div className="mt-2 flex items-center justify-between pt-5">
+            <div className="mt-2 flex items-center justify-between pt-4">
               <input
                 ref={postInputRef}
                 type="file"
@@ -287,7 +290,7 @@ export default function FeedClientPage() {
               <button
                 type="button"
                 onClick={() => postInputRef.current?.click()}
-                className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-3 rounded-xl flex items-center gap-1"
+                className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1"
               >
                 <CiImageOn className="h-5 w-5 text-green-400" />
                 Photos
@@ -335,7 +338,7 @@ export default function FeedClientPage() {
                         alt={post.author.name}
                         width={30}
                         height={30}
-                        className="h-10 w-10 rounded-full object-cover"
+                        className="h-9 w-9 rounded-full object-cover"
                       />
                     ) : (
                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
@@ -344,12 +347,12 @@ export default function FeedClientPage() {
                     )}
 
                     <div>
-                      <h3 className="font-semibold text-[17px] text-zinc-900">
+                      <h3 className="font-semibold text-md text-zinc-900">
                         {post.author?.name || user?.name}
                       </h3>
 
-                      <div className="flex items-center gap-1 text-sm text-zinc-500">
-                        <span>{user?.profession}</span>
+                      <div className="flex items-center gap-1 text-xs text-zinc-500">
+                        <span>{formData?.profession || user?.profession}</span>
                         <span>•</span>
                         <span>{post.time}</span>
                       </div>
@@ -459,8 +462,8 @@ export default function FeedClientPage() {
                             <Image
                               src={post.image}
                               alt="Post"
-                              width={800}
-                              height={800}
+                              width={700}
+                              height={700}
                               priority
                               className="h-full w-full object-cover"
                             />
@@ -489,8 +492,8 @@ export default function FeedClientPage() {
                                   {post.author?.name || user?.name}
                                 </h3>
 
-                                <div className="flex items-center gap-1 text-sm text-zinc-500">
-                                  <span>{user?.profession}</span>
+                                <div className="flex items-center gap-1 text-xs text-zinc-500">
+                                  <span>{formData?.profession || user?.profession}</span>
                                   <span>•</span>
                                   <span>{post.time}</span>
                                 </div>
@@ -526,7 +529,7 @@ export default function FeedClientPage() {
                               </p>
                             )}
                           </div>
-                          <div className="h-full w-70 border border-zinc-100 rounded-xl mr-7">
+                          <div className="h-full w-80 bg-zinc-100 rounded-xl mr-7 ">
                             <div>
                               {comments.length === 0 ? (
                                 <div className="py-8 text-center text-zinc-500">
@@ -542,12 +545,12 @@ export default function FeedClientPage() {
                                       onClick={() =>
                                         deleteComment(post.id, comment.id)
                                       }
-                                      className="absolute right-2 top-2 bg-white hover:bg-red-50 p-1 rounded-full cursor-pointer"
+                                      className="absolute right-3 top-3 bg-white hover:bg-red-50 p-1 rounded-full cursor-pointer"
                                     >
                                       <Trash2 className="h-4 w-4 text-red-600" />
                                     </button>
 
-                                    <div className="flex items-center gap-2 w-full">
+                                    <div className="flex items-center gap-2 w-full px-2">
                                       <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
                                         <Image
                                           src={
@@ -561,15 +564,15 @@ export default function FeedClientPage() {
                                       </div>
 
                                       <div className="w-full">
-                                        <div className="rounded-2xl bg-zinc-100 px-4 py-2">
+                                        <Card className="rounded-xl flex flex-col px-4 py-2 shadow-sm">
                                           <p className="text-sm font-semibold">
                                             {comment.authorName}
                                           </p>
 
-                                          <p className="text-sm text-zinc-700">
+                                          <p className="text-xs text-zinc-700">
                                             {comment.body}
                                           </p>
-                                        </div>
+                                        </Card>
 
                                         <div className="mt-1 flex items-center justify-between px-3 text-xs font-medium text-zinc-500">
                                           <span>
@@ -631,7 +634,7 @@ export default function FeedClientPage() {
 
                               <Share2 className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
 
-                              <Send className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+                              <Copy onClick={() => handleCopyLink(post.id)} className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
                             </div>
                             <div className="border-t mt-3 px-3 py-3">
                               <Field>
@@ -667,8 +670,11 @@ export default function FeedClientPage() {
                     Repost
                   </button>
 
-                  <button onClick={() => handleCopyLink(post.id)} className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                    <Copy  className="h-4 w-4" />
+                  <button
+                    onClick={() => handleCopyLink(post.id)}
+                    className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600"
+                  >
+                    <Copy className="h-4 w-4" />
                     Copy Link
                   </button>
                 </div>
