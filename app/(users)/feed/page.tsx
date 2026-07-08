@@ -165,10 +165,10 @@ export default function FeedClientPage() {
     <section className="min-h-screen py-8">
       <div className="mx-auto flex max-w-7xl gap-8 px-6">
         <div className="w-[320px] space-y-6 sticky top-25 self-start">
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm border">
+          <div className="overflow-hidden rounded-2xl h-80 bg-white shadow-sm border">
             <div className="h-24 bg-red-400" />
 
-            <div className="-mt-10 flex justify-center">
+            <div className="-mt-12 flex justify-center">
               {user?.profilePicture ? (
                 <Image
                   src={user.profilePicture}
@@ -187,9 +187,9 @@ export default function FeedClientPage() {
             </div>
 
             <div className="px-5 pb-2 text-center">
-              <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
+              <h2 className="text-md tracking-wider font-bold text-gray-900">{user?.name}</h2>
               <p className="text-sm text-gray-500">
-                {formData?.profession || user?.profession}, at Skybase
+                {formData?.profession || user?.profession}
               </p>
             </div>
 
@@ -652,7 +652,7 @@ export default function FeedClientPage() {
                                   <button
                                     onClick={handleCommentPost}
                                     type="button"
-                                    className="font-semibold text-base text-(--brand-maroon) transition hover:text-red-600 cursor-pointer"
+                                    className="font-semibold text-base cursor-pointer bg-(--brand-maroon) text-white px-3 py-1 rounded-lg hover:scale-105 transition-all duration-150"
                                   >
                                     Post
                                   </button>

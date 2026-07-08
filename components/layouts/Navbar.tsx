@@ -9,6 +9,10 @@ import { FaRegCompass } from "react-icons/fa";
 import { FiBell } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { CgProfile } from "react-icons/cg";
+import { RiLockPasswordLine } from "react-icons/ri";
+import { IoLogOutOutline } from "react-icons/io5";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,34 +79,34 @@ function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-50">
-            <DropdownMenuGroup>
-              <p className="text-base mb-1 font-semi-bold text-zinc-600">
+            <DropdownMenuGroup className="p-1">
+              <p className="text-base font-semi-bold text-zinc-600">
                 {user?.name}
               </p>
-              <p className="text-sm font-light text-zinc-600 mb-2">
+              <p className="text-sm font-light text-zinc-600 mb-1 tracking-wide">
                 {user?.email}
               </p>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer text-base font-light text-zinc-600">
-                Profile
+              <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer text-md font-light text-zinc-600">
+                <CgProfile className="w-6 h-6"/> Profile
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push("/change-password")}
-                className="cursor-pointer text-base font-light text-zinc-600"
+                className="cursor-pointer text-md font-light text-zinc-600"
               >
-                Change Password
+                <RiLockPasswordLine /> Change Password
               </DropdownMenuItem>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem
                     variant="destructive"
-                    className="cursor-pointer text-base font-light"
+                    className="cursor-pointer text-md font-light"
                     onSelect={(e) => e.preventDefault()} // Prevents the dropdown from closing immediately
                   >
-                    Log out
+                    <IoLogOutOutline /> Log out
                   </DropdownMenuItem>
                 </AlertDialogTrigger>
 
