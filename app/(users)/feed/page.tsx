@@ -29,6 +29,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import SuggestedUsers from "@/components/feed/(suggestedUser)/SuggestedUser";
 import { useCommentStore } from "@/lib/stores/commentStore";
+import { useCopyLinkStore } from "@/lib/stores/copyLinkStores";
 
 type DiscoverUser = {
   uid: string;
@@ -45,7 +46,7 @@ export default function FeedClientPage() {
   const [loading, setLoading] = useState(false);
   const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
 
-  const { posts, addPost, fetchPosts, deletePost } = usePostStore();
+  const { posts, addPost, fetchPosts, handleLike, deletePost } = usePostStore();
   const [postPreview, setPostPreview] = useState<string | null>(null);
   const [postData, setPostData] = useState({
     body: "",
@@ -61,6 +62,8 @@ export default function FeedClientPage() {
     deleteComment,
     toggleCommentLike,
   } = useCommentStore();
+
+  const { fetchShareLink } = useCopyLinkStore();
 
   useEffect(() => {
     const getDiscoverUsers = async () => {
@@ -137,20 +140,6 @@ export default function FeedClientPage() {
     }
   };
 
-  const handleLike = async (postId: string) => {
-    try {
-      const res = await api.post(`/posts/${postId}/like`);
-
-      usePostStore.getState().updatePost(postId, {
-        likes: res.data.likesCount,
-        hasLiked: res.data.hasLiked,
-      });
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!");
-    }
-  };
-
   const handleCommentPost = async () => {
     if (!commentText.trim() || !activePostId) return;
 
@@ -162,6 +151,13 @@ export default function FeedClientPage() {
       console.log(error);
       toast.error("Something went wrong! Please try again");
     }
+  };
+
+  const handleCopyLink = async (postId: string) => {
+    await fetchShareLink(postId);
+    const { share_link } = useCopyLinkStore.getState().shareData!;
+
+    await navigator.clipboard.writeText(share_link);
   };
 
   return (
@@ -212,7 +208,7 @@ export default function FeedClientPage() {
           <SuggestedUsers users={discoverUsers} />
         </div>
 
-        <main className="flex-1 max-w-3xl space-y-6">
+        <section className="flex-1 max-w-3xl space-y-6">
           <div className="rounded-2xl border bg-white shadow-sm p-6">
             <div className="flex gap-3">
               {user?.profilePicture ? (
@@ -428,9 +424,10 @@ export default function FeedClientPage() {
                     className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600"
                   >
                     <Heart
-                      fill={post.hasLiked ? "currentColor" : "none"}
                       className={`h-5 w-5 ${
-                        post.hasLiked ? "text-red-500" : ""
+                        post.hasLiked
+                          ? "fill-red-500 text-red-500"
+                          : "fill-none text-zinc-600"
                       }`}
                     />
                     Like
@@ -670,15 +667,15 @@ export default function FeedClientPage() {
                     Repost
                   </button>
 
-                  <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                    <Copy className="h-4 w-4" />
+                  <button onClick={() => handleCopyLink(post.id)} className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
+                    <Copy  className="h-4 w-4" />
                     Copy Link
                   </button>
                 </div>
               </div>
             ))
           )}
-        </main>
+        </section>
       </div>
     </section>
   );
