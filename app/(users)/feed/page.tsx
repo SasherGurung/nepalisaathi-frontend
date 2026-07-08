@@ -12,9 +12,10 @@ import { useProfileStore } from "@/lib/stores/profileStore";
 import { usePostStore } from "@/lib/stores/postStores";
 import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
-import { Copy, Heart, MessageCircle, Send, Share2 } from "lucide-react";
+import { Copy, Heart, MessageCircle, Send, Share2, Trash2 } from "lucide-react";
 import { LuMessageSquareDashed } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { BiRepost } from "react-icons/bi";
 
 import {
   DropdownMenu,
@@ -27,6 +28,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import SuggestedUsers from "@/components/feed/(suggestedUser)/SuggestedUser";
+import { useCommentStore } from "@/lib/stores/commentStore";
 
 type DiscoverUser = {
   uid: string;
@@ -34,20 +36,6 @@ type DiscoverUser = {
   profession: string;
   displayName: string;
   profilePicture: string | null;
-};
-
-type Comment = {
-  id: string;
-  postId: string;
-  authorId: string;
-  authorName: string;
-  authorLocation: string;
-  authorProfilePicture: string;
-  body: string;
-  createdAt: string;
-  likedBy: string[];
-  likesCount: number;
-  hasLiked: boolean;
 };
 
 export default function FeedClientPage() {
@@ -64,8 +52,15 @@ export default function FeedClientPage() {
     image: null as File | null,
   });
 
-  const [fetchComments, setFetchComments] = useState<Comment[]>([]);
   const [commentText, setCommentText] = useState("");
+  const [activePostId, setActivePostId] = useState<string | null>(null);
+  const {
+    comments,
+    fetchComment,
+    addComment,
+    deleteComment,
+    toggleCommentLike,
+  } = useCommentStore();
 
   useEffect(() => {
     const getDiscoverUsers = async () => {
@@ -84,18 +79,6 @@ export default function FeedClientPage() {
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
-
-  const getComments = async (postId: string) => {
-    try {
-      const { data } = await api.get(`/posts/${postId}/comments`);
-      setFetchComments(data.data);
-      console.log("data", data);
-      getComments(postId);
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!");
-    }
-  };
 
   const handlePost = async () => {
     try {
@@ -146,10 +129,6 @@ export default function FeedClientPage() {
     try {
       const res = await api.delete(`/posts/${postId}`);
       console.log("Response:", res.data.deletedId);
-      console.log(
-        "Store IDs:",
-        posts.map((p) => p.id),
-      );
       deletePost(res.data.deletedId);
       toast.success(res.data.message || "Post deleted Successfully");
     } catch (error) {
@@ -172,15 +151,13 @@ export default function FeedClientPage() {
     }
   };
 
-  const handleComment = async (postId: string) => {
-    try {
-      const res = await api.post(`/posts/${postId}/comments`, {
-        body: commentText,
-      });
+  const handleCommentPost = async () => {
+    if (!commentText.trim() || !activePostId) return;
 
-      console.log("data:", res.data.data);
-      toast.success("Commented Successfully");
+    try {
+      await addComment(activePostId, commentText);
       setCommentText("");
+      fetchComment(activePostId);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong! Please try again");
@@ -436,11 +413,11 @@ export default function FeedClientPage() {
                     </span>
                   )}
 
-                  {fetchComments.length === 0 ? (
+                  {comments.length === 0 ? (
                     <span>No Comments</span>
                   ) : (
                     <span className="font-semibold text-zinc-400">
-                      {fetchComments.length} Comments
+                      {comments.length} Comments
                     </span>
                   )}
                 </div>
@@ -466,13 +443,16 @@ export default function FeedClientPage() {
                     <Dialog
                       onOpenChange={(open) => {
                         if (open) {
-                          getComments(post.id);
+                          setActivePostId(post.id);
+                          fetchComment(post.id);
+                        } else {
+                          setActivePostId(null);
                         }
                       }}
                     >
                       <DialogTrigger asChild>
                         <button className="flex items-center gap-2 px-13 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-red-600 cursor-pointer">
-                          <MessageCircle className="h-5 w-5" />
+                          <MessageCircle className="h-4 w-4" />
                           Comment
                         </button>
                       </DialogTrigger>
@@ -549,19 +529,28 @@ export default function FeedClientPage() {
                               </p>
                             )}
                           </div>
-                          <div className="h-full w-70 border border-zinc-100 rounded-xl mr-8">
+                          <div className="h-full w-70 border border-zinc-100 rounded-xl mr-7">
                             <div>
-                              {fetchComments.length === 0 ? (
+                              {comments.length === 0 ? (
                                 <div className="py-8 text-center text-zinc-500">
                                   No comments yet.
                                 </div>
                               ) : (
-                                fetchComments.map((comment) => (
+                                comments.map((comment) => (
                                   <div
                                     key={comment.id}
-                                    className="flex items-center justify-between py-2"
+                                    className="group relative flex items-center justify-between py-2"
                                   >
-                                    <div className="flex items-center gap-2">
+                                    <button
+                                      onClick={() =>
+                                        deleteComment(post.id, comment.id)
+                                      }
+                                      className="absolute right-2 top-2 bg-white hover:bg-red-50 p-1 rounded-full cursor-pointer"
+                                    >
+                                      <Trash2 className="h-4 w-4 text-red-600" />
+                                    </button>
+
+                                    <div className="flex items-center gap-2 w-full">
                                       <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
                                         <Image
                                           src={
@@ -574,13 +563,36 @@ export default function FeedClientPage() {
                                         />
                                       </div>
 
-                                      <div>
-                                        <p className="text-sm font-semibold">
-                                          {comment.authorName}
-                                        </p>
-                                        <p className="text-xs font-medium text-zinc-600">
-                                          {comment.body}
-                                        </p>
+                                      <div className="w-full">
+                                        <div className="rounded-2xl bg-zinc-100 px-4 py-2">
+                                          <p className="text-sm font-semibold">
+                                            {comment.authorName}
+                                          </p>
+
+                                          <p className="text-sm text-zinc-700">
+                                            {comment.body}
+                                          </p>
+                                        </div>
+
+                                        <div className="mt-1 flex items-center justify-between px-3 text-xs font-medium text-zinc-500">
+                                          <span>
+                                            {comment.createdAt
+                                              .split(" ")[1]
+                                              .slice(0, 5)}
+                                          </span>
+
+                                          <div className="flex gap-3">
+                                            <button className="hover:text-zinc-700 transition">
+                                              {comment.likesCount > 0
+                                                ? `${comment.likesCount} likes`
+                                                : "Like"}
+                                            </button>
+
+                                            <button className="hover:text-zinc-700 transition">
+                                              Reply
+                                            </button>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -620,7 +632,7 @@ export default function FeedClientPage() {
                                   />
 
                                   <button
-                                    onClick={() => handleComment(post.id)}
+                                    onClick={handleCommentPost}
                                     type="button"
                                     className="font-semibold text-base text-(--brand-maroon) transition hover:text-red-600 cursor-pointer"
                                   >
@@ -636,12 +648,12 @@ export default function FeedClientPage() {
                   </div>
 
                   <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                    <Share2 className="h-5 w-5" />
-                    Share
+                    <BiRepost className="h-6 w-6" />
+                    Repost
                   </button>
 
                   <button className="flex items-center justify-center gap-2 py-3 text-sm cursor-pointer font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-red-600">
-                    <Copy className="h-5 w-5" />
+                    <Copy className="h-4 w-4" />
                     Copy Link
                   </button>
                 </div>
