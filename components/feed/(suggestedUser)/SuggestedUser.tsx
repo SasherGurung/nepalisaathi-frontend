@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -15,7 +13,7 @@ export default function SuggestedUsers({ users }: SuggestedUsersProps) {
 
   return (
     <div className="rounded-2xl border bg-white p-5 shadow-sm">
-      {/* Header */}
+     
       <div className="mb-5 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-lg font-semibold text-black">
           <MdOutlineGroup className="h-8 w-8 text-zinc-500" />
