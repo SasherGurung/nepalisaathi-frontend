@@ -582,10 +582,28 @@ export default function FeedClientPage() {
                                           </span>
 
                                           <div className="flex gap-3">
-                                            <button className="hover:text-zinc-700 transition">
-                                              {comment.likesCount > 0
-                                                ? `${comment.likesCount} likes`
-                                                : "Like"}
+                                            <button
+                                              onClick={() =>
+                                                toggleCommentLike(
+                                                  post.id,
+                                                  comment.id,
+                                                )
+                                              }
+                                              className="flex items-center gap-1 hover:text-zinc-700 transition cursor-pointer"
+                                            >
+                                              <Heart
+                                                className={`h-4 w-4 ${
+                                                  comment.hasLiked
+                                                    ? "fill-red-500 text-red-500"
+                                                    : "text-zinc-500"
+                                                }`}
+                                              />
+
+                                              {comment.likesCount > 0 && (
+                                                <span>
+                                                  {comment.likesCount}
+                                                </span>
+                                              )}
                                             </button>
 
                                             <button className="hover:text-zinc-700 transition">

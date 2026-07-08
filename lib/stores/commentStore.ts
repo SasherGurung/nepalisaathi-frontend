@@ -61,10 +61,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
 
   // Delete Comments
   deleteComment: async (postId: string, commentId: string) => {
-    try {
-      console.log("Post ID:", postId);
-      console.log("Comment ID:", commentId);
-  
+    try {  
       await api.delete(`/posts/${postId}/comments/${commentId}`);
   
       set((state) => ({
@@ -81,7 +78,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
   },
 
   // Toggle Comment Likes
-  toggleCommentLike: async (commentId: string, postId: string) => {
+  toggleCommentLike: async (postId: string, commentId: string) => {
     try {
       const { data } = await api.post(
         `/posts/${postId}/comments/${commentId}/like`,
