@@ -46,7 +46,6 @@ function ProfilePage() {
     getConnections();
   }, []);
 
-
   return (
     <section className="min-h-screen my-5 mx-50">
       <Card className="overflow-hidden p-0">
@@ -115,7 +114,7 @@ function ProfilePage() {
         </div>
       </Card>
 
-      <div className="mt-5 grid grid-cols-[30%_70%]">
+      <div className="mt-5  grid grid-cols-[30%_70%]">
         <Card className="p-6 space-y-5 mr-5">
           <h2 className="text-2xl font-bold text-zinc-500">About</h2>
 
