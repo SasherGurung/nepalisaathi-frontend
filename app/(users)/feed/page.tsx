@@ -11,6 +11,7 @@ import { Copy, Heart, MessageCircle, Share2, Trash2 } from "lucide-react";
 import { LuMessageSquareDashed } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { BiRepost } from "react-icons/bi";
+import { LiaCommentSlashSolid } from "react-icons/lia";
 
 import {
   DropdownMenu,
@@ -28,7 +29,7 @@ import { useCopyLinkStore } from "@/lib/stores/copyLinkStores";
 import { Card } from "@/components/ui/card";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
 import { usePostStore } from "@/lib/stores/postStores";
-import FeedProfile from "@/components/feed/feedProfile)/page";
+import FeedProfile from "@/components/feed/(feedProfile)/page";
 
 type DiscoverUser = {
   uid: string;
@@ -152,7 +153,7 @@ export default function FeedClientPage() {
                         className="h-9 w-9 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
                         {(post.author?.name || user?.name || "S")[0]}
                       </div>
                     )}
@@ -342,10 +343,11 @@ export default function FeedClientPage() {
                               </p>
                             )}
                           </div>
-                          <div className="h-full w-80 bg-zinc-100 rounded-xl mr-7 ">
+                          <div className="h-full w-80 overflow-y-auto rounded-xl bg-zinc-50 mr-7 no-scrollbar">
                             <div>
                               {comments.length === 0 ? (
-                                <div className="py-8 text-center text-zinc-500">
+                                <div className="py-8 items-center text-center text-base text-zinc-500 flex flex-col gap-2">
+                                  <LiaCommentSlashSolid className="w-11 h-11 " />
                                   No comments yet.
                                 </div>
                               ) : (

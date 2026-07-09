@@ -76,12 +76,12 @@ export default function FeedPost() {
           <Image
             src={user.profilePicture}
             alt="Profile Image"
-            width={96}
-            height={96}
-            className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+            width={90}
+            height={90}
+            className="rounded-full border-4 border-white object-cover shadow-md"
           />
         ) : (
-          <div className="bg-(--brand-maroon) h-11 w-11 font-bold rounded-full text-white text-center pt-2 cursor-pointer">
+          <div className="bg-(--brand-maroon) h-10 w-10 font-bold rounded-full text-white text-center pt-1.5 cursor-pointer">
             <span className="text-lg font-bold text-white">
               {(user?.name || user?.displayName)?.charAt(0).toUpperCase()}
             </span>
