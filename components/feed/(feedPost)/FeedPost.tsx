@@ -66,6 +66,9 @@ export default function FeedPost() {
 
     setPostPreview(URL.createObjectURL(file));
   };
+
+  const isPostEmpty =
+  postData.body.trim() === "" && postData.image === null;
   return (
     <div className="rounded-2xl border bg-white shadow-sm p-6">
       <div className="flex gap-3">
@@ -145,15 +148,15 @@ export default function FeedPost() {
         <button
           type="button"
           onClick={() => postInputRef.current?.click()}
-          className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1"
+          className="cursor-pointer hover:bg-zinc-100 text-zinc-500 px-3 py-2 rounded-xl flex items-center gap-1 text-md"
         >
-          <CiImageOn className="h-5 w-5 text-green-400" />
+          <CiImageOn className="h-5 w-5 text-green-500" />
           Photos
         </button>
         <Button
           onClick={handlePost}
-          disabled={loading}
-          className="rounded-xl bg-(--brand-maroon) hover:bg-red-600 text-base px-8 py-5 cursor-pointer"
+          disabled={loading || isPostEmpty}
+          className="rounded-lg bg-(--brand-maroon) hover:bg-red-600 text-md px-8 py-5 cursor-pointer"
         >
           {loading ? "Posting..." : "Post"}
         </Button>

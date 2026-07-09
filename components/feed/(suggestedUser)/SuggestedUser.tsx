@@ -9,7 +9,7 @@ type SuggestedUsersProps = {
 export default function SuggestedUsers({ users }: SuggestedUsersProps) {
 
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm  w-xs h-full sticky top-23">
+    <div className="rounded-2xl border bg-white p-5 shadow-sm  w-xs h-full sticky top-25">
      
       <div className="mb-5 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-md font-semibold text-black tracking-wide">

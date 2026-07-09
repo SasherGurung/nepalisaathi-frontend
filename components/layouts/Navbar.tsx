@@ -7,11 +7,12 @@ import { FiHome } from "react-icons/fi";
 import { MdOutlineGroup } from "react-icons/md";
 import { FaRegCompass } from "react-icons/fa";
 import { FiBell } from "react-icons/fi";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CgProfile } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { IoLogOutOutline } from "react-icons/io5";
+import { RiChat3Line } from "react-icons/ri";
 
 import {
   AlertDialog,
@@ -36,6 +37,7 @@ import { useAuthStore } from "@/lib/stores/authStores";
 
 function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const { clearUser } = useAuthStore();
   const { user } = useAuthStore();
@@ -53,19 +55,50 @@ function Navbar() {
           Nepal Saathi
         </h1>
       </div>
-      <div className="flex gap-8 mr-30 ">
-        <FiHome
+      <div className="flex gap-9 mr-30 items-center">
+        <button
           onClick={() => router.push("/feed")}
-          className="h-6 w-6 text-(--crimson) cursor-pointer hover:scale-110 transition-all duration-200"
-        />
-        <MdOutlineGroup
+          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+            pathname === "/feed"
+              ? "border-(--brand-maroon) text-(--brand-maroon)"
+              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+          }`}
+        >
+          <FiHome className="h-7 w-6" />
+        </button>
+
+        <button
           onClick={() => router.push("/connection")}
-          className="h-7 w-7 text-(--crimson) cursor-pointer rounded-full hover:scale-110 transition-all duration-200"
-        />
-        <FaRegCompass
+          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+            pathname === "/connection"
+              ? "border-(--brand-maroon) text-(--brand-maroon)"
+              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+          }`}
+        >
+          <MdOutlineGroup className="h-7 w-7" />
+        </button>
+
+        <button
+          onClick={() => router.push("/chat")}
+          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+            pathname === "/chat"
+              ? "border-(--brand-maroon) text-(--brand-maroon)"
+              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+          }`}
+        >
+          <RiChat3Line className="h-7 w-6" />
+        </button>
+
+        <button
           onClick={() => router.push("/discover")}
-          className="h-6 w-6 text-(--crimson) cursor-pointer hover:scale-110 transition-all duration-200"
-        />
+          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+            pathname === "/discover"
+              ? "border-(--brand-maroon) text-(--brand-maroon)"
+              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+          }`}
+        >
+          <FaRegCompass className="h-6 w-6" />
+        </button>
       </div>
       <div className="flex gap-5 items-center">
         <FiBell className="h-6 w-6 cursor-pointer" />
