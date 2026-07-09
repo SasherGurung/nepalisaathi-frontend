@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { MdOutlineGroup } from "react-icons/md";
 import { DiscoverUser } from "./types";
 
@@ -9,24 +7,15 @@ type SuggestedUsersProps = {
 };
 
 export default function SuggestedUsers({ users }: SuggestedUsersProps) {
-  const router = useRouter();
 
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border bg-white p-5 shadow-sm  w-xs h-full sticky top-23">
      
       <div className="mb-5 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-lg font-semibold text-black">
-          <MdOutlineGroup className="h-8 w-8 text-zinc-500" />
+        <h3 className="flex items-center gap-2 text-md font-semibold text-black tracking-wide">
+          <MdOutlineGroup className="h-6 w-6 text-zinc-500" />
           Suggested for you
         </h3>
-
-        <Button
-          variant="link"
-          className="cursor-pointer text-zinc-500"
-          onClick={() => router.push("/discover")}
-        >
-          See All
-        </Button>
       </div>
 
       {users.length === 0 ? (
@@ -42,7 +31,7 @@ export default function SuggestedUsers({ users }: SuggestedUsersProps) {
         </div>
       ) : (
         <div className="space-y-5">
-          {users.slice(0, 6).map((user) => (
+          {users.slice(0, 5).map((user) => (
             <div key={user.uid} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
@@ -55,13 +44,13 @@ export default function SuggestedUsers({ users }: SuggestedUsersProps) {
                 </div>
 
                 <div>
-                  <p className="font-medium">{user.name}</p>
+                  <p className="text-sm truncate max-w-full">{user.name}</p>
                   <p className="text-xs text-gray-500">{user.profession}</p>
                 </div>
               </div>
 
-              <button className="cursor-pointer px-4 py-1.5 text-sm text-blue-600 transition hover:text-blue-700">
-                Follow
+              <button className="cursor-pointer px-5 py-1.5 border border-(--brand-blue) rounded-2xl text-sm text-(--brand-blue) hover:bg-blue-50 ml-3">
+                Connect
               </button>
             </div>
           ))}

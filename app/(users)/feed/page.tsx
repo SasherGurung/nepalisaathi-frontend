@@ -109,7 +109,7 @@ export default function FeedClientPage() {
 
   return (
     <section className="min-h-screen py-8">
-      <div className="mx-auto flex max-w-7xl gap-8 px-6">
+      <div className="mx-auto flex max-w-7xl gap-8">
         <div className="w-[320px] space-y-6 sticky top-25 self-start">
           <div className="overflow-hidden rounded-2xl h-74 bg-white shadow-sm border">
             <div className="h-24 bg-red-400" />
@@ -155,8 +155,6 @@ export default function FeedClientPage() {
               </Card>
             </div>
           </div>
-
-          <SuggestedUsers users={discoverUsers} />
         </div>
 
         <section className="flex-1 max-w-3xl space-y-6">
@@ -547,6 +545,7 @@ export default function FeedClientPage() {
             ))
           )}
         </section>
+        <SuggestedUsers users={discoverUsers} />
       </div>
     </section>
   );
