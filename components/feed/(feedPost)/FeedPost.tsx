@@ -67,8 +67,7 @@ export default function FeedPost() {
     setPostPreview(URL.createObjectURL(file));
   };
 
-  const isPostEmpty =
-  postData.body.trim() === "" && postData.image === null;
+  const isPostEmpty = postData.body.trim() === "" && postData.image === null;
   return (
     <div className="rounded-2xl border bg-white shadow-sm p-6">
       <div className="flex gap-3">

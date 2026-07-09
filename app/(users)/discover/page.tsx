@@ -152,19 +152,11 @@ function DiscoverPage() {
           </div>
         </Card>
         <Card className="w-7xl mt-6">
-          <div className="items-center flex justify-center flex-col mb-3">
-            <div className="flex items-center justify-center h-16 w-16 rounded-2xl bg-(--brand-maroon)/10 mb-4">
+          <div className="flex gap-2 mb-3 items-center">
+            <div className="flex h-5 w-5 rounded-2xl bg-(--brand-maroon)/10 mb-4">
               <FaRegCompass className="text-(--brand-maroon) w-8 h-8" />
             </div>
-            <div className="flex flex-col justify-center text-center gap-2">
-              <h1 className="text-3xl text-zinc-500 font-bold">
-                Discover New Connection
-              </h1>
-              <p className="line-clamp-3 w-lg text-zinc-500 text-sm">
-                Find people from your hometown, discover new groups, and expand
-                your professional network on Nepali Saathi.
-              </p>
-            </div>
+            <p className="text-md text-zinc-400">12 Newcomers matched</p>
           </div>
 
           <DiscoverUsers users={filterUsers} />
