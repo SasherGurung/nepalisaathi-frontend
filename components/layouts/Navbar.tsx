@@ -90,8 +90,11 @@ function Navbar() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer text-md font-light text-zinc-600">
-                <CgProfile className="w-6 h-6"/> Profile
+              <DropdownMenuItem
+                onClick={() => router.push("/profile")}
+                className="cursor-pointer text-md font-light text-zinc-600"
+              >
+                <CgProfile className="w-6 h-6" /> Profile
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push("/change-password")}
@@ -104,7 +107,7 @@ function Navbar() {
                   <DropdownMenuItem
                     variant="destructive"
                     className="cursor-pointer text-md font-light"
-                    onSelect={(e) => e.preventDefault()} // Prevents the dropdown from closing immediately
+                    onSelect={(e) => e.preventDefault()}
                   >
                     <IoLogOutOutline /> Log out
                   </DropdownMenuItem>
@@ -112,18 +115,25 @@ function Navbar() {
 
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-xl">Log out?</AlertDialogTitle>
+                    <AlertDialogTitle className="text-xl">
+                      Log out?
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                       Are you sure you want to log out of your account?
                     </AlertDialogDescription>
                   </AlertDialogHeader>
 
                   <AlertDialogFooter>
-                    <AlertDialogAction variant="outline" className="cursor-pointer">Cancel</AlertDialogAction>
+                    <AlertDialogAction
+                      variant="outline"
+                      className="cursor-pointer"
+                    >
+                      Cancel
+                    </AlertDialogAction>
 
                     <AlertDialogAction
-                    variant={"destructive"}
-                    className="cursor-pointer"
+                      variant={"destructive"}
+                      className="cursor-pointer"
                       onClick={() => {
                         clearUser();
                         router.replace("/login");

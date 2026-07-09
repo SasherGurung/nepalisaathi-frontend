@@ -1,17 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/authStores";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { CiImageOn } from "react-icons/ci";
 import Image from "next/image";
 import { useProfileStore } from "@/lib/stores/profileStore";
-import { usePostStore } from "@/lib/stores/postStores";
-import { BiGroup } from "react-icons/bi";
-import { RxCross2 } from "react-icons/rx";
 import { Copy, Heart, MessageCircle, Share2, Trash2 } from "lucide-react";
 import { LuMessageSquareDashed } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -31,6 +26,8 @@ import SuggestedUsers from "@/components/feed/(suggestedUser)/SuggestedUser";
 import { useCommentStore } from "@/lib/stores/commentStore";
 import { useCopyLinkStore } from "@/lib/stores/copyLinkStores";
 import { Card } from "@/components/ui/card";
+import FeedPost from "@/components/feed/(feedPost)/FeedPost";
+import { usePostStore } from "@/lib/stores/postStores";
 
 type DiscoverUser = {
   uid: string;
@@ -44,15 +41,9 @@ export default function FeedClientPage() {
   const router = useRouter();
   const { formData } = useProfileStore();
   const { user } = useAuthStore();
-  const [loading, setLoading] = useState(false);
   const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
 
-  const { posts, addPost, fetchPosts, handleLike, deletePost } = usePostStore();
-  const [postPreview, setPostPreview] = useState<string | null>(null);
-  const [postData, setPostData] = useState({
-    body: "",
-    image: null as File | null,
-  });
+  const { posts, fetchPosts, handleLike, deletePost } = usePostStore();
 
   const [commentText, setCommentText] = useState("");
   const [activePostId, setActivePostId] = useState<string | null>(null);
@@ -83,51 +74,6 @@ export default function FeedClientPage() {
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
-
-  const handlePost = async () => {
-    try {
-      setLoading(true);
-      console.log(postData);
-      const formData = new FormData();
-
-      formData.append("body", postData.body);
-      if (postData.image) {
-        formData.append("imageUrl", postData.image);
-      }
-
-      const { data } = await api.post("/posts", formData);
-
-      addPost(data.post);
-
-      setPostData({
-        body: "",
-        image: null,
-      });
-
-      console.log("Data:", data);
-      toast.success(data.message || "Post created successfully");
-      fetchPosts();
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong! Please try again!");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const postInputRef = useRef<HTMLInputElement>(null);
-
-  const handlePostImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setPostData((prev) => ({
-      ...prev,
-      image: file,
-    }));
-
-    setPostPreview(URL.createObjectURL(file));
-  };
 
   const handleDeletePost = async (postId: string) => {
     try {
@@ -165,7 +111,7 @@ export default function FeedClientPage() {
     <section className="min-h-screen py-8">
       <div className="mx-auto flex max-w-7xl gap-8 px-6">
         <div className="w-[320px] space-y-6 sticky top-25 self-start">
-          <div className="overflow-hidden rounded-2xl h-80 bg-white shadow-sm border">
+          <div className="overflow-hidden rounded-2xl h-74 bg-white shadow-sm border">
             <div className="h-24 bg-red-400" />
 
             <div className="-mt-12 flex justify-center">
@@ -186,21 +132,23 @@ export default function FeedClientPage() {
               )}
             </div>
 
-            <div className="px-5 pb-2 text-center">
-              <h2 className="text-md tracking-wider font-bold text-gray-900">{user?.name}</h2>
+            <div className="text-center">
+              <h2 className="text-md tracking-wider font-bold text-gray-900">
+                {user?.name}
+              </h2>
               <p className="text-sm text-gray-500">
                 {formData?.profession || user?.profession}
               </p>
             </div>
 
             <div className="p-3">
-              <Card className="shadow-sm">
-                <div className="flex justify-between">
+              <Card className="shadow-sm h-24 py-7">
+                <div className="flex justify-between text-sm">
                   <p className="text-gray-500">Connections</p>
                   <p className="text-gray-500">{user?.connectionsCount}</p>
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <p className="text-gray-500">Total Posts</p>
                   <p className="text-gray-500">{user?.postsCount}</p>
                 </div>
@@ -212,98 +160,7 @@ export default function FeedClientPage() {
         </div>
 
         <section className="flex-1 max-w-3xl space-y-6">
-          <div className="rounded-2xl border bg-white shadow-sm p-6">
-            <div className="flex gap-3">
-              {user?.profilePicture ? (
-                <Image
-                  src={user.profilePicture}
-                  alt="Profile Image"
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
-                />
-              ) : (
-                <div className="bg-(--brand-maroon) h-11 w-11 font-bold rounded-full text-white text-center pt-2 cursor-pointer">
-                  <span className="text-lg font-bold text-white">
-                    {(user?.name || user?.displayName)?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-              )}
-              <div>
-                <p className="font-semibold text-md">{user?.name}</p>
-                <p className="text-zinc-400 text-sm flex items-center">
-                  <BiGroup className="h-4 w-4" /> Friends
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <textarea
-                value={postData.body}
-                onChange={(e) =>
-                  setPostData((prev) => ({
-                    ...prev,
-                    body: e.target.value,
-                  }))
-                }
-                placeholder={`What's on your mind, ${user?.name || user?.displayName}?`}
-                className="w-full h-32 p-3 rounded-lg mt-3 border focus:outline-none focus:ring-1 focus:ring-red-400 text-sm shadow-sm"
-              />
-            </div>
-
-            {postPreview && (
-              <div className="relative mt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPostPreview(null);
-                    setPostData((prev) => ({
-                      ...prev,
-                      image: null,
-                    }));
-
-                    if (postInputRef.current) {
-                      postInputRef.current.value = "";
-                    }
-                  }}
-                  className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-gray-100 cursor-pointer"
-                >
-                  <RxCross2 className="h-3 w-3 text-black" />
-                </button>
-
-                <Image
-                  src={postPreview}
-                  alt="Selected image"
-                  width={500}
-                  height={300}
-                  className="w-full max-h-80 rounded-lg border object-cover"
-                />
-              </div>
-            )}
-            <div className="mt-2 flex items-center justify-between pt-4">
-              <input
-                ref={postInputRef}
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={handlePostImage}
-              />
-              <button
-                type="button"
-                onClick={() => postInputRef.current?.click()}
-                className="cursor-pointer hover:bg-zinc-100 text-zinc-400 px-3 py-2 rounded-xl flex items-center gap-1"
-              >
-                <CiImageOn className="h-5 w-5 text-green-400" />
-                Photos
-              </button>
-              <Button
-                onClick={handlePost}
-                disabled={loading}
-                className="rounded-xl bg-(--brand-maroon) hover:bg-red-600 text-base px-8 py-5 cursor-pointer"
-              >
-                {loading ? "Posting..." : "Post"}
-              </Button>
-            </div>
-          </div>
+          <FeedPost />
 
           {posts.length === 0 ? (
             <div className="flex flex-col h-80 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20">
@@ -493,7 +350,9 @@ export default function FeedClientPage() {
                                 </h3>
 
                                 <div className="flex items-center gap-1 text-xs text-zinc-500">
-                                  <span>{formData?.profession || user?.profession}</span>
+                                  <span>
+                                    {formData?.profession || user?.profession}
+                                  </span>
                                   <span>•</span>
                                   <span>{post.time}</span>
                                 </div>
@@ -576,9 +435,12 @@ export default function FeedClientPage() {
 
                                         <div className="mt-1 flex items-center justify-between px-3 text-xs font-medium text-zinc-500">
                                           <span>
-                                            {comment.createdAt
-                                              .split(" ")[1]
-                                              .slice(0, 5)}
+                                            {new Date(
+                                              comment.createdAt,
+                                            ).toLocaleTimeString([], {
+                                              hour: "2-digit",
+                                              minute: "2-digit",
+                                            })}
                                           </span>
 
                                           <div className="flex gap-3">
@@ -634,7 +496,10 @@ export default function FeedClientPage() {
 
                               <Share2 className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
 
-                              <Copy onClick={() => handleCopyLink(post.id)} className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+                              <Copy
+                                onClick={() => handleCopyLink(post.id)}
+                                className="h-5 w-5 cursor-pointer transition hover:text-red-600"
+                              />
                             </div>
                             <div className="border-t mt-3 px-3 py-3">
                               <Field>

@@ -115,11 +115,11 @@ function ProfilePage() {
 
             <div className="mt-4 space-y-2">
               <div>
-                <h2 className="text-3xl font-bold tracking-tight">
+                <h2 className="text-2xl font-bold tracking-wide">
                   {user?.name || user?.displayName}
                 </h2>
-                <p className="text-lg text-muted-foreground">
-                  {formData?.profession || user?.profession}, at Skybase
+                <p className="text-xl text-muted-foreground">
+                  {formData?.profession || user?.profession}
                 </p>
               </div>
 
@@ -130,7 +130,7 @@ function ProfilePage() {
               <div className="flex flex-wrap gap-5 pt-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <BriefcaseBusiness className="h-4 w-4" />
-                  {user?.profession || formData?.profession}at Skybase
+                  {user?.profession || formData?.profession}
                 </div>
 
                 <div className="flex items-center gap-2">
