@@ -64,7 +64,7 @@ function Navbar() {
               : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <FiHome className="h-7 w-6" />
+          <FiHome className="h-7 w-7" />
         </button>
 
         <button
@@ -75,7 +75,7 @@ function Navbar() {
               : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <MdOutlineGroup className="h-7 w-7" />
+          <MdOutlineGroup className="h-8 w-8" />
         </button>
 
         <button
@@ -86,7 +86,7 @@ function Navbar() {
               : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <RiChat3Line className="h-7 w-6" />
+          <RiChat3Line className="h-7 w-7" />
         </button>
 
         <button
@@ -97,7 +97,7 @@ function Navbar() {
               : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <FaRegCompass className="h-6 w-6" />
+          <FaRegCompass className="h-7 w-7" />
         </button>
       </div>
       <div className="flex gap-5 items-center">

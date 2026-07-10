@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
+import { MdOutlinePersonRemoveAlt1 } from "react-icons/md";
+
 
 function ConnectionPage() {
   const router = useRouter();
@@ -57,9 +59,9 @@ function ConnectionPage() {
               0
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3 ">
             <div className="flex flex-col items-center justify-between w-full">
-              <div className="flex items-center justify-between rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow mt-5 w-full">
+              <div className="flex items-center justify-between rounded-xl border p-3 shadow-sm hover:shadow-md transition-shadow mt-5 w-full">
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-300 text-xl font-semibold text-white">
                     S
@@ -75,17 +77,13 @@ function ConnectionPage() {
 
                 <div className="flex items-center gap-3">
                   <button className="border-red-600 rounded-full h-7 w-7 flex justify-center text-red-500 items-center transition-colors hover:bg-red-50 cursor-pointer">
-                    <RxCross2 />
-                  </button>
-
-                  <button className="rounded-2xl hover:bg-blue-600 px-5 py-2 text-white transition-colors bg-(--brand-blue) text-sm cursor-pointer">
-                    Accept
+                    <MdOutlinePersonRemoveAlt1 />
                   </button>
                 </div>
               </div>
             </div>
             <div className="flex flex-col items-center justify-between w-full">
-              <div className="flex items-center justify-between rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow mt-5 w-full">
+              <div className="flex items-center justify-between rounded-xl border p-3 shadow-sm hover:shadow-md transition-shadow mt-5 w-full">
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-300 text-xl font-semibold text-white">
                     S
@@ -101,17 +99,13 @@ function ConnectionPage() {
 
                 <div className="flex items-center gap-3">
                   <button className="border-red-600 rounded-full h-7 w-7 flex justify-center text-red-500 items-center transition-colors hover:bg-red-50 cursor-pointer">
-                    <RxCross2 />
-                  </button>
-
-                  <button className="rounded-2xl hover:bg-blue-600 px-5 py-2 text-white transition-colors bg-(--brand-blue) text-sm cursor-pointer">
-                    Accept
+                    <MdOutlinePersonRemoveAlt1 />
                   </button>
                 </div>
               </div>
             </div>
             <div className="flex flex-col items-center justify-between w-full">
-              <div className="flex items-center justify-between rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow w-full">
+              <div className="flex items-center justify-between rounded-xl border p-3 shadow-sm hover:shadow-md transition-shadow w-full">
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-300 text-xl font-semibold text-white">
                     S
@@ -127,11 +121,7 @@ function ConnectionPage() {
 
                 <div className="flex items-center gap-3">
                   <button className="border-red-600 rounded-full h-7 w-7 flex justify-center text-red-500 items-center transition-colors hover:bg-red-50 cursor-pointer">
-                    <RxCross2 />
-                  </button>
-
-                  <button className="rounded-2xl hover:bg-blue-600 px-5 py-2 text-white transition-colors bg-(--brand-blue) text-sm cursor-pointer">
-                    Accept
+                    <MdOutlinePersonRemoveAlt1 />
                   </button>
                 </div>
               </div>

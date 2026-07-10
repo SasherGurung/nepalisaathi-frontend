@@ -34,10 +34,10 @@ export default function DiscoverUsers({ users }: DiscoverUserProps) {
                 alt="Profile Image"
                 width={96}
                 height={96}
-                className="h-20 w-20 rounded-full border-4 border-white object-cover shadow-md"
+                className="h-15 w-15 rounded-full object-cover shadow-md"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full border-4 border-white bg-red-700 shadow-md flex justify-center items-center">
+              <div className="w-15 h-15 rounded-full bg-blue-100 shadow-md flex justify-center items-center">
                 <span className="text-4xl font-bold text-white">
                   {(user.name || user.displayName)?.charAt(0).toUpperCase()}
                 </span>
@@ -51,7 +51,7 @@ export default function DiscoverUsers({ users }: DiscoverUserProps) {
             <p className="text-sm text-zinc-500">{user.profession}</p>
             <p className="text-sm text-zinc-500">{user.status}</p>
 
-            <button className="mt-5 w-full rounded-full text-red-600 py-2.5 font-medium border border-red-600 hover:bg-red-100 transition-all cursor-pointer">
+            <button className="mt-5 w-full rounded-2xl text-(--brand-blue) py-1.5 font-medium border border-(--brand-blue) hover:bg-blue-50 transition-all cursor-pointer">
               Connect
             </button>
           </div>
