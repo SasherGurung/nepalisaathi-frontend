@@ -18,6 +18,7 @@ import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
+import FeedPostContent from "@/components/feed/(feedPostContent)/FeedPostContent";
 
 type Connections = {
   uid: string;
@@ -114,80 +115,87 @@ function ProfilePage() {
         </div>
       </Card>
 
-      <div className="mt-5  grid grid-cols-[30%_70%]">
-        <Card className="p-6 space-y-5 mr-5">
-          <h2 className="text-2xl font-bold text-zinc-500">About</h2>
+      <div className="mt-5 flex flex-col">
+        <div className="flex justify-between">
+          <Card className="p-6 space-y-5 mr-5 w-2/6">
+            <h2 className="text-2xl font-bold text-zinc-500">About</h2>
 
-          <div className="space-y-4 text-sm">
-            <div className="flex items-center gap-3">
-              <BriefcaseBusiness className="h-6 w-6 text-zinc-500" />
-              Works as, <br></br>Frontend Developer at Skybase
-            </div>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-center gap-3">
+                <BriefcaseBusiness className="h-6 w-6 text-zinc-500" />
+                Works as, <br></br>Frontend Developer at Skybase
+              </div>
 
-            <div className="flex items-center gap-3">
-              <MapPin className="h-6 w-6 text-zinc-500" />
-              Lives in, <br></br> Pokhara, Nepal
+              <div className="flex items-center gap-3">
+                <MapPin className="h-6 w-6 text-zinc-500" />
+                Lives in, <br></br> Pokhara, Nepal
+              </div>
             </div>
+          </Card>
+          <div className="flex flex-col w-full">
+            <FeedPost />
           </div>
-        </Card>
-        <div className="flex flex-col">
-          <FeedPost />
         </div>
 
-        <Card className="p-6 space-y-5 mr-5 mt-5">
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-bold text-zinc-500">Connections</h2>
-            <Button
-              onClick={() => router.push("/connection")}
-              variant="link"
-              className="cursor-pointer text-md text-zinc-600"
-            >
-              See all
-            </Button>
-          </div>
+        <div className="w-full flex justify-between items-start mt-5">
+          <Card className="p-6 space-y-5 mr-5 h-auto w-2/6">
+            <div className="flex justify-between">
+              <h2 className="text-2xl font-bold text-zinc-500">Connections</h2>
+              <Button
+                onClick={() => router.push("/connection")}
+                variant="link"
+                className="cursor-pointer text-md text-zinc-600"
+              >
+                See all
+              </Button>
+            </div>
 
-          <div className="flex gap-3 space-y-4 text-sm">
-            {connections.length > 0 ? (
-              connections.slice(0, 3).map((connection) => (
-                <div
-                  key={connection.uid}
-                  className="items-center text-center cursor-pointer"
-                >
-                  {connection.profilePicture ? (
-                    <Image
-                      src={connection.profilePicture}
-                      alt="Profile Image"
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 rounded-2xl border-4 border-white object-cover shadow-md"
-                    />
-                  ) : (
-                    <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-red-700 shadow-md">
-                      <span className="text-4xl font-bold text-white">
-                        {(connection.name || connection.displayName)
-                          ?.charAt(0)
-                          .toUpperCase()}
-                      </span>
-                    </div>
-                  )}
+            <div className="flex gap-3 space-y-4 text-sm">
+              {connections.length > 0 ? (
+                connections.slice(0, 3).map((connection) => (
+                  <div
+                    key={connection.uid}
+                    className="items-center text-center cursor-pointer"
+                  >
+                    {connection.profilePicture ? (
+                      <Image
+                        src={connection.profilePicture}
+                        alt="Profile Image"
+                        width={96}
+                        height={96}
+                        className="w-24 h-24 rounded-2xl border-4 border-white object-cover shadow-md"
+                      />
+                    ) : (
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-red-700 shadow-md">
+                        <span className="text-4xl font-bold text-white">
+                          {(connection.name || connection.displayName)
+                            ?.charAt(0)
+                            .toUpperCase()}
+                        </span>
+                      </div>
+                    )}
 
-                  <p className="mt-1 text-sm text-zinc-500">
-                    {connection.name || connection.displayName}
+                    <p className="mt-1 text-sm text-zinc-500">
+                      {connection.name || connection.displayName}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="flex justify-center items-center flex-col text-center ">
+                  <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
+                  <h1 className="font-bold text-xl">No User Found</h1>
+                  <p className="font-light text-zinc-500 text-sm line-clamp-2">
+                    You dont have any connections yet. Start connecting with
+                    people to grow your network.
                   </p>
                 </div>
-              ))
-            ) : (
-              <div className="flex justify-center items-center flex-col text-center ">
-                <MdOutlineGroup className="w-15 h-15 text-zinc-400" />
-                <h1 className="font-bold text-xl">No User Found</h1>
-                <p className="font-light text-zinc-500 text-sm line-clamp-4 w-xs">
-                  You dont have any connections yet. Start connecting with
-                  people to grow your network.
-                </p>
-              </div>
-            )}
+              )}
+            </div>
+          </Card>
+          <div className="w-full">
+              <FeedPostContent />
           </div>
-        </Card>
+        </div>
       </div>
     </section>
   );
