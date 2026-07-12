@@ -24,7 +24,7 @@ export const useCopyLinkStore = create<CopyLinkState>((set) => ({
             set({
                 shareData: data
             })
-            toast.success("Post Link copied successfully")
+            toast.success("Link copied successfully")
         } catch (error) {
             console.log(error);
             toast.error("Something went wrong! Please try again")

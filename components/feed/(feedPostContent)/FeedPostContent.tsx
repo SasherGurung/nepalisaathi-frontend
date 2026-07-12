@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { usePostStore } from "@/lib/stores/postStores";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useCommentStore } from "@/lib/stores/commentStore";
-import { Copy, Heart, MessageCircle, Share2, Trash2 } from "lucide-react";
+import { Copy, Heart, MessageCircle, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -148,21 +148,13 @@ export default function FeedPostContent() {
         </div>
       )}
 
-      <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
+      <div className="flex items-center  px-5 py-3 text-sm text-zinc-500">
         {post.likes === 0 ? (
           <span>No Likes</span>
         ) : (
           <span className="flex gap-1 items-center">
             <span className="font-semibold text-zinc-400">{post?.likes}</span>
             <Heart className="h-4 w-4 text-red-600 fill-red-600" />
-          </span>
-        )}
-
-        {comments.length === 0 ? (
-          <span>No Comments</span>
-        ) : (
-          <span className="font-semibold text-zinc-400">
-            {comments.length} Comments
           </span>
         )}
       </div>
@@ -359,7 +351,7 @@ export default function FeedPostContent() {
                   <div className="flex items-center gap-4 px-3 pt-3">
                     <button
                       onClick={() => handleLike(post.id)}
-                      className="cursor-pointer"
+                      className="cursor-pointer flex gap-2"
                     >
                       <Heart
                         className={`h-5 w-5 ${
@@ -368,14 +360,21 @@ export default function FeedPostContent() {
                             : "fill-none text-zinc-600"
                         }`}
                       />
+                      Like
                     </button>
 
-                    <Share2 className="h-5 w-5 cursor-pointer transition hover:text-red-600" />
+                    <button className="flex gap-2 items-center transition hover:text-red-600 text-zinc-600 cursor-pointer">
+                      <BiRepost className="h-6 w-6 cursor-pointer" />
+                      Repost
+                    </button>
 
-                    <Copy
-                      onClick={() => handleCopyLink(post.id)}
-                      className="h-5 w-5 cursor-pointer transition hover:text-red-600"
-                    />
+                    <button className="flex gap-2 text-sm text-zinc-600 items-center cursor-pointer transition hover:text-red-600">
+                      <Copy
+                        onClick={() => handleCopyLink(post.id)}
+                        className="h-4 w-4 "
+                      />
+                      Copy Link
+                    </button>
                   </div>
                   <div className="border-t mt-3 px-3 py-3">
                     <Field>
