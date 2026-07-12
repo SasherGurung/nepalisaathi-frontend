@@ -8,7 +8,7 @@ function FeedProfile() {
   const { user } = useAuthStore();
   const { formData } = useProfileStore();
   return (
-    <div className="w-[320px] space-y-6 sticky top-25 self-start">
+    <div className="w-[320px] space-y-6 sticky top-28 self-start">
       <div className="overflow-hidden rounded-2xl h-74 bg-white shadow-sm border">
         <div className="h-24 bg-red-400" />
 

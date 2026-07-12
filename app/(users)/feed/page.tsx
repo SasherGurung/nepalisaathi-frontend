@@ -59,7 +59,7 @@ export default function FeedPage() {
                 <LuMessageSquareDashed className="w-20 h-20 text-zinc-400" />
                 <h2 className="text-3xl font-bold tracking-tight text-zinc-700 m-2">
                   No posts yet
-                </h2>
+                </h2> 
                 <p className="mt-1 text-sm text-zinc-400 line-clamp-3 w-xs">
                   Your feed is empty. Be the first to share your thoughts, or
                   connect with more people to see their updates!

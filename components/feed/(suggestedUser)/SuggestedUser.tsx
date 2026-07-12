@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
 import { DiscoverUser } from "./types";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type SuggestedUsersProps = {
   users: DiscoverUser[];
@@ -8,14 +10,21 @@ type SuggestedUsersProps = {
 
 export default function SuggestedUsers({ users }: SuggestedUsersProps) {
 
+  const router = useRouter();
+
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm  w-xs h-full sticky top-25">
+    <div className="rounded-2xl border bg-white p-5 shadow-sm  w-xs h-full sticky top-28">
      
       <div className="mb-5 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-md font-semibold text-black tracking-wide">
           <MdOutlineGroup className="h-6 w-6 text-zinc-500" />
           Suggested for you
         </h3>
+        <div>
+          <Button variant="link" onClick={() => router.push("/discover")} className="cursor-pointer text-sm text-zinc-500">
+              See all
+          </Button>
+        </div>
       </div>
 
       {users.length === 0 ? (
