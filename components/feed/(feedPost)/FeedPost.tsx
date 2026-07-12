@@ -69,7 +69,7 @@ export default function FeedPost() {
 
   const isPostEmpty = postData.body.trim() === "" && postData.image === null;
   return (
-    <div className="rounded-2xl border bg-white shadow-sm p-6">
+    <div className="rounded-2xl border bg-white shadow-lg p-6">
       <div className="flex gap-3">
         {user?.profilePicture ? (
           <Image

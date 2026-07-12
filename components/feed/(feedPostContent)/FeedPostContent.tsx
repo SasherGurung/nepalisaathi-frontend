@@ -73,7 +73,6 @@ export default function FeedPostContent() {
     await navigator.clipboard.writeText(share_link);
   };
 
-  
   return posts.map((post) => (
     <div
       key={post.id}
@@ -363,9 +362,10 @@ export default function FeedPostContent() {
                       className="cursor-pointer"
                     >
                       <Heart
-                        fill={post.hasLiked ? "currentColor" : "none"}
                         className={`h-5 w-5 ${
-                          post.hasLiked ? "text-red-500" : ""
+                          post.hasLiked
+                            ? "fill-red-500 text-red-500"
+                            : "fill-none text-zinc-600"
                         }`}
                       />
                     </button>

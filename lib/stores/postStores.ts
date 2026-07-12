@@ -55,11 +55,15 @@ export const usePostStore = create<PostState>()((set) => ({
 
   handleLike: async (postId: string) => {
     try {
-      const res = await api.post(`/posts/${postId}/like`);
+      const { data } = await api.post(`/posts/${postId}/like`);
+
+      const post = usePostStore.getState().posts.find((p) => p.id === postId);
+
+      if (!post) return;
 
       usePostStore.getState().updatePost(postId, {
-        likes: res.data.likesCount,
-        hasLiked: res.data.hasLiked,
+        likes: data.likesCount,
+        hasLiked: !post.hasLiked,
       });
     } catch (error) {
       console.log(error);

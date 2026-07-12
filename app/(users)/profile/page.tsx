@@ -19,6 +19,8 @@ import { MdOutlineGroup } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
 import FeedPostContent from "@/components/feed/(feedPostContent)/FeedPostContent";
+import { LuMessageSquareDashed } from "react-icons/lu";
+import { usePostStore } from "@/lib/stores/postStores";
 
 type Connections = {
   uid: string;
@@ -32,6 +34,7 @@ function ProfilePage() {
   const { user } = useAuthStore();
   const { formData } = useProfileStore();
   const [connections, setConnections] = useState<Connections[]>([]);
+  const { posts } = usePostStore();
 
   useEffect(() => {
     const getConnections = async () => {
@@ -115,9 +118,9 @@ function ProfilePage() {
         </div>
       </Card>
 
-      <div className="mt-5 flex flex-col">
-        <div className="flex justify-between">
-          <Card className="p-6 space-y-5 mr-5 w-2/6">
+      <div className="grid grid-cols-[35%_65%] gap-5 mt-5 sticky">
+        <div className="flex flex-col gap-5">
+          <Card className="p-6 space-y-5 mr-5">
             <h2 className="text-2xl font-bold text-zinc-500">About</h2>
 
             <div className="space-y-4 text-sm">
@@ -132,13 +135,7 @@ function ProfilePage() {
               </div>
             </div>
           </Card>
-          <div className="flex flex-col w-full">
-            <FeedPost />
-          </div>
-        </div>
-
-        <div className="w-full flex justify-between items-start mt-5">
-          <Card className="p-6 space-y-5 mr-5 h-auto w-2/6">
+          <Card className="p-6 space-y-5 mr-5 h-auto">
             <div className="flex justify-between">
               <h2 className="text-2xl font-bold text-zinc-500">Connections</h2>
               <Button
@@ -192,9 +189,31 @@ function ProfilePage() {
               )}
             </div>
           </Card>
-          <div className="w-full">
-              <FeedPostContent />
-          </div>
+        </div>
+        <div className="flex flex-col gap-5">
+          <FeedPost />
+          {posts.length === 0 ? (
+            <div className="flex flex-col h-80 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20 shadow-xl">
+              <div className="flex flex-col text-center items-center">
+                <LuMessageSquareDashed className="w-20 h-20 text-zinc-400" />
+                <h2 className="text-3xl font-bold tracking-tight text-zinc-700 m-2">
+                  No posts yet
+                </h2>
+                <p className="mt-1 text-sm text-zinc-400 line-clamp-3 w-xs">
+                  Your feed is empty. Be the first to share your thoughts, or
+                  connect with more people to see their updates!
+                </p>
+                <button
+                  onClick={() => router.push("/discover")}
+                  className="px-4 py-3 bg-(--brand-blue) rounded-xl text-sm text-white mt-3 cursor-pointer hover:bg-blue-900"
+                >
+                  Find Connections
+                </button>
+              </div>
+            </div>
+          ) : (
+            <FeedPostContent />
+          )}
         </div>
       </div>
     </section>
