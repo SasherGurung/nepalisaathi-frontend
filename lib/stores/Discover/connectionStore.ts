@@ -2,6 +2,16 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 import { api } from "../../api/config";
 
+type OtherUser = {
+  uid: string;
+  name: string;
+  displayName: string;
+  profession: string;
+  homeCity: string;
+  profilePicture: string;
+  status: string;
+};
+
 type Connection = {
   id: string;
   senderId: string;
@@ -17,34 +27,24 @@ type Connection = {
   otherUser: OtherUser;
 };
 
-type OtherUser = {
-  uid: string;
-  name: string;
-  displayName: string;
-  profession: string;
-  homeCity: string;
-  profilePicture: string;
-  status: string;
-};
-
 type ConnectionStore = {
   connections: Connection[];
   sentRequest: Connection[];
   receiveRequest: Connection[];
-  postConnections: Connection[];
 
   fetchConnection: () => Promise<void>;
   fetchSentConnection: () => Promise<void>;
   fetchReceivedRequests: () => Promise<void>;
 
   postConnection: (receiverId: string) => Promise<void>;
+  acceptConnection: (connectionId: string) => Promise<void>;
+  declineConnection: (connectionId: string) => Promise<void>;
 };
 
 export const useConnectionStore = create<ConnectionStore>((set) => ({
   connections: [],
   sentRequest: [],
   receiveRequest: [],
-  postConnections: [],    
 
   fetchConnection: async () => {
     try {
@@ -55,31 +55,33 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch connections.");
+      toast.error("Failed to fetch connections");
     }
   },
 
   fetchSentConnection: async () => {
     try {
-      const { data } = await api("/connections/sent");
+      const { data } = await api.get("/connections/sent");
+
       set({
-        sentRequest: data,
-      })
+        sentRequest: data.data,
+      });
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong! Please try again");
+      console.error(error);
+      toast.error("Failed to fetch sent requests");
     }
   },
 
   fetchReceivedRequests: async () => {
-    const { data } = await api.get("/connections/received");
-    set({
-      receiveRequest: data,
-    })
     try {
+      const { data } = await api.get("/connections/received");
+
+      set({
+        receiveRequest: data.data,
+      });
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong! Please try again");
+      console.error(error);
+      toast.error("Failed to fetch received requests");
     }
   },
 
@@ -90,11 +92,48 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
       });
 
       set((state) => ({
-        sentRequest: [...state.sentRequest, data],
-      }))
+        sentRequest: [...state.sentRequest, data.data],
+      }));
+
+      toast.success("Connection request sent");
     } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong! Please try again")
+      console.error(error);
+      toast.error("Failed to send connection request");
     }
-  }
+  },
+
+  acceptConnection: async (connectionId) => {
+    try {
+      const { data } = await api.patch(`/connections/${connectionId}/accept`);
+
+      set((state) => ({
+        receiveRequest: state.receiveRequest.filter(
+          (request) => request.id !== connectionId,
+        ),
+        connections: [...state.connections, data.data],
+      }));
+
+      toast.success("Connection request accepted");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to accept connection request");
+    }
+  },
+
+  declineConnection: async (connectionId) => {
+    try {
+      await api.patch(`/connections/${connectionId}/decline`);
+
+      set((state) => ({
+        receiveRequest: state.receiveRequest.filter(
+          (request) => request.id !== connectionId,
+        ),
+      }));
+
+      toast.success("Connection request declined");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to decline connection request");
+    }
+  },
 }));
