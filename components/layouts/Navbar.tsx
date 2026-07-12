@@ -43,7 +43,7 @@ function Navbar() {
   const { user } = useAuthStore();
 
   return (
-    <header className="flex justify-between px-10 py-1 items-center cursor-pointer sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b shadow-sm">
+    <header className="flex justify-between px-30 py-1 items-center cursor-pointer sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b shadow-sm">
       <div onClick={() => router.push("/feed")} className="flex gap-5">
         <Image
           src="/logo.png"
@@ -55,49 +55,49 @@ function Navbar() {
           Nepal Saathi
         </h1>
       </div>
-      <div className="flex gap-9 mr-30 items-center">
+      <div className="flex items-center justify-between gap-3 bg-white px-5 py-2 w-2xs mr-30">
         <button
           onClick={() => router.push("/feed")}
-          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+          className={`flex h-11 w-11 items-center justify-center transition-all duration-300 cursor-pointer ${
             pathname === "/feed"
-              ? "border-(--brand-maroon) text-(--brand-maroon)"
-              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+              ? "border-b-2 border-(--brand-maroon) text-(--brand-maroon)"
+              : " hover:bg-zinc-100 text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <FiHome className="h-7 w-7" />
-        </button>
+          <FiHome className="h-6 w-6" />
+        </button> 
 
         <button
           onClick={() => router.push("/connection")}
-          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+          className={`flex h-11 w-11 items-center justify-center transition-all duration-200 cursor-pointer ${
             pathname === "/connection"
-              ? "border-(--brand-maroon) text-(--brand-maroon)"
-              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+              ? "border-b-2 border-(--brand-maroon) text-(--brand-maroon)"
+              : "hover:bg-zinc-100 text-zinc-500   hover:text-(--brand-maroon)"
           }`}
         >
-          <MdOutlineGroup className="h-8 w-8" />
+          <MdOutlineGroup className="h-7 w-7" />
         </button>
 
         <button
           onClick={() => router.push("/chat")}
-          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+          className={`flex h-11 w-11 items-center justify-center transition-all duration-200 cursor-pointer ${
             pathname === "/chat"
-              ? "border-(--brand-maroon) text-(--brand-maroon)"
-              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+              ? "border-b-2 border-(--brand-maroon) text-(--brand-maroon)"
+              : "hover:bg-zinc-100 text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <RiChat3Line className="h-7 w-7" />
+          <RiChat3Line className="h-6 w-6" />
         </button>
 
         <button
           onClick={() => router.push("/discover")}
-          className={`border-b-2 pb-2 transition-all cursor-pointer ${
+          className={`flex h-11 w-11 items-center justify-center transition-all duration-200 cursor-pointer ${
             pathname === "/discover"
-              ? "border-(--brand-maroon) text-(--brand-maroon)"
-              : "border-transparent text-zinc-500 hover:text-(--brand-maroon)"
+              ? "border-b-2 border-(--brand-maroon) text-(--brand-maroon)"
+              : "hover:bg-zinc-100 text-zinc-500 hover:text-(--brand-maroon)"
           }`}
         >
-          <FaRegCompass className="h-7 w-7" />
+          <FaRegCompass className="h-6 w-6" />
         </button>
       </div>
       <div className="flex gap-5 items-center">

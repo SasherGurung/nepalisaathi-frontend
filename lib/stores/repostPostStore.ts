@@ -31,7 +31,9 @@ export const useRepostPostStore = create<RepostPostState>((set) => ({
     
     sharePost: async(postId, body) => {
         try {
-            const { data } = await api.post(`/posts/${postId}/share`);
+            const { data } = await api.post(`/posts/${postId}/share`, {
+                body
+            });
             set({
                 repostPost: data.post,
             })
