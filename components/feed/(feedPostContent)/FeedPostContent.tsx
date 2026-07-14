@@ -24,8 +24,12 @@ import { useAuthStore } from "@/lib/stores/authStores";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { api } from "@/lib/api/config";
 import { useCopyLinkStore } from "@/lib/stores/copyLinkStores";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function FeedPostContent() {
+
+  const router = useRouter();
   const { formData } = useProfileStore();
   const { user } = useAuthStore();
   const { posts, handleLike, deletePost } = usePostStore();
@@ -95,9 +99,9 @@ export default function FeedPostContent() {
           )}
 
           <div>
-            <h3 className="font-semibold text-md text-zinc-900">
+            <Button onClick={() => router.push("/profile")} variant="link" className="font-semibold text-md text-zinc-900 p-0 cursor-pointer">
               {post.author?.name || user?.name}
-            </h3>
+            </Button>
 
             <div className="flex items-center gap-1 text-xs text-zinc-500">
               <span>{formData?.profession || user?.profession}</span>

@@ -48,7 +48,7 @@ const statuses = [
   "Student",
   "Working Professional",
   "Business Owner",
-  "Planning To Relocate",
+  "Planning to Relocate",
 ];
 
 function DiscoverPage() {

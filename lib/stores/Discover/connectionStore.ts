@@ -2,16 +2,6 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 import { api } from "../../api/config";
 
-type OtherUser = {
-  uid: string;
-  name: string;
-  displayName: string;
-  profession: string;
-  homeCity: string;
-  profilePicture: string;
-  status: string;
-};
-
 type Connection = {
   id: string;
   senderId: string;
@@ -27,6 +17,16 @@ type Connection = {
   otherUser: OtherUser;
 };
 
+type OtherUser = {
+  uid: string;
+  name: string;
+  displayName: string;
+  profession: string;
+  homeCity: string;
+  profilePicture: string;
+  status: string;
+};
+
 type ConnectionStore = {
   connections: Connection[];
   sentRequest: Connection[];
@@ -37,7 +37,7 @@ type ConnectionStore = {
   fetchReceivedRequests: () => Promise<void>;
 
   postConnection: (receiverId: string) => Promise<void>;
-  acceptConnection: (connectionId: string) => Promise<void>;
+  acceptConnection: (senderId: string) => Promise<void>;
   declineConnection: (connectionId: string) => Promise<void>;
 };
 
@@ -102,13 +102,15 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
     }
   },
 
-  acceptConnection: async (connectionId) => {
+  acceptConnection: async (senderId) => {
     try {
-      const { data } = await api.patch(`/connections/${connectionId}/accept`);
+      const { data } = await api.patch("/connections/action", {
+        senderId,
+      });
 
       set((state) => ({
         receiveRequest: state.receiveRequest.filter(
-          (request) => request.id !== connectionId,
+          (request) => request.senderId !== senderId,
         ),
         connections: [...state.connections, data.data],
       }));

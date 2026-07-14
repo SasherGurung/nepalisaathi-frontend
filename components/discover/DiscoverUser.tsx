@@ -1,12 +1,21 @@
 import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
 import { DiscoverUser } from "./types";
+import { useConnectionStore } from "@/lib/stores/Discover/connectionStore";
 
 type DiscoverUserProps = {
   users: DiscoverUser[];
 };
 
 export default function DiscoverUsers({ users }: DiscoverUserProps) {
+
+  const { postConnection } = useConnectionStore();
+
+  const handleConnectionRequest = async (receiverId: string) => {
+    await postConnection(receiverId);
+  }
+
+
   if (users.length === 0) {
     return (
       <div className="flex justify-center items-center flex-col text-center mt-17">
@@ -51,7 +60,7 @@ export default function DiscoverUsers({ users }: DiscoverUserProps) {
             <p className="text-sm text-zinc-500">{user.profession}</p>
             <p className="text-sm text-zinc-500">{user.status}</p>
 
-            <button className="mt-5 w-full rounded-2xl text-(--brand-blue) py-1.5 font-medium border border-(--brand-blue) hover:bg-blue-50 transition-all cursor-pointer">
+            <button onClick={() => handleConnectionRequest(user.uid)} className="mt-5 w-full rounded-2xl text-(--brand-blue) py-1.5 font-medium border border-(--brand-blue) hover:bg-blue-50 transition-all cursor-pointer">
               Connect
             </button>
           </div>
