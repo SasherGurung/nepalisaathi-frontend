@@ -1,7 +1,7 @@
 "use client"
 
 import Navbar from "@/components/layouts/Navbar";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

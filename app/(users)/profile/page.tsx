@@ -10,7 +10,6 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/lib/stores/authStores";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api/config";
@@ -20,13 +19,14 @@ import { useRouter } from "next/navigation";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
 import FeedPostContent from "@/components/feed/(feedPostContent)/FeedPostContent";
 import { LuMessageSquareDashed } from "react-icons/lu";
-import { usePostStore } from "@/lib/stores/postStores";
+import { usePostStore } from "@/lib/stores/Posts/postStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 
 type Connections = {
   uid: string;
   name: string;
   displayName: string;
-  profilePicture: string;
+  profilePicture: string; 
 };
 
 function ProfilePage() {

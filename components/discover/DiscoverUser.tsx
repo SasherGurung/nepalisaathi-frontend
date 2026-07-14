@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
 import { DiscoverUser } from "./types";
-import { useConnectionStore } from "@/lib/stores/Discover/connectionStore";
+import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
 
 type DiscoverUserProps = {
   users: DiscoverUser[];

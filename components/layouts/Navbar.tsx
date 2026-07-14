@@ -33,7 +33,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 
 function Navbar() {
   const router = useRouter();

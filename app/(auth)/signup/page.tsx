@@ -24,7 +24,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 import { RegisterResponse } from "@/lib/types/auth.types";
 
 export default function SignupForm() {

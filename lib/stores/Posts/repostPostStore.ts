@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { create } from "zustand";
-import { api } from "../api/config";
+import { api } from "../../api/config";
 
 type RepostPost = {
     id: string;

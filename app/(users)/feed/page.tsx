@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { LuMessageSquareDashed } from "react-icons/lu";
 import SuggestedUsers from "@/components/feed/(suggestedUser)/SuggestedUser";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
-import { usePostStore } from "@/lib/stores/postStores";
+import { usePostStore } from "@/lib/stores/Posts/postStores";
 import FeedProfile from "@/components/feed/(feedProfile)/page";
 import FeedPostContent from "@/components/feed/(feedPostContent)/FeedPostContent";
 

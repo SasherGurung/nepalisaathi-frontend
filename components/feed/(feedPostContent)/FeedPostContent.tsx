@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { usePostStore } from "@/lib/stores/postStores";
+import { usePostStore } from "@/lib/stores/Posts/postStores";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { useCommentStore } from "@/lib/stores/commentStore";
+import { useCommentStore } from "@/lib/stores/Posts/commentStore";
 import { Copy, Heart, MessageCircle, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
@@ -20,15 +20,14 @@ import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { BiRepost } from "react-icons/bi";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { api } from "@/lib/api/config";
-import { useCopyLinkStore } from "@/lib/stores/copyLinkStores";
+import { useCopyLinkStore } from "@/lib/stores/Posts/copyLinkStores";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function FeedPostContent() {
-
   const router = useRouter();
   const { formData } = useProfileStore();
   const { user } = useAuthStore();
@@ -99,7 +98,11 @@ export default function FeedPostContent() {
           )}
 
           <div>
-            <Button onClick={() => router.push("/profile")} variant="link" className="font-semibold text-md text-zinc-900 p-0 cursor-pointer">
+            <Button
+              onClick={() => router.push("/profile")}
+              variant="link"
+              className="font-semibold text-md text-zinc-900 p-0 cursor-pointer"
+            >
               {post.author?.name || user?.name}
             </Button>
 
@@ -200,7 +203,7 @@ export default function FeedPostContent() {
                 {post.image && (
                   <Image
                     src={post.image}
-                    alt="Post"
+                    alt={post.author.name}
                     width={700}
                     height={700}
                     priority
@@ -222,7 +225,7 @@ export default function FeedPostContent() {
                       />
                     ) : (
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-(--brand-maroon) text-lg font-bold text-white uppercase">
-                        {(post.author?.name || user?.name || "S")[0]}
+                        {post.author.name.charAt(0).toUpperCase()}
                       </div>
                     )}
 
@@ -275,7 +278,7 @@ export default function FeedPostContent() {
                       </div>
                     ) : (
                       comments.map((comment) => (
-                        <div
+                        <div  
                           key={comment.id}
                           className="group relative flex items-center justify-between py-2"
                         >
@@ -286,16 +289,20 @@ export default function FeedPostContent() {
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </button>
 
-                          <div className="flex items-center gap-2 w-full px-2">
-                            <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
-                              <Image
-                                src={
-                                  comment.authorProfilePicture || "/logo.png"
-                                }
-                                alt={comment.authorName}
-                                fill
-                                className="object-cover"
-                              />
+                          <div className="flex items-center gap-2 w-full px-2 py-2">
+                            <div className="relative h-11 w-11 overflow-hidden rounded-full">
+                              {comment.authorProfilePicture ? (
+                                <Image
+                                  src={comment.authorProfilePicture}
+                                  alt={comment.authorName}
+                                  fill
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-(--brand-blue) text-lg font-bold text-white uppercase">
+                                  {post.author.name.charAt(0).toUpperCase()}
+                                </div>
+                              )}
                             </div>
 
                             <div className="w-full">

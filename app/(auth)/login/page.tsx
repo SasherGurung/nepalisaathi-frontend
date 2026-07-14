@@ -25,7 +25,7 @@ import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
 import { useRouter } from "next/navigation";
 import { loginSchema } from "@/app/schema/authSchema";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 
 export default function LoginForm() {
   const router = useRouter();

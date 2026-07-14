@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 import { useProfileStore } from "@/lib/stores/profileStore";
 import { Card } from "@/components/ui/card";
 
@@ -9,7 +9,7 @@ function FeedProfile() {
   const { formData } = useProfileStore();
   return (
     <div className="w-[320px] space-y-6 sticky top-28 self-start">
-      <div className="overflow-hidden rounded-2xl h-74 bg-white shadow-sm border">
+      <div className="overflow-hidden rounded-2xl h-78 bg-white shadow-sm border">
         <div className="h-24 bg-red-400" />
 
         <div className="-mt-12 flex justify-center">

@@ -6,10 +6,10 @@ import { BiGroup } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
 import { CiImageOn } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/lib/stores/authStores";
+import { useAuthStore } from "@/lib/stores/Auth/authStores";
 import { api } from "@/lib/api/config";
 import toast from "react-hot-toast";
-import { usePostStore } from "@/lib/stores/postStores";
+import { usePostStore } from "@/lib/stores/Posts/postStores";
 
 export default function FeedPost() {
   const { user } = useAuthStore();
@@ -74,10 +74,10 @@ export default function FeedPost() {
         {user?.profilePicture ? (
           <Image
             src={user.profilePicture}
-            alt="Profile Image"
-            width={90}
-            height={90}
-            className="rounded-full border-4 border-white object-cover shadow-md"
+            alt={user.displayName || user.name}
+            width={50}
+            height={50}
+            className="h-11 w-11 rounded-full object-cover"
           />
         ) : (
           <div className="bg-(--brand-maroon) h-10 w-10 font-bold rounded-full text-white text-center pt-1.5 cursor-pointer">

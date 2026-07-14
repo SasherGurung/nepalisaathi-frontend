@@ -1,9 +1,11 @@
 import toast from "react-hot-toast";
 import { create } from "zustand";
-import { api } from "../api/config";
+import { api } from "../../api/config";
 
 type Comment = {
   id: string;
+  commentedId: string;
+  commentedid: string;
   postId: string;
   authorId: string;
   authorName: string;
@@ -14,7 +16,28 @@ type Comment = {
   likedBy: string[];
   likesCount: number;
   hasLiked: boolean;
+  text: string;
+  replies: Replies[];
 };
+
+type Replies = {
+  id: string;
+  commentedId: string;
+  commentedid: string;
+  postId: string;
+  authorId: string;
+  authorName: string;
+  authorLocation: string;
+  authorProfilePicture: string | null;
+  body: string;
+  createdAt: string;
+  likedBy: string[];
+  likesCount: number;
+  hasLiked: boolean;
+  parentId: string | null;
+  replies: [];
+};
+
 
 type CommentStore = {
   comments: Comment[];
