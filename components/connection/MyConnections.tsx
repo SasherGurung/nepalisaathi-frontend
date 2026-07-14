@@ -2,10 +2,10 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { MdOutlineGroup, MdOutlinePersonRemoveAlt1 } from "react-icons/md";
 import { useConnectionUserStore } from "@/lib/stores/Connection/connectionUserStore";
+import Image from "next/image";
 
 function MyConnections() {
-  const { connectionUsers, deleteConnection } =
-    useConnectionUserStore();
+  const { connectionUsers, deleteConnection } = useConnectionUserStore();
 
   return (
     <Card className="h-auto w-full">
@@ -38,9 +38,19 @@ function MyConnections() {
               >
                 <div className="flex items-center justify-between rounded-xl border p-3 shadow-sm hover:shadow-md transition-shadow mt-5 w-full">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--brand-blue) text-xl font-semibold text-white">
-                      {connectionUser.name.charAt(0).toUpperCase()}
-                    </div>
+                    {connectionUser.profilePicture ? (
+                      <Image
+                        src={connectionUser.profilePicture}
+                        alt={connectionUser.displayName}
+                        width={30}
+                        height={30}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--brand-blue) text-xl font-semibold text-white">
+                        {connectionUser.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
 
                     <div>
                       <h3 className="text-lg font-semibold text-zinc-800">
