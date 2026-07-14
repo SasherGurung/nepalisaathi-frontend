@@ -16,11 +16,15 @@ function ConnectionPage() {
     acceptConnection,
     declineConnection,
   } = useConnectionStore();
-  const { connectionUsers } = useConnectionUserStore();
+  const { connectionUsers, fetchConnectionUsers } = useConnectionUserStore();
 
   useEffect(() => {
     fetchReceivedRequests();
   }, [fetchReceivedRequests]);
+
+  useEffect(() => {
+    fetchConnectionUsers();
+  }, [fetchConnectionUsers])
 
   return (
     <section className="min-h-screen grid grid-cols-[70%_30%] gap-5 mt-5 mx-50">
@@ -38,7 +42,7 @@ function ConnectionPage() {
             {receiveRequest.map((request) => (
               <div
                 key={request.id}
-                className="flex items-center justify-between rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow mt-5 w-full"
+                className="flex items-center justify-between rounded-xl border py-4 px-5 shadow-sm hover:shadow-md transition-shadow mt-4 w-full"
               >
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-300 text-xl font-semibold text-white">
@@ -62,10 +66,7 @@ function ConnectionPage() {
                   </button>
 
                   <button
-                    onClick={() => {
-                      console.log(request.id);
-                      acceptConnection(request.id);
-                    }}
+                    onClick={() => acceptConnection(request.id)}
                     className="rounded-2xl hover:bg-blue-600 px-5 py-2 text-white transition-colors bg-(--brand-blue) text-sm cursor-pointer"
                   >
                     Accept
@@ -89,7 +90,9 @@ function ConnectionPage() {
             {connectionUsers.length === 0 ? (
               <div className="flex justify-center items-center flex-col text-center mt-17">
                 <MdOutlineGroup className="w-20 h-20 text-zinc-300" />
-                <h1 className="font-bold text-2xl text-zinc-500">No Connections yet</h1>
+                <h1 className="font-medium text-xl text-zinc-500">
+                  No Connections yet
+                </h1>
                 <p className="font-light text-zinc-500 text-sm line-clamp-3 w-sm">
                   Build your network by connecting with people from your
                   hometown and profession.
@@ -97,7 +100,7 @@ function ConnectionPage() {
               </div>
             ) : (
               connectionUsers.map((connectionUser) => (
-                <div key={connectionUser.id} className="grid grid-cols-2 gap-3">
+                <div key={connectionUser.uid} className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col items-center justify-between w-full">
                     <div className="flex items-center justify-between rounded-xl border p-3 shadow-sm hover:shadow-md transition-shadow mt-5 w-full">
                       <div className="flex items-center gap-4">

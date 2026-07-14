@@ -34,9 +34,10 @@ export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
     fetchConnectionUsers: async () => {
         try {
             const { data } = await api.get("/connections/users");
+            console.log(data)
 
             set({
-                connectionUsers: data.data,
+                connectionUsers: data.data.data,
             });
         } catch (error) {
             console.log(error);
