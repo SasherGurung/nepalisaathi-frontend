@@ -38,7 +38,7 @@ type ConnectionStore = {
 
   postConnection: (receiverId: string) => Promise<void>;
   acceptConnection: (senderId: string) => Promise<void>;
-  declineConnection: (connectionId: string) => Promise<void>;
+  declineConnection: (senderId: string) => Promise<void>;
 };
 
 export const useConnectionStore = create<ConnectionStore>((set) => ({
@@ -46,6 +46,7 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
   sentRequest: [],
   receiveRequest: [],
 
+  // Fetch the Connections
   fetchConnection: async () => {
     try {
       const { data } = await api.get("/connections");
@@ -59,6 +60,7 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
     }
   },
 
+  // Fetch the Sent Connection
   fetchSentConnection: async () => {
     try {
       const { data } = await api.get("/connections/sent");
@@ -72,6 +74,7 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
     }
   },
 
+  // Fetch the Received Request
   fetchReceivedRequests: async () => {
     try {
       const { data } = await api.get("/connections/received");
@@ -85,6 +88,7 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
     }
   },
 
+  // Fetch teh Post Connection
   postConnection: async (receiverId) => {
     try {
       const { data } = await api.post("/connections", {
@@ -102,11 +106,15 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
     }
   },
 
+  // Accept the Connection (Receiver)
   acceptConnection: async (senderId) => {
     try {
       const { data } = await api.patch("/connections/action", {
         senderId,
+        status: "accepted",
       });
+
+      console.log(data);
 
       set((state) => ({
         receiveRequest: state.receiveRequest.filter(
@@ -122,13 +130,17 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
     }
   },
 
-  declineConnection: async (connectionId) => {
+  // Decline the Connection (Receiver)
+  declineConnection: async (senderId) => {
     try {
-      await api.patch(`/connections/${connectionId}/decline`);
+      await api.patch("connection/action",{
+        senderId,
+        status: "accepted",
+      });
 
       set((state) => ({
         receiveRequest: state.receiveRequest.filter(
-          (request) => request.id !== connectionId,
+          (request) => request.id !== senderId,
         ),
       }));
 
