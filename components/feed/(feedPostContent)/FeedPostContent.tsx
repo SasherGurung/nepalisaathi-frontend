@@ -194,13 +194,20 @@ export default function FeedPostContent() {
         </div>
       )}
 
-      <div className="flex items-center  px-5 py-3 text-sm text-zinc-500">
+      <div className="flex items-center justify-between px-5 py-3 text-sm text-zinc-500">
         {post.likes === 0 ? (
           <span>No Likes</span>
         ) : (
           <span className="flex gap-1 items-center">
             <span className="font-semibold text-zinc-400">{post?.likes}</span>
             <Heart className="h-4 w-4 text-red-600 fill-red-600" />
+          </span>
+        )}
+        {post.commentsCount === 0? (
+          <span>No Comments</span>
+        ) : (
+          <span className="flex gap-1 items-center">
+            <span className="font-semibold text-zinc-400">{post?.commentsCount} Comments</span>
           </span>
         )}
       </div>

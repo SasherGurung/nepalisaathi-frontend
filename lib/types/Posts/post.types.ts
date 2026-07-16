@@ -1,19 +1,46 @@
 export interface Post {
-    id: string;
-    time: string;
-    content: string;
-    image: string | null;
-    likes: number | 0;
-    hasLiked: boolean;
-    initialComments: [];
-    author: Author;
-    sharedPost: Post | null;
-  };
-  
-  export interface Author {
-    id: string;
-    name: string;
-    headline: string;
-    avatar: string;
-    avatar_url: string;
-  };
+  id: string;
+  authorId: string;
+  authorName: string;
+  authorRole: string;
+  authorLocation: string;
+  authorProfilePicture: string | null;
+  body: string | null;
+  content: string | null;
+  imageUrl: string | null;
+  image: string | null;
+  createdAt: string;
+  time: string;
+  likedBy: string[];
+  likesCount: number;
+  likes: number;
+  hasLiked: boolean;
+  likedByUsersPreview: LikedByUserPreview[];
+  author: PostAuthor;
+  commentsCount: number;
+  initialComments: Comment[];
+  shared_post_id: string | null;
+  shareLink: string;
+
+  edited: boolean;
+  edit_count: number;
+  sharedPost: SharedPost | null;
+  is_deleted: boolean;
+}
+
+export interface LikedByUserPreview {
+  uid: string;
+  name: string;
+}
+
+export interface PostAuthor {
+  id: string;
+  name: string;
+  avatar: string;
+  avatar_url: string;
+  headline: string;
+}
+
+export interface SharedPost {
+  is_deleted: boolean;
+}

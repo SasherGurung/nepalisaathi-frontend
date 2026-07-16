@@ -29,6 +29,7 @@ export const usePostStore = create<PostState>()((set) => ({
     try {
       const { data } = await api.get("/posts");
       set({ posts: data.data });
+      console.log(data)
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong! Please try again");
