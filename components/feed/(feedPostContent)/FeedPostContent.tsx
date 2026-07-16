@@ -15,8 +15,6 @@ import {
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { LiaCommentSlashSolid } from "react-icons/lia";
-import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { BiRepost } from "react-icons/bi";
@@ -37,6 +35,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useRepostPostStore } from "@/lib/stores/Posts/repostPostStore";
+import CommentPost from "./CommentPost";
 
 export default function FeedPostContent() {
   const router = useRouter();
@@ -46,12 +46,11 @@ export default function FeedPostContent() {
   const [commentText, setCommentText] = useState("");
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const {
-    comments,
     fetchComment,
     addComment,
-    deleteComment,
-    toggleCommentLike,
   } = useCommentStore();
+
+  const { sharePost } = useRepostPostStore();
 
   const { fetchShareLink } = useCopyLinkStore();
 
@@ -203,11 +202,13 @@ export default function FeedPostContent() {
             <Heart className="h-4 w-4 text-red-600 fill-red-600" />
           </span>
         )}
-        {post.commentsCount === 0? (
-          <span>No Comments</span>
+        {post.commentsCount === 0 ? (
+          <span>No comments</span>
         ) : (
           <span className="flex gap-1 items-center">
-            <span className="font-semibold text-zinc-400">{post?.commentsCount} Comments</span>
+            <span className="font-semibold text-zinc-400">
+              {post?.commentsCount} comments
+            </span>
           </span>
         )}
       </div>
@@ -344,129 +345,26 @@ export default function FeedPostContent() {
                 </div>
                 <div className="h-full w-80 overflow-y-auto rounded-xl bg-zinc-50 mr-7 no-scrollbar">
                   <div>
-                    {comments.length === 0 ? (
-                      <div className="py-8 items-center text-center text-base text-zinc-500 flex flex-col gap-2">
-                        <LiaCommentSlashSolid className="w-11 h-11 " />
-                        No comments yet.
-                      </div>
-                    ) : (
-                      comments.map((comment) => {
-                        console.log("comment", comment);
-                        return (
-                          <div
-                            key={comment.id}
-                            className="group relative flex items-center justify-between py-2"
-                          >
-                            <button
-                              onClick={() => deleteComment(post.id, comment.id)}
-                              className="absolute right-3 top-3 bg-white hover:bg-red-50 p-1 rounded-full cursor-pointer"
-                            >
-                              <Trash2 className="h-4 w-4 text-red-600" />
-                            </button>
-
-                            <div className="flex items-center w-full px-2">
-                              <div className="h-15 w-15 ">
-                                {comment.user.avatar_url ? (
-                                  <Image
-                                    src={comment.user.avatar_url}
-                                    alt={comment.user.name}
-                                    width={100}
-                                    height={100}
-                                    className="object-cover h-10 w-10 rounded-full"
-                                  />
-                                ) : (
-                                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--brand-blue) text-lg font-bold text-white uppercase">
-                                    {comment.user.name.charAt(0).toUpperCase()}
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className="w-full">
-                                <Card className="rounded-xl flex flex-col px-4 py-2 shadow-sm">
-                                  <p className="text-sm font-semibold">
-                                    {comment.user.name}
-                                  </p>
-
-                                  <p className="text-xs text-zinc-700">
-                                    {comment.text}
-                                  </p>
-                                </Card>
-
-                                <div className="mt-1 flex items-center justify-between px-3 text-xs font-medium text-zinc-500">
-                                  <span>
-                                    {new Date(
-                                      comment.createdAt,
-                                    ).toLocaleTimeString([], {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })}
-                                  </span>
-
-                                  <div className="flex gap-3">
-                                    <button
-                                      onClick={() =>
-                                        toggleCommentLike(post.id, comment.id)
-                                      }
-                                      className="flex items-center gap-1 hover:text-zinc-700 transition cursor-pointer"
-                                    >
-                                      <Heart
-                                        className={`h-4 w-4 ${
-                                          comment.hasLiked
-                                            ? "fill-red-500 text-red-500"
-                                            : "text-zinc-500"
-                                        }`}
-                                      />
-
-                                      {comment.likesCount > 0 && (
-                                        <span>{comment.likesCount}</span>
-                                      )}
-                                    </button>
-
-                                    <button className="hover:text-zinc-700 transition">
-                                      Reply
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
+                    <CommentPost postId={post.id} />
                   </div>
                 </div>
                 <div className="mt-auto">
-                  <div className="flex items-center gap-4 px-3 pt-3">
-                    <button
-                      onClick={() => handleLike(post.id)}
-                      className="cursor-pointer flex gap-2"
-                    >
-                      <Heart
-                        className={`h-5 w-5 ${
-                          post.hasLiked
-                            ? "fill-red-500 text-red-500"
-                            : "fill-none text-zinc-600"
-                        }`}
-                      />
-                      Like
-                    </button>
-
-                    <button className="flex gap-2 items-center transition hover:text-red-600 text-zinc-600 cursor-pointer">
-                      <BiRepost className="h-6 w-6 cursor-pointer" />
-                      Repost
-                    </button>
-
-                    <button className="flex gap-2 text-sm text-zinc-600 items-center cursor-pointer transition hover:text-red-600">
-                      <Copy
-                        onClick={() => handleCopyLink(post.id)}
-                        className="h-4 w-4 "
-                      />
-                      Copy Link
-                    </button>
-                  </div>
                   <div className="border-t mt-3 px-3 py-3">
                     <Field>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleLike(post.id)}
+                          className="cursor-pointer flex gap-1"
+                        >
+                          <Heart
+                            className={`h-5 w-5 ${
+                              post.hasLiked
+                                ? "fill-red-500 text-red-500"
+                                : "fill-none text-zinc-600"
+                            }`}
+                          />
+                          Like
+                        </button>
                         <Input
                           value={commentText}
                           onChange={(e) => setCommentText(e.target.value)}

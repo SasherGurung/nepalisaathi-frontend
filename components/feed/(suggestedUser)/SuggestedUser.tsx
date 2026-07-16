@@ -9,20 +9,22 @@ type SuggestedUsersProps = {
 };
 
 export default function SuggestedUsers({ users }: SuggestedUsersProps) {
-
   const router = useRouter();
 
   return (
     <div className="rounded-2xl border bg-white p-5 shadow-sm  w-xs h-full sticky top-28">
-     
       <div className="mb-5 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-md font-semibold text-black tracking-wide">
           <MdOutlineGroup className="h-6 w-6 text-zinc-500" />
           Suggested for you
         </h3>
         <div>
-          <Button variant="link" onClick={() => router.push("/discover")} className="cursor-pointer text-sm text-zinc-500">
-              See all
+          <Button
+            variant="link"
+            onClick={() => router.push("/discover")}
+            className="cursor-pointer text-sm text-zinc-500"
+          >
+            See all
           </Button>
         </div>
       </div>
@@ -43,13 +45,19 @@ export default function SuggestedUsers({ users }: SuggestedUsersProps) {
           {users.slice(0, 5).map((user) => (
             <div key={user.uid} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
-                  <Image
-                    src={user.profilePicture || "/logo.png"}
-                    alt={user.name || user.displayName}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="relative h-11 w-11 overflow-hidden rounded-full">
+                  {user.profilePicture ? (
+                    <Image
+                      src={user.profilePicture}
+                      alt={user.name || user.displayName}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-xl font-semibold text-white">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
 
                 <div>

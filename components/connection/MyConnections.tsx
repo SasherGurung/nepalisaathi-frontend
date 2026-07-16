@@ -41,7 +41,7 @@ function MyConnections() {
                     {connectionUser.profilePicture ? (
                       <Image
                         src={connectionUser.profilePicture}
-                        alt={connectionUser.displayName}
+                        alt={connectionUser.name}
                         width={30}
                         height={30}
                         className="h-10 w-10 rounded-full object-cover"
@@ -65,7 +65,7 @@ function MyConnections() {
 
                   <button
                     onClick={() =>
-                      deleteConnection(connectionUser.connectionId)
+                      deleteConnection(connectionUser.uid)
                     }
                     className="border-red-600 rounded-full h-7 w-7 flex justify-center items-center text-red-500 hover:bg-red-50 cursor-pointer"
                   >
