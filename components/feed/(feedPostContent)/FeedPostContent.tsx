@@ -26,6 +26,17 @@ import { api } from "@/lib/api/config";
 import { useCopyLinkStore } from "@/lib/stores/Posts/copyLinkStores";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function FeedPostContent() {
   const router = useRouter();
@@ -125,13 +136,41 @@ export default function FeedPostContent() {
             <DropdownMenuGroup>
               <DropdownMenuItem>Edit Post</DropdownMenuItem>
 
-              <DropdownMenuItem
-                onClick={() => handleDeletePost(post.id)}
-                variant="destructive"
-                className="cursor-pointer"
-              >
-                <RiDeleteBin5Line /> Delete Post
-              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    className="cursor-pointer"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <RiDeleteBin5Line className="" />
+                    Delete Post
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-xl font-semibold">
+                      Delete Post
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-md">
+                      Are you sure you want to delete this post? This action
+                      cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="cursor-pointer">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      className="cursor-pointer"
+                      onClick={() => handleDeletePost(post.id)}
+                    >
+                      Yes, Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -252,14 +291,41 @@ export default function FeedPostContent() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuGroup>
                         <DropdownMenuItem>Edit Post</DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          onClick={() => handleDeletePost(post.id)}
-                          variant="destructive"
-                          className="cursor-pointer"
-                        >
-                          <RiDeleteBin5Line /> Delete Post
-                        </DropdownMenuItem>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem
+                              variant="destructive"
+                              className="cursor-pointer"
+                              onSelect={(e) => e.preventDefault()}
+                            >
+                              <RiDeleteBin5Line className="" />
+                              Delete Post
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="text-xl font-semibold">
+                                Delete Post
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="text-md">
+                                Are you sure you want to delete this post? This
+                                action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="cursor-pointer">
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                variant="destructive"
+                                className="cursor-pointer"
+                                onClick={() => handleDeletePost(post.id)}
+                              >
+                                Yes, Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -277,84 +343,88 @@ export default function FeedPostContent() {
                         No comments yet.
                       </div>
                     ) : (
-                      comments.map((comment) => (
-                        <div  
-                          key={comment.id}
-                          className="group relative flex items-center justify-between py-2"
-                        >
-                          <button
-                            onClick={() => deleteComment(post.id, comment.id)}
-                            className="absolute right-3 top-3 bg-white hover:bg-red-50 p-1 rounded-full cursor-pointer"
+                      comments.map((comment) => {
+                        console.log("comment", comment);
+                        return (
+                          <div
+                            key={comment.id}
+                            className="group relative flex items-center justify-between py-2"
                           >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </button>
+                            <button
+                              onClick={() => deleteComment(post.id, comment.id)}
+                              className="absolute right-3 top-3 bg-white hover:bg-red-50 p-1 rounded-full cursor-pointer"
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </button>
 
-                          <div className="flex items-center gap-2 w-full px-2 py-2">
-                            <div className="relative h-11 w-11 overflow-hidden rounded-full">
-                              {comment.authorProfilePicture ? (
-                                <Image
-                                  src={comment.authorProfilePicture}
-                                  alt={comment.authorName}
-                                  fill
-                                  className="object-cover"
-                                />
-                              ) : (
-                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-(--brand-blue) text-lg font-bold text-white uppercase">
-                                  {post.author.name.charAt(0).toUpperCase()}
-                                </div>
-                              )}
-                            </div>
+                            <div className="flex items-center w-full px-2 py-2">
+                              <div className="h-15 w-15 ">
+                                {comment.user.avatar_url ? (
+                                  <Image
+                                    src={comment.user.avatar_url}
+                                    alt={comment.user.name}
+                                    width={100}
+                                    height={100}
+                                    className="object-cover h-10 w-10 rounded-full"
+                                  />
+                                ) : (
+                                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--brand-blue) text-lg font-bold text-white uppercase">
+                                    {comment.user.name.charAt(0).toUpperCase()}
+                                  </div>
+                                )}
+                              </div>
 
-                            <div className="w-full">
-                              <Card className="rounded-xl flex flex-col px-4 py-2 shadow-sm">
-                                <p className="text-sm font-semibold">
-                                  {comment.authorName}
-                                </p>
+                              <div className="w-full">
+                                <Card className="rounded-xl flex flex-col px-4 py-2 shadow-sm">
+                                  <p className="text-sm font-semibold">
+                                    {comment.user.name}
+                                  </p>
 
-                                <p className="text-xs text-zinc-700">
-                                  {comment.body}
-                                </p>
-                              </Card>
+                                  <p className="text-xs text-zinc-700">
+                                    {comment.text}
+                                  </p>
+                                </Card>
 
-                              <div className="mt-1 flex items-center justify-between px-3 text-xs font-medium text-zinc-500">
-                                <span>
-                                  {new Date(
-                                    comment.createdAt,
-                                  ).toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                                </span>
+                                <div className="mt-1 flex items-center justify-between px-3 text-xs font-medium text-zinc-500">
+                                  <span>
+                                    {new Date(
+                                      comment.createdAt,
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
 
-                                <div className="flex gap-3">
-                                  <button
-                                    onClick={() =>
-                                      toggleCommentLike(post.id, comment.id)
-                                    }
-                                    className="flex items-center gap-1 hover:text-zinc-700 transition cursor-pointer"
-                                  >
-                                    <Heart
-                                      className={`h-4 w-4 ${
-                                        comment.hasLiked
-                                          ? "fill-red-500 text-red-500"
-                                          : "text-zinc-500"
-                                      }`}
-                                    />
+                                  <div className="flex gap-3">
+                                    <button
+                                      onClick={() =>
+                                        toggleCommentLike(post.id, comment.id)
+                                      }
+                                      className="flex items-center gap-1 hover:text-zinc-700 transition cursor-pointer"
+                                    >
+                                      <Heart
+                                        className={`h-4 w-4 ${
+                                          comment.hasLiked
+                                            ? "fill-red-500 text-red-500"
+                                            : "text-zinc-500"
+                                        }`}
+                                      />
 
-                                    {comment.likesCount > 0 && (
-                                      <span>{comment.likesCount}</span>
-                                    )}
-                                  </button>
+                                      {comment.likesCount > 0 && (
+                                        <span>{comment.likesCount}</span>
+                                      )}
+                                    </button>
 
-                                  <button className="hover:text-zinc-700 transition">
-                                    Reply
-                                  </button>
+                                    <button className="hover:text-zinc-700 transition">
+                                      Reply
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>

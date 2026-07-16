@@ -13,6 +13,7 @@ export default function DiscoverUsers({ users }: DiscoverUserProps) {
 
   const handleConnectionRequest = async (receiverId: string) => {
     await postConnection(receiverId);
+
   }
 
 
