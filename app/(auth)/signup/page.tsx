@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { api } from "@/lib/api/config";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
-import { RegisterResponse } from "@/lib/types/auth.types";
+import { RegisterResponse } from "@/lib/types/Auth/auth.types";
 
 export default function SignupForm() {
   const router = useRouter();

@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select";
-import { useProfileStore } from "@/lib/stores/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
 
 export default function Step2() {
 

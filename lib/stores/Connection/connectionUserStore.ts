@@ -1,33 +1,14 @@
 import { api } from "@/lib/api/config";
 import toast from "react-hot-toast";
 import { create } from "zustand";
-
-type ConnectionUser = {
-  id: number;
-  uid: string;
-  name: string;
-  displayName: string;
-  email: string;
-  phoneNumber: string;
-  homeCity: string;
-  profession: string;
-  bio: string;
-  status: string;
-  approximateLocation: string;
-  latitude: number;
-  longitude: number;
-  profileCompleted: boolean;
-  profilePicture: string | null;
-  updated_at: string;
-  connectionId: string;
-};
+import { ConnectionUser } from "@/lib/types/Connection/connectionUser.types";
 
 type ConnectionUserStore = {
   connectionUsers: ConnectionUser[];
 
   fetchConnectionUsers: () => Promise<void>;
 
-  deleteConnection: (connectionId: string) => Promise<void>;
+  deleteConnection: (uid: string) => Promise<void>;
 };
 
 export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
@@ -50,20 +31,18 @@ export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
   },
 
   // Delete Connection (Not Working cant find ConnectionId)
-  deleteConnection: async (connectionId: string) => {
+  deleteConnection: async (uid: string) => {
     try {
-      await api.delete(`/connections/${connectionId}`);
-      console.log(connectionId);
+      await api.delete(`/connections/${uid}`);
 
       set((state) => ({
         connectionUsers: state.connectionUsers.filter(
-          (connection) => connection.connectionId !== connectionId,
+          (user) => user.uid !== uid,
         ),
       }));
 
       toast.success("Connection deleted successfully");
     } catch (error) {
-      console.log(connectionId);
       console.log(error);
       toast.error("Failed to delete Connection");
     }

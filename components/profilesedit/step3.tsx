@@ -19,8 +19,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useProfileStore } from "@/lib/stores/profileStore";
-import { useImageStore } from "@/lib/stores/imageStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
+import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 
 const MapLocation = dynamic(() => import("@/components/map/locationMarker"), {
   ssr: false,

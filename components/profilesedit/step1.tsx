@@ -3,7 +3,7 @@
 import React from "react";
 import { Field, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { useProfileStore } from "@/lib/stores/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
 
 export default function Step1() {
 

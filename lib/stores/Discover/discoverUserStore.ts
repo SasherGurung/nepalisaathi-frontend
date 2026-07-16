@@ -1,51 +1,11 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api/config";
+import { DiscoverUsers } from "@/lib/types/Discover/discover.types";
 
-export type DiscoverUser = {
-  id: number;
-  uid: string;
-  name: string;
-  displayName: string;
-  email: string;
-  homeCity: string;
-  profession: string;
-  bio: string;
-  status: string;
-  approximateLocation: string;
-  latitude: number;
-  longitude: number;
-  profileCompleted: boolean;
-  role: string;
-  profilePicture: string | null;
-  coverPicture: string | null;
-  postsCount: number;
-  connectionsCount: number;
-  lastActivityAt: string;
-  isOnline: boolean;
-  phoneNumber: string;
-  mutualConnections: string[];
-  mutualConnectionsCount: number;
-  zone_id: number;
-  district_id: number;
-  municipality_id: number;
-  education_history: string[];
-  current_country: string;
-  current_city: string;
-  arrival_date: string;
-  visa_type: string | null;
-  looking_for: {
-    tag: string;
-    direction: string;
-    expires_at: string;
-    is_featured: boolean;
-  }[];
-  is_new_arrival: boolean;
-  open_to_helping_newcomers: boolean;
-};
 
 type DiscoverUserStore = {
-  discoverUsers: DiscoverUser[];
+  discoverUsers: DiscoverUsers[];
 
   fetchDiscoverUsers: () => Promise<void>;
 };
@@ -53,6 +13,7 @@ type DiscoverUserStore = {
 export const userDiscoverUserStore = create<DiscoverUserStore>((set) => ({
   discoverUsers: [],
 
+  // Fetch Discover Users
   fetchDiscoverUsers: async () => {
     try {
       const { data } = await api.get("/discover");

@@ -21,7 +21,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { BiRepost } from "react-icons/bi";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
-import { useProfileStore } from "@/lib/stores/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
 import { api } from "@/lib/api/config";
 import { useCopyLinkStore } from "@/lib/stores/Posts/copyLinkStores";
 import { Button } from "@/components/ui/button";
@@ -357,7 +357,7 @@ export default function FeedPostContent() {
                               <Trash2 className="h-4 w-4 text-red-600" />
                             </button>
 
-                            <div className="flex items-center w-full px-2 py-2">
+                            <div className="flex items-center w-full px-2">
                               <div className="h-15 w-15 ">
                                 {comment.user.avatar_url ? (
                                   <Image

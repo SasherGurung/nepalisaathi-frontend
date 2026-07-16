@@ -1,4 +1,4 @@
-import { BaseApiResponse } from "./response.types";
+import { BaseApiResponse } from "../response.types";
 
 export interface User {
     id: number;

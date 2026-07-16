@@ -1,26 +1,8 @@
 import { create } from "zustand";
 import { api } from "@/lib/api/config";
 import toast from "react-hot-toast";
+import { Post } from "@/lib/types/Posts/post.types";
 
-type Post = {
-  id: string;
-  time: string;
-  content: string;
-  image: string | null;
-  likes: number | 0;
-  hasLiked: boolean;
-  initialComments: [];
-  author: Author;
-  sharedPost: Post | null;
-};
-
-type Author = {
-  id: string;
-  name: string;
-  headline: string;
-  avatar: string;
-  avatar_url: string;
-};
 
 type PostState = {
   posts: Post[];

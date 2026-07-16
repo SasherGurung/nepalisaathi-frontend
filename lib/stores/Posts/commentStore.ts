@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 import { api } from "../../api/config";
 
-import { Comment } from "@/lib/types/Comments/comment.types";
+import { Comment } from "@/lib/types/Posts/comment.types";
 
 
 type CommentStore = {

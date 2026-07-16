@@ -10,9 +10,9 @@ import Step2 from "@/components/profilesedit/step2";
 import Step3 from "@/components/profilesedit/step3";
 import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
-import { useProfileStore } from "@/lib/stores/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
 import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
-import { useImageStore } from "@/lib/stores/imageStore";
+import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 import { useRouter } from "next/navigation";
 
 export default function ProfileSetup() {

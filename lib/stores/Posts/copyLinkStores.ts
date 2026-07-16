@@ -1,13 +1,7 @@
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { api } from "../../api/config";
-
-type CopyLink = {
-  post_id: string;
-  share_link: string;
-  title: string;
-  description: string;
-};
+import { CopyLink } from "@/lib/types/Posts/copyLink.types";
 
 type CopyLinkState = {
   shareData: CopyLink | null;
@@ -18,6 +12,7 @@ type CopyLinkState = {
 export const useCopyLinkStore = create<CopyLinkState>((set) => ({
     shareData: null,
 
+    // Fetch Share Link
     fetchShareLink: async (postId: string) => {
         try {
             const { data } = await api.get(`/posts/${postId}/share-link`);

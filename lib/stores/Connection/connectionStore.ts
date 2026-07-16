@@ -1,31 +1,7 @@
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { api } from "../../api/config";
-
-type Connection = {
-  id: string;
-  senderId: string;
-  receiverId: string;
-  status: string;
-  timestamp: string;
-  senderName: string;
-  senderProfession: string;
-  senderLocation: string;
-  receiverName: string;
-  receiverProfession: string;
-  receiverLocation: string;
-  otherUser: OtherUser;
-};
-
-type OtherUser = {
-  uid: string;
-  name: string;
-  displayName: string;
-  profession: string;
-  homeCity: string;
-  profilePicture: string;
-  status: string;
-};
+import { Connection } from "@/lib/types/Connection/connection.types";
 
 type ConnectionStore = {
   connections: Connection[];
