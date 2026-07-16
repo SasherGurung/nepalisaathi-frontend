@@ -12,10 +12,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "nepalisaathi.skybase.com.np",
+        hostname: "nepalisaathi.app",
         pathname: "/storage/**",
       },
     ],
+  },
+  experimental: {
+    globalNotFound: true,
   },
 };
 

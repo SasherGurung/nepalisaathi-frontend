@@ -24,11 +24,10 @@ import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
 function ProfilePage() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { formData } = useProfileStore();
+  const { formData } = useProfileStore();;
   const { fetchReceivedRequests } = useConnectionStore();
   const { fetchConnectionUsers } = useConnectionUserStore();
-  const { posts, fetchPosts } = usePostStore();
-  
+    const { posts, fetchPosts } = usePostStore();
   useEffect(() => {
     fetchReceivedRequests();
     fetchConnectionUsers();
@@ -41,7 +40,7 @@ function ProfilePage() {
   return (
     <section className="min-h-screen my-5 mx-50">
       <Card className="overflow-hidden p-0">
-        <div className="h-55 bg-(--brand-blue)" />
+        <div className="h-55 bg-red-500" />
         <div className="flex justify-between bg-white">
           <div className="px-6 pb-6">
             <div className="-mt-16">

@@ -47,7 +47,7 @@ function FeedProfile() {
             </div>
 
             <div className="flex justify-between text-sm">
-              <p className="text-gray-500">Total Posts</p>
+              <p className="text-gray-500">Post Created</p>
               <p className="text-gray-500">{user?.postsCount}</p>
             </div>
           </Card>

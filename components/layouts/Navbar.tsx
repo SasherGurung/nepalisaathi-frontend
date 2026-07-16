@@ -43,7 +43,7 @@ function Navbar() {
   const { user } = useAuthStore();
 
   return (
-    <header className="flex justify-between px-30 py-1 items-center cursor-pointer sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b shadow-sm">
+    <header className="flex justify-between px-30 py-1 items-center cursor-pointer sticky top-0 z-50 bg-white backdrop-blur-md border-b shadow-sm">
       <div onClick={() => router.push("/feed")} className="flex gap-5">
         <Image
           src="/logo.png"

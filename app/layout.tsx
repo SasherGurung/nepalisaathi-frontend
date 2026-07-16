@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { sourceSans3 } from "./fonts";
 import "./globals.css";
 import { Toaster } from "react-hot-toast"
 import "leaflet/dist/leaflet.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Nepal Saathi",
@@ -28,7 +18,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.className} ${geistMono.variable} h-full antialiased`}
+      className={`${sourceSans3.className} h-full antialiased`}
     >
       <body className="min-h-screen flex flex-col ">
         <Toaster position="top-center"/>{children}
