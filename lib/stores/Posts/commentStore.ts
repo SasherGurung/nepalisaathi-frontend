@@ -14,7 +14,7 @@ type CommentStore = {
 
   deleteComment: (postId: string, commentId: string) => Promise<void>;
 
-  toggleCommentLike: (commentId: string, postId: string) => Promise<void>;
+  toggleCommentLike: (postId: string, commentId: string) => Promise<void>;
 };
 
 export const useCommentStore = create<CommentStore>((set) => ({

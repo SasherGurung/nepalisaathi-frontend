@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePostStore } from "@/lib/stores/Posts/postStores";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useCommentStore } from "@/lib/stores/Posts/commentStore";
@@ -54,6 +54,8 @@ export default function FeedPostContent() {
 
   const { fetchShareLink } = useCopyLinkStore();
 
+
+
   const handleCommentPost = async () => {
     if (!commentText.trim() || !activePostId) return;
 
@@ -85,6 +87,7 @@ export default function FeedPostContent() {
 
     await navigator.clipboard.writeText(share_link);
   };
+
 
   return posts.map((post) => (
     <div

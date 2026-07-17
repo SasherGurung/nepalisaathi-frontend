@@ -5,7 +5,7 @@ import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
 import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
 
-function PendingRquest() {
+export default function PendingRequest() {
   const {
     receiveRequest,
     acceptConnection,
@@ -85,7 +85,5 @@ function PendingRquest() {
         )}
       </Card>
     </>
-  );
+  );  
 }
-
-export default PendingRquest;

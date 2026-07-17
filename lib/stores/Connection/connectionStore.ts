@@ -1,12 +1,12 @@
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { api } from "../../api/config";
-import { Connection } from "@/lib/types/Connection/connection.types";
+import { ConnectionUser } from "@/lib/types/Connection/connectionUser.types";
 
 type ConnectionStore = {
-  connections: Connection[];
-  sentRequest: Connection[];
-  receiveRequest: Connection[];
+  connections: ConnectionUser[];
+  sentRequest: ConnectionUser[];
+  receiveRequest: ConnectionUser[];
 
   fetchConnection: () => Promise<void>;
   fetchSentConnection: () => Promise<void>;

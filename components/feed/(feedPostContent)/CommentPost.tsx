@@ -1,5 +1,3 @@
-"use client";
-
 import { Card } from "@/components/ui/card";
 import { useCommentStore } from "@/lib/stores/Posts/commentStore";
 import { Heart, Trash2 } from "lucide-react";

@@ -8,7 +8,7 @@ type ConnectionUserStore = {
 
   fetchConnectionUsers: () => Promise<void>;
 
-  deleteConnection: (uid: string) => Promise<void>;
+  deleteConnection: (id: string) => Promise<void>;
 };
 
 export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
@@ -17,12 +17,12 @@ export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
   // Fetch Connection Users
   fetchConnectionUsers: async () => {
     try {
-      const { data } = await api.get("/connections/users");
+      const { data } = await api.get("/connections");
 
       console.log(data);
 
       set({
-        connectionUsers: data.data.data,
+        connectionUsers: data.data,
       });
     } catch (error) {
       console.log(error);
@@ -31,20 +31,20 @@ export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
   },
 
   // Delete Connection (Not Working cant find ConnectionId)
-  deleteConnection: async (uid: string) => {
+  deleteConnection: async (id: string) => {
     try {
-      await api.delete(`/connections/${uid}`);
+      await api.delete(`/connections/${id}`);
 
       set((state) => ({
         connectionUsers: state.connectionUsers.filter(
-          (user) => user.uid !== uid,
+          (user) => user.id !== id,
         ),
       }));
 
-      toast.success("Connection deleted successfully");
+      toast.success("Connection removed successfully");
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete Connection");
+      toast.error("Failed to removed Connection");
     }
   },
 }));
