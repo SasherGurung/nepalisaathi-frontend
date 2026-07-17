@@ -30,7 +30,7 @@ export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
     }
   },
 
-  // Delete Connection (Not Working cant find ConnectionId)
+  // Delete Connection
   deleteConnection: async (id: string) => {
     try {
       await api.delete(`/connections/${id}`);
@@ -47,4 +47,6 @@ export const useConnectionUserStore = create<ConnectionUserStore>((set) => ({
       toast.error("Failed to removed Connection");
     }
   },
+
+
 }));

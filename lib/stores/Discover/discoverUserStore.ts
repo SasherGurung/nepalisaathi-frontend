@@ -1,11 +1,10 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api/config";
-import { DiscoverUsers } from "@/lib/types/Discover/discover.types";
-
+import { DiscoverUser } from "@/lib/types/Discover/discover.types";
 
 type DiscoverUserStore = {
-  discoverUsers: DiscoverUsers[];
+  discoverUsers: DiscoverUser[];
 
   fetchDiscoverUsers: () => Promise<void>;
 };

@@ -1,4 +1,4 @@
-export interface DiscoverUsers {
+export interface DiscoverUser {
   id: number;
   uid: string;
   name: string;
@@ -6,11 +6,11 @@ export interface DiscoverUsers {
   email: string;
   homeCity: string;
   profession: string;
-  bio: string;
+  bio: string | null;
   status: string;
   approximateLocation: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   profileCompleted: boolean;
   role: string;
   profilePicture: string | null;
@@ -18,14 +18,15 @@ export interface DiscoverUsers {
   coverPicture: string | null;
   cover_url: string | null;
   province: Province | null;
-  district: Province | null;
+  district: District | null;
   municipality: Municipality | null;
   postsCount: number;
   connectionsCount: number;
   lastActivityAt: string;
   isOnline: boolean;
   phoneNumber: string | null;
-  education_history: EducationHistory[];
+  mutualConnectionsCount: number;
+  education_history: EducationHistory[] | null;
   current_country: string | null;
   current_city: string | null;
   arrival_date: string | null;
@@ -36,6 +37,11 @@ export interface DiscoverUsers {
 }
 
 export interface Province {
+  id: number;
+  name: string;
+}
+
+export interface District {
   id: number;
   name: string;
 }

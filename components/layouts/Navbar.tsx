@@ -65,7 +65,7 @@ function Navbar() {
           }`}
         >
           <FiHome className="h-6 w-6" />
-        </button> 
+        </button>
 
         <button
           onClick={() => router.push("/connection")}
@@ -101,7 +101,20 @@ function Navbar() {
         </button>
       </div>
       <div className="flex gap-5 items-center">
-        <FiBell className="h-6 w-6 cursor-pointer" />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+          <FiBell className="h-6 w-6 cursor-pointer" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-lg">Notifications</DropdownMenuLabel>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>Team</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

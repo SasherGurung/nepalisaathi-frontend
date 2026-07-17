@@ -1,9 +1,9 @@
 export interface ConnectionUser {
-  id: string; //Connection Id
+  id: string;
   senderId: string;
   receiverId: string;
   status: "pending" | "accepted" | "declined";
-  timestamp: string;
+  timestamp?: string;
   acceptedTimestamp: string | null;
   senderName: string;
   senderProfession: string | null;

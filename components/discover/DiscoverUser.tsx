@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
-import { DiscoverUser } from "./types";
 import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { DiscoverUser } from "@/lib/types/Discover/discover.types";
 
 type DiscoverUserProps = {
   users: DiscoverUser[];
@@ -9,11 +11,12 @@ type DiscoverUserProps = {
 
 export default function DiscoverUsers({ users }: DiscoverUserProps) {
 
+  const router = useRouter();
+
   const { postConnection } = useConnectionStore();
 
   const handleConnectionRequest = async (receiverId: string) => {
     await postConnection(receiverId);
-
   }
 
 
@@ -54,9 +57,9 @@ export default function DiscoverUsers({ users }: DiscoverUserProps) {
               </div>
             )}
 
-            <h3 className="mt-3 text-lg font-semibold text-zinc-900">
+            <Button onClick={() => router.push(`/profile/${user.uid}`)} variant="link" className="mt-3 text-lg font-semibold text-zinc-900 cursor-pointer">
               {user.name || user.displayName}
-            </h3>
+            </Button>
 
             <p className="text-sm text-zinc-500">{user.profession}</p>
             <p className="text-sm text-zinc-500">{user.status}</p>
