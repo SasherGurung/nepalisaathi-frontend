@@ -9,44 +9,36 @@ import Step1 from "@/components/profilesedit/step1";
 import Step2 from "@/components/profilesedit/step2";
 import Step3 from "@/components/profilesedit/step3";
 import { toast } from "react-hot-toast";
-import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
-import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
-import { useRouter } from "next/navigation";
+import { step1Schema } from "@/app/schema/profileSchema";
 import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import Step4 from "@/components/profilesedit/step4";
 
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const progress = {
-    1: 33,
-    2: 67,
-    3: 100,
+    1: 25,
+    2: 50,
+    3: 75,
+    4: 100,
   };
 
   const { postSetupProfile } = useSetupProfileStore();
-
-  const profilePicture = useImageStore((state) => state.profilePicture);
-  const coverPicture = useImageStore((state) => state.coverPicture);
 
   const [formData, setFormData] = useState({
     province: "",
     district: "",
     municipality: "",
     municipalityType: "Nagarpalika",
-
-    status: "",
-    profession: "",
-
-    bio: "",
   });
 
   const handleNext = async () => {
     if (step === 1) {
       const result = step1Schema.safeParse({
-        homeCity: formData.homeCity,
+        province: formData.province,
+        district: formData.district,
+        municipality: formData.municipality,
       });
 
       if (!result.success) {
@@ -57,32 +49,20 @@ export default function ProfileSetup() {
       setStep(2);
       return;
     }
-
     if (step === 2) {
-      const result = step2Schema.safeParse({
-        status: formData.status,
-        profession: formData.profession,
-      });
-
-      if (!result.success) {
-        toast.error(result.error.issues[0].message);
-        return;
-      }
-
       setStep(3);
       return;
     }
 
     if (step === 3) {
+      setStep(4);
+      return;
+    }
+
+    if (step === 4) {
       await handleSetupProfile();
     }
   };
-
-  const result = step1Schema.safeParse({
-    province: formData.province,
-    district: formData.district,
-    municipality: formData.municipality,
-  });
 
   const handleSetupProfile = async () => {
     try {
@@ -95,30 +75,17 @@ export default function ProfileSetup() {
       data.append("municipality", formData.municipality);
       data.append("municipalityType", formData.municipalityType);
 
-      data.append("status", formData.status);
-      data.append("profession", formData.profession);
-
-      data.append("bio", formData.bio);
-
-      if (profilePicture) {
-        data.append("profilePicture", profilePicture);
-      }
-
-      if (coverPicture) {
-        data.append("coverPicture", coverPicture);
-      }
-
       await postSetupProfile(data);
     } catch (error) {
       console.log(error);
-      toast.error(data.message || "Failed to setup Profile");
+      toast.error("Failed to setup Profile");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="min-h-screen bg-zinc-50 flex items-center justify-center px-6 py-10">
+    <section className="min-h-screen bg-zinc-50 flex items-center justify-center">
       <Card className="w-full max-w-2xl rounded-3xl border shadow-sm p-8 space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">
@@ -145,7 +112,7 @@ export default function ProfileSetup() {
           />
         </div>
 
-        {step === 1 && <Step1 formData={formData} setFormData={setFormData} />}
+        {step === 1 && <Step1 />}
         {step === 2 && <Step2 />}
         {step === 3 && <Step3 />}
         {step === 4 && <Step4 />}
@@ -169,7 +136,7 @@ export default function ProfileSetup() {
           >
             {loading
               ? "Submitting..."
-              : step === 3
+              : step === 4
                 ? "Complete Profile"
                 : "Next"}
           </Button>

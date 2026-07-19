@@ -24,11 +24,26 @@ export default function Step1() {
 
   const [provinceId, setProvinceId] = useState<number>();
   const [districtId, setDistrictId] = useState<number>();
-  const [type, setType] = useState<MunicipalityType>("Nagarpalika");
+  const [municipalityId, setMunicipalityId] = useState<number>();
+  const [municipalityType, setMunicipalityType] = useState<
+    MunicipalityType | undefined
+  >(undefined);
 
   useEffect(() => {
     fetchProvinces();
   }, [fetchProvinces]);
+
+  useEffect(() => {
+    if (provinceId) {
+      fetchDistricts(provinceId);
+    }
+  }, [provinceId, fetchDistricts]);
+
+  useEffect(() => {
+    if (districtId && municipalityType) {
+      fetchMunicipalities(districtId, municipalityType);
+    }
+  }, [districtId, municipalityType, fetchMunicipalities]);
 
   return (
     <>
@@ -49,19 +64,17 @@ export default function Step1() {
 
             <Select
               onValueChange={(value) => {
-                const id = Number(value);
-
-                setProvinceId(id);
+                setProvinceId(Number(value));
                 setDistrictId(undefined);
-
-                fetchDistricts(id);
+                setMunicipalityType(undefined);
+                setMunicipalityId(undefined);
               }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Province" />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent side="bottom">
                 {provinces.map((province) => (
                   <SelectItem key={province.id} value={province.id.toString()}>
                     {province.name}
@@ -77,18 +90,15 @@ export default function Step1() {
             <Select
               disabled={!provinceId}
               onValueChange={(value) => {
-                const id = Number(value);
-
-                setDistrictId(id);
-
-                fetchMunicipalities(id, type);
+                setDistrictId(Number(value));
+                setMunicipalityId(undefined);
               }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select District" />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent side="bottom">
                 {districts.map((district) => (
                   <SelectItem key={district.id} value={district.id.toString()}>
                     {district.name}
@@ -104,22 +114,18 @@ export default function Step1() {
             </FieldLabel>
 
             <Select
-              value={type}
+              disabled={!districtId}
+              value={municipalityType}
               onValueChange={(value) => {
-                const selectedType = value as MunicipalityType;
-
-                setType(selectedType);
-
-                if (districtId) {
-                  fetchMunicipalities(districtId, selectedType);
-                }
+                setMunicipalityType(value as MunicipalityType);
+                setMunicipalityId(undefined);
               }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Municipality Type" />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent side="bottom">
                 <SelectItem value="Nagarpalika">Nagarpalika</SelectItem>
                 <SelectItem value="Gaupalika">Gaupalika</SelectItem>
               </SelectContent>
@@ -132,21 +138,15 @@ export default function Step1() {
             </FieldLabel>
 
             <Select
-              disabled={!districtId}
-              onValueChange={(value) => {
-                const municipalityId = Number(value);
-
-                console.log("Selected Municipality ID:", municipalityId);
-
-                // Save the municipality id here if needed
-                // setMunicipalityId(municipalityId);
-              }}
+              disabled={!municipalityType}
+              value={municipalityId?.toString()}
+              onValueChange={(value) => setMunicipalityId(Number(value))}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Municipality" />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent side="bottom">
                 {municipalities.map((municipality) => (
                   <SelectItem
                     key={municipality.id}

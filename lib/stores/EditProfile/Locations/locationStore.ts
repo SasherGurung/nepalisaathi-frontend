@@ -15,7 +15,7 @@ type locationState = {
 
   fetchProvinces: () => Promise<void>;
 
-  fetchDistricts: (zone_id: number) => Promise<void>;
+  fetchDistricts: (zoneId: number) => Promise<void>;
 
   fetchMunicipalities: (
     districtId: number,
@@ -34,7 +34,7 @@ export const useLocationStore = create<locationState>((set) => ({
       const { data } = await api.get("/locations/zones");
 
       set({
-        provinces: data.data,
+        provinces: data,
       });
     } catch (error) {
       console.log(error);
@@ -43,12 +43,12 @@ export const useLocationStore = create<locationState>((set) => ({
   },
 
   // Fetch Districts
-  fetchDistricts: async (zone_id: number) => {
+  fetchDistricts: async (zoneId: number) => {
     try {
-      const { data } = await api.get(`/locations/districts/${zone_id}`);
+      const { data } = await api.get(`/locations/districts/${zoneId}`);
 
       set({
-        districts: data.data,
+        districts: data,
       });
     } catch (error) {
       console.log(error);
@@ -63,10 +63,10 @@ export const useLocationStore = create<locationState>((set) => ({
         ? `/locations/municipalities/${districtId}?type=${type}`
         : `/locations/municipalities/${districtId}`;
 
-      const data = await api.get(url);
+      const { data } = await api.get(url);
 
       set({
-        municipalities: data.data,
+        municipalities: data,
       });
     } catch (error) {
       console.log(error);

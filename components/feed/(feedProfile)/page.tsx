@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
-import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
+import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import { Card } from "@/components/ui/card";
 
 function FeedProfile() {
   const { user } = useAuthStore();
-  const { formData } = useProfileStore();
+  const { setupProfile } = useSetupProfileStore();
   return (
     <div className="w-[320px] space-y-6 sticky top-28 self-start">
       <div className="overflow-hidden rounded-2xl h-78 bg-white shadow-sm border">
@@ -35,7 +35,7 @@ function FeedProfile() {
             {user?.name}
           </h2>
           <p className="text-sm text-gray-500">
-            {formData?.profession || user?.profession}
+            {setupProfile?.profession || user?.profession}
           </p>
         </div>
 

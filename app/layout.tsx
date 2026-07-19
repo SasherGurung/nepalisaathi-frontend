@@ -20,7 +20,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${sourceSans3.className} h-full antialiased`}
     >
-      <body className="min-h-screen flex flex-col ">
+      <body className="min-h-screen flex flex-col">
         <Toaster position="top-center"/>{children}
       </body>
     </html>

@@ -19,7 +19,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { BiRepost } from "react-icons/bi";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
-import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
+import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import { api } from "@/lib/api/config";
 import { useCopyLinkStore } from "@/lib/stores/Posts/copyLinkStores";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ import CommentPost from "./CommentPost";
 
 export default function FeedPostContent() {
   const router = useRouter();
-  const { formData } = useProfileStore();
+  const { setupProfile } = useSetupProfileStore();
   const { user } = useAuthStore();
   const { posts, handleLike, deletePost } = usePostStore();
   const [commentText, setCommentText] = useState("");
@@ -120,7 +120,7 @@ export default function FeedPostContent() {
             </Button>
 
             <div className="flex items-center gap-1 text-xs text-zinc-500">
-              <span>{formData?.profession || user?.profession}</span>
+              <span>{setupProfile?.profession || user?.profession}</span>
               <span>•</span>
               <span>{post.time}</span>
             </div>
@@ -285,7 +285,7 @@ export default function FeedPostContent() {
                       </h3>
 
                       <div className="flex items-center gap-1 text-xs text-zinc-500">
-                        <span>{formData?.profession || user?.profession}</span>
+                        <span>{setupProfile?.profession || user?.profession}</span>
                         <span>•</span>
                         <span>{post.time}</span>
                       </div>

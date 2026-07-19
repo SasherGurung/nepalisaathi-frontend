@@ -8,7 +8,7 @@ import {
   MapPin,
   Users,
 } from "lucide-react";
-import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
+import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import { useRouter } from "next/navigation";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
 import FeedPostContent from "@/components/feed/(feedPostContent)/FeedPostContent";
@@ -24,7 +24,7 @@ import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
 function ProfilePage() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { formData } = useProfileStore();;
+  const { setupProfile } = useSetupProfileStore();;
   const { fetchReceivedRequests } = useConnectionStore();
   const { fetchConnectionUsers } = useConnectionUserStore();
     const { posts, fetchPosts } = usePostStore();
@@ -65,23 +65,23 @@ function ProfilePage() {
                   {user?.name || user?.displayName}
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  {formData?.profession || user?.profession}
+                  {setupProfile?.profession || user?.profession}
                 </p>
               </div>
 
               <p className="max-w-xl text-sm text-muted-foreground">
-                {formData?.bio || user?.bio}.
+                {setupProfile?.bio || user?.bio}.
               </p>
 
               <div className="flex flex-wrap gap-5 pt-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <BriefcaseBusiness className="h-4 w-4" />
-                  {user?.profession || formData?.profession}
+                  {user?.profession || setupProfile?.profession}
                 </div>
 
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
-                  {user?.homeCity ?? formData?.homeCity}
+                  {user?.homeCity ?? setupProfile?.homeCity}
                 </div>
 
                 <div className="flex items-center gap-2">
