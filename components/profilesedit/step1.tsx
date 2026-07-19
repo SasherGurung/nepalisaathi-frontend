@@ -5,18 +5,30 @@ import { Field, FieldLabel } from "../ui/field";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { MunicipalityType } from "@/lib/types/EditProfile/Locations/location.types";
 
 export default function Step1() {
+  const {
+    provinces,
+    districts,
+    municipalities,
+    fetchProvinces,
+    fetchDistricts,
+    fetchMunicipalities,
+  } = useLocationStore();
 
-  const { provinces, districts, municipalities, fetchProvinces, fetchDistricts, fetchMunicipalities } = useLocationStore();
+  const [provinceId, setProvinceId] = useState<number>();
+  const [districtId, setDistrictId] = useState<number>();
+  const [type, setType] = useState<MunicipalityType>("Nagarpalika");
 
+  useEffect(() => {
+    fetchProvinces();
+  }, [fetchProvinces]);
 
   return (
     <>
@@ -35,23 +47,26 @@ export default function Step1() {
           <Field>
             <FieldLabel className="text-zinc-500 text-sm">Province</FieldLabel>
 
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                const id = Number(value);
+
+                setProvinceId(id);
+                setDistrictId(undefined);
+
+                fetchDistricts(id);
+              }}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Province" />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Province</SelectLabel>
-
-                  <SelectItem value="koshi">Koshi</SelectItem>
-                  <SelectItem value="madhesh">Madhesh</SelectItem>
-                  <SelectItem value="bagmati">Bagmati</SelectItem>
-                  <SelectItem value="gandaki">Gandaki</SelectItem>
-                  <SelectItem value="lumbini">Lumbini</SelectItem>
-                  <SelectItem value="karnali">Karnali</SelectItem>
-                  <SelectItem value="sudurpaschim">Sudurpashchim</SelectItem>
-                </SelectGroup>
+                {provinces.map((province) => (
+                  <SelectItem key={province.id} value={province.id.toString()}>
+                    {province.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </Field>
@@ -59,45 +74,87 @@ export default function Step1() {
           <Field>
             <FieldLabel className="text-zinc-500 text-sm">District</FieldLabel>
 
-            <Select>
+            <Select
+              disabled={!provinceId}
+              onValueChange={(value) => {
+                const id = Number(value);
+
+                setDistrictId(id);
+
+                fetchMunicipalities(id, type);
+              }}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select District" />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>District</SelectLabel>
-
-                  <SelectItem value="kathmandu">Kathmandu</SelectItem>
-                  <SelectItem value="lalitpur">Lalitpur</SelectItem>
-                  <SelectItem value="bhaktapur">Bhaktapur</SelectItem>
-                </SelectGroup>
+                {districts.map((district) => (
+                  <SelectItem key={district.id} value={district.id.toString()}>
+                    {district.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field className="md:col-span-2">
+          <Field>
+            <FieldLabel className="text-zinc-500 text-sm">
+              Municipality Type
+            </FieldLabel>
+
+            <Select
+              value={type}
+              onValueChange={(value) => {
+                const selectedType = value as MunicipalityType;
+
+                setType(selectedType);
+
+                if (districtId) {
+                  fetchMunicipalities(districtId, selectedType);
+                }
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Municipality Type" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="Nagarpalika">Nagarpalika</SelectItem>
+                <SelectItem value="Gaupalika">Gaupalika</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+
+          <Field>
             <FieldLabel className="text-zinc-500 text-sm">
               Municipality
             </FieldLabel>
 
-            <Select>
+            <Select
+              disabled={!districtId}
+              onValueChange={(value) => {
+                const municipalityId = Number(value);
+
+                console.log("Selected Municipality ID:", municipalityId);
+
+                // Save the municipality id here if needed
+                // setMunicipalityId(municipalityId);
+              }}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Municipality" />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Municipality</SelectLabel>
-
-                  <SelectItem value="kmc">
-                    Kathmandu Metropolitan City
+                {municipalities.map((municipality) => (
+                  <SelectItem
+                    key={municipality.id}
+                    value={municipality.id.toString()}
+                  >
+                    {municipality.name}
                   </SelectItem>
-                  <SelectItem value="lmc">
-                    Lalitpur Metropolitan City
-                  </SelectItem>
-                  <SelectItem value="bmc">Bhaktapur Municipality</SelectItem>
-                </SelectGroup>
+                ))}
               </SelectContent>
             </Select>
           </Field>

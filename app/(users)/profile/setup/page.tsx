@@ -31,6 +31,18 @@ export default function ProfileSetup() {
   const profilePicture = useImageStore((state) => state.profilePicture);
   const coverPicture = useImageStore((state) => state.coverPicture);
 
+  const [formData, setFormData] = useState({
+    province: "",
+    district: "",
+    municipality: "",
+    municipalityType: "Nagarpalika",
+
+    status: "",
+    profession: "",
+
+    bio: "",
+  });
+
   const handleNext = async () => {
     if (step === 1) {
       const result = step1Schema.safeParse({
@@ -66,14 +78,37 @@ export default function ProfileSetup() {
     }
   };
 
+  const result = step1Schema.safeParse({
+    province: formData.province,
+    district: formData.district,
+    municipality: formData.municipality,
+  });
+
   const handleSetupProfile = async () => {
     try {
       setLoading(true);
 
       const data = new FormData();
 
-      data.append("province", FormData.province);
+      data.append("province", formData.province);
+      data.append("district", formData.district);
+      data.append("municipality", formData.municipality);
+      data.append("municipalityType", formData.municipalityType);
 
+      data.append("status", formData.status);
+      data.append("profession", formData.profession);
+
+      data.append("bio", formData.bio);
+
+      if (profilePicture) {
+        data.append("profilePicture", profilePicture);
+      }
+
+      if (coverPicture) {
+        data.append("coverPicture", coverPicture);
+      }
+
+      await postSetupProfile(data);
     } catch (error) {
       console.log(error);
       toast.error(data.message || "Failed to setup Profile");
@@ -110,7 +145,7 @@ export default function ProfileSetup() {
           />
         </div>
 
-        {step === 1 && <Step1 />}
+        {step === 1 && <Step1 formData={formData} setFormData={setFormData} />}
         {step === 2 && <Step2 />}
         {step === 3 && <Step3 />}
         {step === 4 && <Step4 />}
