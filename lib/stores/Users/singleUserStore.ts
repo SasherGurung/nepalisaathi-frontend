@@ -1,32 +1,56 @@
-import { create } from "zustand";
-import toast from "react-hot-toast";
-import { api } from "@/lib/api/config";
-import { Post } from "@/lib/types/Posts/post.types";
-import { SingleUser } from "@/lib/types/Users/singleUser.types";
+  import { create } from "zustand";
+  import toast from "react-hot-toast";
+  import { api } from "@/lib/api/config";
+  import { Post } from "@/lib/types/Posts/post.types";
+  import { SingleUser } from "@/lib/types/Users/singleUser.types";
 
-type SingleUserStore = {
-  selectedUser: SingleUser | null;
-  posts: Post[];
+  type SingleUserStore = {
+    selectedUser: SingleUser | null;
+    posts: Post[];
 
-  fetchSingleUser: (uid: string) => Promise<void>;
-};
+    handleLike: (postId: string) => Promise<void>;
 
-export const userSingleUserStore = create<SingleUserStore>((set) => ({
-  selectedUser: null,
-  posts: [],
+    fetchSingleUser: (uid: string) => Promise<void>;
+  };
 
-  // Fetch Single User
-  fetchSingleUser: async (uid: string) => {
-    try {
-      const { data } = await api.get(`/user/${uid}`);
+  export const useSingleUserStore = create<SingleUserStore>((set) => ({
+    selectedUser: null,
+    posts: [],
 
-      set({
-        selectedUser: data.data,
-        posts: data.posts,
-      });
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to fetch user");
-    }
-  },
-}));
+    // Fetch Single User
+    fetchSingleUser: async (uid: string) => {
+      try {
+        const { data } = await api.get(`/user/${uid}`);
+
+        set({
+          selectedUser: data.data,
+          posts: data.posts,
+        });
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to fetch user");
+      }
+    },
+
+    // Single User handle Like
+    handleLike: async (postId: string) => {
+      try {
+        const { data } = await api.post(`/posts/${postId}/like`);
+    
+        set((state) => ({
+          posts: state.posts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  likes: data.likesCount,
+                  hasLiked: !post.hasLiked,
+                }
+              : post
+          ),
+        }));
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong!");
+      }
+    },
+  }));

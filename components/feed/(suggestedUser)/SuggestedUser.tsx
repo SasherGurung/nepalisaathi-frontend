@@ -61,7 +61,7 @@ export default function SuggestedUsers({ users }: SuggestedUsersProps) {
                 </div>
 
                 <div>
-                  <p className="text-sm truncate max-w-full">{user.name}</p>
+                  <Button onClick={() => router.push(`/profile/${user.uid}`)} variant="link" className="text-sm truncate max-w-full cursor-pointer">{user.name}</Button>
                   <p className="text-xs text-gray-500">{user.profession}</p>
                 </div>
               </div>

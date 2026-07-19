@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button";
 import Step1 from "@/components/profilesedit/step1";
 import Step2 from "@/components/profilesedit/step2";
 import Step3 from "@/components/profilesedit/step3";
-import { api } from "@/lib/api/config";
 import { toast } from "react-hot-toast";
-import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
 import { step1Schema, step2Schema } from "@/app/schema/profileSchema";
 import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 import { useRouter } from "next/navigation";
+import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
+import Step4 from "@/components/profilesedit/step4";
 
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
@@ -26,10 +26,10 @@ export default function ProfileSetup() {
     3: 100,
   };
 
-  const formData = useProfileStore((state) => state.formData);
+  const { postSetupProfile } = useSetupProfileStore();
+
   const profilePicture = useImageStore((state) => state.profilePicture);
   const coverPicture = useImageStore((state) => state.coverPicture);
-
 
   const handleNext = async () => {
     if (step === 1) {
@@ -62,38 +62,21 @@ export default function ProfileSetup() {
     }
 
     if (step === 3) {
-      await handleSubmit();
+      await handleSetupProfile();
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSetupProfile = async () => {
     try {
       setLoading(true);
 
       const data = new FormData();
 
-      data.append("homeCity", formData.homeCity);
-      data.append("status", formData.status);
-      data.append("profession", formData.profession);
-      data.append("bio", formData.bio);
-      data.append("latitude", formData.latitude?.toString() ?? "");
-      data.append("longitude", formData.longitude?.toString() ?? "");
+      data.append("province", FormData.province);
 
-      if (profilePicture) {
-        data.append("profilePicture", profilePicture);
-      }
-
-      if (coverPicture) {
-        data.append("coverPicture", coverPicture);
-      }
-
-      await api.post("/profile/setup", data);
-
-      toast.success("Profile setup completed!");
-      router.push("/feed");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong! Please try again.");
+      console.log(error);
+      toast.error(data.message || "Failed to setup Profile");
     } finally {
       setLoading(false);
     }
@@ -130,6 +113,7 @@ export default function ProfileSetup() {
         {step === 1 && <Step1 />}
         {step === 2 && <Step2 />}
         {step === 3 && <Step3 />}
+        {step === 4 && <Step4 />}
 
         <div className="flex justify-between pt-2">
           <Button

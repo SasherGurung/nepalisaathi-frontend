@@ -9,15 +9,15 @@ import {
   Users,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import FeedPost from "@/components/feed/(feedPost)/FeedPost"; 
 import { LuMessageSquareDashed } from "react-icons/lu";
 import Image from "next/image";
 import { useEffect } from "react";
-import { userSingleUserStore } from "@/lib/stores/Users/singleUserStore";
+import { useSingleUserStore } from "@/lib/stores/Users/singleUserStore";
 import SingleUserConnection from "@/components/profiles/MyConnection";
+import SingleUserPostContent from "@/components/profiles/singleProfile/SingleUserPosts";
 
 export default function SingleProfilePage() {
-  const { fetchSingleUser, selectedUser } = userSingleUserStore();
+  const { fetchSingleUser, selectedUser } = useSingleUserStore();
   const params = useParams();
   const uid = params.uid as string;
 
@@ -29,7 +29,6 @@ export default function SingleProfilePage() {
 
   return (
     <section className="min-h-screen my-5 mx-50">
-
       <Card className="overflow-hidden p-0">
         <div className="h-55 bg-red-500" />
         <div className="flex justify-between bg-white">
@@ -108,7 +107,7 @@ export default function SingleProfilePage() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-[35%_65%] gap-5 mt-5 sticky">
+      <div className="grid grid-cols-[35%_64%] gap-5 mt-5 sticky">
         <div className="flex flex-col gap-5">
           <Card className="p-6 space-y-5 mr-5">
             <h2 className="text-2xl font-bold text-zinc-500">About</h2>
@@ -117,7 +116,7 @@ export default function SingleProfilePage() {
               <div className="flex items-center gap-3">
                 <BriefcaseBusiness className="h-6 w-6 text-zinc-500" />
                 Works as, <br></br>
-                {selectedUser?.profession}
+                {selectedUser?.profession} at skybase
               </div>
 
               <div className="flex items-center gap-3">
@@ -129,28 +128,20 @@ export default function SingleProfilePage() {
           <SingleUserConnection />
         </div>
         <div className="flex flex-col gap-5">
-          <FeedPost />
           {selectedUser?.postsCount === 0 ? (
             <div className="flex flex-col h-80 items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-20 shadow-xl">
               <div className="flex flex-col text-center items-center">
-                <LuMessageSquareDashed className="w-20 h-20 text-zinc-400" />
+                <LuMessageSquareDashed className="w-18 h-18 text-zinc-400" />
                 <h2 className="text-3xl font-bold tracking-tight text-zinc-700 m-2">
                   No posts yet
                 </h2>
-                <p className="mt-1 text-sm text-zinc-400 line-clamp-3 w-xs">
-                  Your feed is empty. Be the first to share your thoughts, or
-                  connect with more people to see their updates!
+                <p className="text-sm text-zinc-400 line-clamp-3 w-xs tracking-wide">
+                This user has not posted anything yet.
                 </p>
-                <button
-                  onClick={() => router.push("/discover")}
-                  className="px-4 py-3 bg-(--brand-blue) rounded-xl text-sm text-white mt-3 cursor-pointer hover:bg-blue-900"
-                >
-                  Find Connections
-                </button>
               </div>
             </div>
           ) : (
-            <>hello</>
+            <SingleUserPostContent />
           )}
         </div>
       </div>

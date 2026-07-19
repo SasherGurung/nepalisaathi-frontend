@@ -4,8 +4,12 @@ import { RxCross2 } from "react-icons/rx";
 import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
 import Image from "next/image";
 import { MdOutlineGroup } from "react-icons/md";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export default function PendingRequest() {
+
+  const router = useRouter();
   const {
     receiveRequest,
     acceptConnection,
@@ -56,9 +60,9 @@ export default function PendingRequest() {
                   )}
 
                   <div>
-                    <h3 className="text-lg font-semibold text-zinc-800">
+                    <Button onClick={() => router.push(`/profile/${request.senderId}`)} variant="link" className="text-lg font-semibold text-zinc-800">
                       {request.senderName}
-                    </h3>
+                    </Button>
                     <p className="text-sm text-zinc-500">
                       {request.senderProfession}
                     </p>

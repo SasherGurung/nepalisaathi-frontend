@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { usePostStore } from "@/lib/stores/Posts/postStores";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useCommentStore } from "@/lib/stores/Posts/commentStore";
-import { Copy, Heart, MessageCircle, Trash2 } from "lucide-react";
+import { Copy, Heart, MessageCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,47 +13,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { BiRepost } from "react-icons/bi";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
 import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
-import { api } from "@/lib/api/config";
 import { useCopyLinkStore } from "@/lib/stores/Posts/copyLinkStores";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useRepostPostStore } from "@/lib/stores/Posts/repostPostStore";
-import CommentPost from "./CommentPost";
+import { useSingleUserStore } from "@/lib/stores/Users/singleUserStore";
+import CommentPost from "@/components/feed/(feedPostContent)/CommentPost";
 
-export default function FeedPostContent() {
+export default function SinglePostContent() {
   const router = useRouter();
   const { formData } = useProfileStore();
   const { user } = useAuthStore();
-  const { posts, handleLike, deletePost } = usePostStore();
   const [commentText, setCommentText] = useState("");
   const [activePostId, setActivePostId] = useState<string | null>(null);
-  const {
-    fetchComment,
-    addComment,
-  } = useCommentStore();
+  const { fetchComment, addComment } = useCommentStore();
 
-  const { sharePost } = useRepostPostStore();
+  const { posts: userPosts, handleLike  } = useSingleUserStore();
 
   const { fetchShareLink } = useCopyLinkStore();
-
-
 
   const handleCommentPost = async () => {
     if (!commentText.trim() || !activePostId) return;
@@ -69,18 +49,6 @@ export default function FeedPostContent() {
     }
   };
 
-  const handleDeletePost = async (postId: string) => {
-    try {
-      const res = await api.delete(`/posts/${postId}`);
-      console.log("Response:", res.data.deletedId);
-      deletePost(res.data.deletedId);
-      toast.success(res.data.message || "Post deleted Successfully");
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong! Please try again");
-    }
-  };
-
   const handleCopyLink = async (postId: string) => {
     await fetchShareLink(postId);
     const { share_link } = useCopyLinkStore.getState().shareData!;
@@ -88,8 +56,7 @@ export default function FeedPostContent() {
     await navigator.clipboard.writeText(share_link);
   };
 
-
-  return posts.map((post) => (
+  return userPosts.map((post) => (
     <div
       key={post.id}
       className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md"
@@ -136,43 +103,7 @@ export default function FeedPostContent() {
 
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
-              <DropdownMenuItem>Edit Post</DropdownMenuItem>
-
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem
-                    variant="destructive"
-                    className="cursor-pointer"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <RiDeleteBin5Line className="" />
-                    Delete Post
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className="text-xl font-semibold">
-                      Delete Post
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-md">
-                      Are you sure you want to delete this post? This action
-                      cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="cursor-pointer">
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      variant="destructive"
-                      className="cursor-pointer"
-                      onClick={() => handleDeletePost(post.id)}
-                    >
-                      Yes, Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <DropdownMenuItem>Report Post</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -301,42 +232,7 @@ export default function FeedPostContent() {
 
                     <DropdownMenuContent align="end">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>Edit Post</DropdownMenuItem>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <DropdownMenuItem
-                              variant="destructive"
-                              className="cursor-pointer"
-                              onSelect={(e) => e.preventDefault()}
-                            >
-                              <RiDeleteBin5Line className="" />
-                              Delete Post
-                            </DropdownMenuItem>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle className="text-xl font-semibold">
-                                Delete Post
-                              </AlertDialogTitle>
-                              <AlertDialogDescription className="text-md">
-                                Are you sure you want to delete this post? This
-                                action cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel className="cursor-pointer">
-                                Cancel
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                variant="destructive"
-                                className="cursor-pointer"
-                                onClick={() => handleDeletePost(post.id)}
-                              >
-                                Yes, Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <DropdownMenuItem>Report Post</DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>

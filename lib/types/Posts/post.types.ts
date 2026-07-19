@@ -21,7 +21,6 @@ export interface Post {
   initialComments: Comment[];
   shared_post_id: string | null;
   shareLink: string;
-
   edited: boolean;
   edit_count: number;
   sharedPost: SharedPost | null;

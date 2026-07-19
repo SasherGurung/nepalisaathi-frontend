@@ -3,8 +3,12 @@ import { Card } from "@/components/ui/card";
 import { MdOutlineGroup, MdOutlinePersonRemoveAlt1 } from "react-icons/md";
 import { useConnectionUserStore } from "@/lib/stores/Connection/connectionUserStore";
 import Image from "next/image";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 function MyConnections() {
+
+  const router = useRouter();
   const { connectionUsers, deleteConnection} = useConnectionUserStore();
 
   return (
@@ -53,9 +57,9 @@ function MyConnections() {
                     )}
 
                     <div>
-                      <h3 className="text-lg font-semibold text-zinc-800">
+                      <Button onClick={() => router.push(`/profile/${connectionUser.otherUser.uid}`)} variant="link" className="text-lg font-semibold text-zinc-800">
                         {connectionUser.otherUser.name || connectionUser.otherUser.displayName}
-                      </h3>
+                      </Button>
 
                       <p className="text-sm text-zinc-500">
                         {connectionUser.otherUser.profession}

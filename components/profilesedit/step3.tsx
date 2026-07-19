@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 
 const MapLocation = dynamic(() => import("@/components/map/locationMarker"), {

@@ -8,7 +8,7 @@ import {
   MapPin,
   Users,
 } from "lucide-react";
-import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import { useRouter } from "next/navigation";
 import FeedPost from "@/components/feed/(feedPost)/FeedPost";
 import FeedPostContent from "@/components/feed/(feedPostContent)/FeedPostContent";

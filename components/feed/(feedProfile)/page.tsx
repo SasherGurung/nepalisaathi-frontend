@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
-import { useProfileStore } from "@/lib/stores/EditProfile/profileStore";
+import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import { Card } from "@/components/ui/card";
 
 function FeedProfile() {
