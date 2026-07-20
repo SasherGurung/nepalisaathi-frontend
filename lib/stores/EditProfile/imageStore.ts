@@ -55,4 +55,9 @@ export const useImageStore = create<ImageState>((set) => ({
       coverPicture: null,
       coverPreview: null,
     }),
+    
 }));
+useImageStore.subscribe((state) => {
+  console.log("Image store changed:", state);
+});
+console.log("ProfileSetup:", useImageStore.getState().profilePicture);

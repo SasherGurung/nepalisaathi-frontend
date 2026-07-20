@@ -9,13 +9,16 @@ import Step1 from "@/components/profilesedit/step1";
 import Step2 from "@/components/profilesedit/step2";
 import Step3 from "@/components/profilesedit/step3";
 import { toast } from "react-hot-toast";
-import { step1Schema } from "@/app/schema/profileSchema";
+import { step1Schema, step2Schema } from "@/app/schema/profileStepSchema";
 import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import Step4 from "@/components/profilesedit/step4";
+import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore";
+import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 
 export default function ProfileSetup() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { formData } = useProfileStepStore();
 
   const progress = {
     1: 25,
@@ -26,15 +29,9 @@ export default function ProfileSetup() {
 
   const { postSetupProfile } = useSetupProfileStore();
 
-  const [formData, setFormData] = useState({
-    province: "",
-    district: "",
-    municipality: "",
-    municipalityType: "Nagarpalika",
-  });
-
   const handleNext = async () => {
     if (step === 1) {
+      console.log(formData);
       const result = step1Schema.safeParse({
         province: formData.province,
         district: formData.district,
@@ -50,6 +47,30 @@ export default function ProfileSetup() {
       return;
     }
     if (step === 2) {
+      console.log(formData);
+      const result = step2Schema.safeParse({
+        status: formData.status,
+        profession: formData.profession,
+      });
+
+      if (!result.success) {
+        toast.error(result.error.issues[0].message);
+        return;
+      }
+      setStep(3);
+      return;
+    }
+    if (step === 2) {
+      console.log(formData);
+      const result = step2Schema.safeParse({
+        status: formData.status,
+        profession: formData.profession,
+      });
+
+      if (!result.success) {
+        toast.error(result.error.issues[0].message);
+        return;
+      }
       setStep(3);
       return;
     }
@@ -68,14 +89,38 @@ export default function ProfileSetup() {
     try {
       setLoading(true);
 
+      const { profilePicture, coverPicture } = useImageStore.getState();
+
       const data = new FormData();
 
+      // Step1
       data.append("province", formData.province);
       data.append("district", formData.district);
       data.append("municipality", formData.municipality);
       data.append("municipalityType", formData.municipalityType);
+      data.append("approximateLocation", formData.approximateLocation);
+
+      // Step2
+      data.append("status", formData.status);
+      data.append("profession", formData.profession);
+
+        // Step3
+        data.append("bio", formData.bio);
+        console.log("Setup state:", useImageStore.getState());
+        console.log(profilePicture);
+  console.log(coverPicture);
+        if (profilePicture) {
+          data.append("profilePicture", profilePicture);
+        }
+        
+      if (coverPicture) {
+        data.append("coverPicture", coverPicture);
+      }
 
       await postSetupProfile(data);
+      for (const [key, value] of data.entries()) {
+        console.log(key, value);
+      }
     } catch (error) {
       console.log(error);
       toast.error("Failed to setup Profile");
@@ -85,7 +130,7 @@ export default function ProfileSetup() {
   };
 
   return (
-    <section className="min-h-screen bg-zinc-50 flex items-center justify-center">
+    <section className="min-h-screen bg-zinc-50 flex items-center justify-center -mt-10">
       <Card className="w-full max-w-2xl rounded-3xl border shadow-sm p-8 space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">

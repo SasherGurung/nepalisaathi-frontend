@@ -1,243 +1,209 @@
-// "use client";
+"use client";
 
-// import React, { useRef, useState } from "react";
-// import dynamic from "next/dynamic";
-// import Image from "next/image";
-// import { FiUpload, FiImage } from "react-icons/fi";
-// import { XIcon } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import Image from "next/image";
+import { FiUpload, FiImage } from "react-icons/fi";
+import { XIcon } from "lucide-react";
 
-// import { Field, FieldLabel, FieldGroup } from "../ui/field";
-// import { Input } from "../ui/input";
-// import { Textarea } from "../ui/textarea";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-// } from "@/components/ui/dialog";
+import { Field, FieldLabel } from "../ui/field";
+import { Textarea } from "../ui/textarea";
+import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
+import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore";
 
-// import { useProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
-// import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
+export default function Step3() {
+  const { formData, setFormData } = useProfileStepStore();
 
-// const MapLocation = dynamic(() => import("@/components/map/locationMarker"), {
-//   ssr: false,
-// });
+  const {
+    profilePreview,
+    coverPreview,
+    setProfilePicture,
+    setCoverPicture,
+    setProfilePreview,
+    setCoverPreview,
+    clearProfileImage,
+    clearCoverImage,
+  } = useImageStore();
 
-// export default function Step3() {
-//   const { formData, setFormData, setLocation } = useProfileStore();
+  const profileInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
-//   const {
-//     profilePreview,
-//     coverPreview,
-//     setProfilePicture,
-//     setCoverPicture,
-//     setProfilePreview,
-//     setCoverPreview,
-//     clearProfileImage,
-//     clearCoverImage,
-//   } = useImageStore();
+  const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    console.log("Selected file:", file);
 
-//   const profileInputRef = useRef<HTMLInputElement>(null);
-//   const coverInputRef = useRef<HTMLInputElement>(null);
-//   const [mapOpen, setMapOpen] = useState(false);
 
-//   const [selectedLocation, setSelectedLocation] = useState<{
-//     lat: number;
-//     lng: number;
-//   } | null>(null);
+    const preview = URL.createObjectURL(file);
 
-//   const handleConfirm = () => {
-//     if (!selectedLocation) return;
+    setProfilePicture(file); // File -> image store
+    setProfilePreview(preview); // Preview -> image store
+    console.log(useImageStore.getState().profilePicture);
 
-//     const { lat, lng } = selectedLocation;
+    setFormData({
+      profilePicture: preview, // String -> persisted store
+    });
+  };
 
-//     setLocation(
-//       lat,
-//       lng,
-//       `Latitude: ${lat.toFixed(5)} | Longitude: ${lng.toFixed(5)}`,
-//     );
+  const handleProfileClick = () => {
+    profileInputRef?.current?.click();
+  };
 
-//     setMapOpen(false);
-//   };
+  const handleCoverImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
 
-//   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const file = e.target.files?.[0];
-//     if (!file) return;
+    const preview = URL.createObjectURL(file);
 
-//     setProfilePicture(file);
-//     setProfilePreview(URL.createObjectURL(file));
-//   };
+    setCoverPicture(file);
+    setCoverPreview(preview);
 
-//   const handleProfileClick = () => {
-//     profileInputRef?.current?.click();
-//   };
+    setFormData({
+      coverPicture: preview,
+    });
+  };
 
-//   const handleCoverImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const file = e.target.files?.[0];
-//     if (!file) return;
-//     setCoverPicture(file);
-//     setCoverPreview(URL.createObjectURL(file));
-//   };
+  const handleCoverClick = () => {
+    coverInputRef?.current?.click();
+  };
 
-//   const handleCoverClick = () => {
-//     coverInputRef?.current?.click();
-//   };
+  const handleDeleteProfilePreview = () => {
+    clearProfileImage();
 
-//   const handleDeleteProfilePreview = () => {
-//     clearProfileImage();
-//   };
+    setFormData({
+      profilePicture: null,
+    });
+  };
 
-//   const handleDeleteCoverPreview = () => {
-//     clearCoverImage();
-//   };
+  const handleDeleteCoverPreview = () => {
+    clearCoverImage();
 
-//   return (
-//     <div className="space-y-5">
-//       <h2 className="text-xl font-semibold">A bit more about you</h2>
+    setFormData({
+      coverPicture: null,
+    });
+  };
 
-//       <div className="grid grid-cols-2 gap-5">
-//         <p>Profile Image</p>
-//         <p>Cover Image</p>
-//         <div
-//           onClick={handleProfileClick}
-//           className="relative flex flex-col items-center justify-center border-3 border-dashed border-zinc-300 w-70 h-30 bg-zinc-50 hover:bg-zinc-100 duration-300 rounded-xl cursor-pointer overflow-hidden"
-//         >
-//           {profilePreview ? (
-//             <>
-//               <Image
-//                 src={profilePreview}
-//                 alt="Profile Picture"
-//                 fill
-//                 className="object-cover"
-//               />
-//               <button
-//                 type="button"
-//                 onClick={handleDeleteProfilePreview}
-//                 className="absolute top-1 right-1 z-10 bg-zinc-200 rounded-full p-0.5 hover:bg-zinc-300"
-//               >
-//                 <XIcon className="h-4 w-4 text-red-500 cursor-pointer" />
-//               </button>
-//             </>
-//           ) : (
-//             <>
-//               <FiUpload className="h-7 w-7 text-gray-400" />
-//               <p className="text-gray-500 text-sm font-semibold">
-//                 Upload Profile Picture
-//               </p>
-//             </>
-//           )}
-//           <input
-//             ref={profileInputRef}
-//             type="file"
-//             accept="image/*"
-//             className="hidden"
-//             onChange={handleProfileImage}
-//           />
-//         </div>
+  useEffect(() => {
+    
+    if (formData.profilePicture) {
+      setProfilePreview(formData.profilePicture);
+    }
 
-//         <div
-//           onClick={handleCoverClick}
-//           className="relative flex flex-col items-center justify-center border-3 border-dashed border-zinc-300 w-70 h-30 bg-zinc-50 hover:bg-zinc-100 duration-300 rounded-xl cursor-pointer overflow-hidden"
-//         >
-//           {coverPreview ? (
-//             <>
-//               <Image
-//                 src={coverPreview}
-//                 alt="Cover Picture"
-//                 fill
-//                 className="object-cover"
-//               />
-//               <button
-//                 type="button"
-//                 onClick={handleDeleteCoverPreview}
-//                 className="absolute top-1 right-1 z-10 bg-zinc-200 rounded-full p-0.5 hover:bg-zinc-300"
-//               >
-//                 <XIcon className="h-4 w-4 text-red-500 cursor-pointer" />
-//               </button>
-//             </>
-//           ) : (
-//             <>
-//               <FiImage className="h-7 w-7 text-gray-400" />
-//               <p className="text-gray-500 text-sm font-semibold">
-//                 Upload Cover Image
-//               </p>
-//             </>
-//           )}
-//           <input
-//             ref={coverInputRef}
-//             type="file"
-//             accept="image/*"
-//             className="hidden"
-//             onChange={handleCoverImage}
-//           />
-//         </div>
-//       </div>
+    if (formData.coverPicture) {
+      setCoverPreview(formData.coverPicture);
+    }
+  }, [
+    formData.profilePicture,
+    formData.coverPicture,
+    setProfilePreview,
+    setCoverPreview,
+  ]);
 
-//       <Field>
-//         <FieldLabel className="text-zinc-500 text-sm">
-//           Current City (Abroad)
-//         </FieldLabel>
-//         <Input
-//           readOnly
-//           value={formData.approximateLocation}
-//           onClick={() => setMapOpen(true)}
-//           placeholder="Select location on map"
-//           className="h-11 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600 cursor-pointer"
-//         />
-
-//         <FieldLabel className="text-zinc-500 text-sm">Short Bio</FieldLabel>
-//         <Textarea
-//           id="bio"
-//           value={formData.bio}
-//           onChange={(e) => setFormData({ bio: e.target.value })}
-//           placeholder="Tell the community a bit about yourself.."
-//           className="h-25 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600"
-//         />
-//       </Field>
-
-//       <Dialog open={mapOpen} onOpenChange={setMapOpen}>
-//         <DialogContent className="sm:max-w-xl">
-//           <DialogHeader>
-//             <DialogTitle>Approximate Location</DialogTitle>
-
-//             <DialogDescription className="text-xs text-red-400">
-//               Location Privacy: We do not show your exact location. This is only
-//               used to connect you with people nearby.
-//             </DialogDescription>
-//           </DialogHeader>
-
-//           <FieldGroup className="flex justify-center">
-//             <MapLocation
-//               onLocationSelect={(lat, lng) => {
-//                 setSelectedLocation({ lat, lng });
-//               }}
-//             />
-//           </FieldGroup>
-
-//           <DialogFooter>
-//             <Button
-//               type="button"
-//               onClick={handleConfirm}
-//               className="bg-(--) hover:bg-indigo-600 cursor-pointer rounded-2xl p-5"
-//             >
-//               Confirm Location
-//             </Button>
-//           </DialogFooter>
-//         </DialogContent>
-//       </Dialog>
-//     </div>
-//   );
-// }
-
-import React from 'react'
-
-function Step3() {
   return (
-    <div>Step3</div>
-  )
-}
+    <div className="space-y-5">
+      <h2 className="text-xl font-semibold">A bit more about you</h2>
 
-export default Step3
+      <div className="grid grid-cols-2 gap-3">
+        <p className="text-zinc-500 text-base">Profile Image</p>
+        <p className="text-zinc-500 text-base">Cover Image</p>
+        <div className="flex gap-6">
+          <div
+            onClick={handleProfileClick}
+            className="relative flex items-center justify-center w-70 h-35 border-3 border-dashed border-zinc-300 bg-zinc-50 hover:bg-zinc-100 duration-300 rounded-xl cursor-pointer"
+          >
+            {profilePreview ? (
+              <>
+                <div className="relative w-30 h-30 rounded-full overflow-hidden">
+                  <Image
+                    src={profilePreview}
+                    alt="Profile Picture"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteProfilePreview();
+                  }}
+                  className="absolute top-2 right-2 z-10 bg-white border-2 border-zinc-200 rounded-full p-1 hover:bg-zinc-50 cursor-pointer"
+                >
+                  <XIcon className="h-4 w-4 text-red-500" />
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center w-30 h-30 rounded-full border-3 border-dashed border-zinc-300">
+                <FiUpload className="h-7 w-7 text-gray-400" />
+                <p className="mt-2 text-gray-500 text-sm font-semibold text-center">
+                  Upload Profile Picture
+                </p>
+              </div>
+            )}
+
+            <input
+              ref={profileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleProfileImage}
+            />
+          </div>
+        </div>
+        <div
+          onClick={handleCoverClick}
+          className="relative flex items-center justify-center w-70 h-35 border-3 border-dashed border-zinc-300 bg-zinc-50 hover:bg-zinc-100 duration-300 rounded-xl cursor-pointer overflow-hidden"
+        >
+          {coverPreview ? (
+            <>
+              <Image
+                src={coverPreview}
+                alt="Cover Picture"
+                fill
+                className="object-cover"
+              />
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteCoverPreview();
+                }}
+                className="absolute top-2 right-2 z-10 bg-white border-2 border-zinc-200 rounded-full p-1 hover:bg-zinc-50 cursor-pointer"
+              >
+                <XIcon className="h-4 w-4 text-red-500" />
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center">
+              <FiImage className="h-7 w-7 text-gray-400" />
+              <p className="mt-2 text-gray-500 text-sm font-semibold">
+                Upload Cover Image
+              </p>
+            </div>
+          )}
+
+          <input
+            ref={coverInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleCoverImage}
+          />
+        </div>
+      </div>
+
+      <Field>
+        <FieldLabel className="text-zinc-500 text-base">Short Bio</FieldLabel>
+        <Textarea
+          id="bio"
+          value={formData.bio}
+          onChange={(e) => setFormData({ bio: e.target.value })}
+          placeholder="Tell the community a bit about yourself.."
+          className="h-23 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600"
+        />
+      </Field>
+    </div>
+  );
+}
