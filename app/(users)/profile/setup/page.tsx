@@ -60,7 +60,7 @@ export default function ProfileSetup() {
       setStep(3);
       return;
     }
-    if (step === 2) {
+    if (step === 3) {
       console.log(formData);
       const result = step2Schema.safeParse({
         status: formData.status,
@@ -71,7 +71,7 @@ export default function ProfileSetup() {
         toast.error(result.error.issues[0].message);
         return;
       }
-      setStep(3);
+      setStep(4);
       return;
     }
 
@@ -104,15 +104,15 @@ export default function ProfileSetup() {
       data.append("status", formData.status);
       data.append("profession", formData.profession);
 
-        // Step3
-        data.append("bio", formData.bio);
-        console.log("Setup state:", useImageStore.getState());
-        console.log(profilePicture);
-  console.log(coverPicture);
-        if (profilePicture) {
-          data.append("profilePicture", profilePicture);
-        }
-        
+      // Step3
+      data.append("bio", formData.bio);
+      console.log("Setup state:", useImageStore.getState());
+      console.log(profilePicture);
+      console.log(coverPicture);
+      if (profilePicture) {
+        data.append("profilePicture", profilePicture);
+      }
+
       if (coverPicture) {
         data.append("coverPicture", coverPicture);
       }
@@ -130,7 +130,7 @@ export default function ProfileSetup() {
   };
 
   return (
-    <section className="min-h-screen bg-zinc-50 flex items-center justify-center -mt-10">
+    <section className="min-h-screen bg-zinc-50 flex items-center justify-center py-10">
       <Card className="w-full max-w-2xl rounded-3xl border shadow-sm p-8 space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">
@@ -144,7 +144,7 @@ export default function ProfileSetup() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="font-medium">Step {step} of 3</span>
+            <span className="font-medium">Step {step} of 4</span>
 
             <span className="text-muted-foreground">
               {progress[step as keyof typeof progress]}%
