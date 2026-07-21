@@ -1,5 +1,4 @@
-import { boolean } from "zod";
-import { fa } from "zod/v4/locales";
+import { LookingFor } from "@/lib/types/EditProfile/editProfile.types";
 import { create } from "zustand";
 
 export interface EditProfileFormData {
@@ -24,6 +23,8 @@ export interface EditProfileFormData {
   visa_type: string | null;
   is_new_arrival: boolean;
   open_to_helping_newcomers: boolean;
+
+  looking_for: LookingFor[];
 }
 
 const initialFormData: EditProfileFormData = {
@@ -47,12 +48,19 @@ const initialFormData: EditProfileFormData = {
   visa_type: null,
   is_new_arrival: false,
   open_to_helping_newcomers: false,
+
+  looking_for: [],
 };
 
 interface EditProfileStepStore {
   formData: EditProfileFormData;
 
   setFormData: (data: Partial<EditProfileFormData>) => void;
+
+  addPreference: (preference: LookingFor) => void;
+  removePreference: (tag: string) => void;
+  updatePreference: (tag: string, data: Partial<LookingFor>) => void;
+  clearPreferences: () => void;
 }
 
 export const useProfileStepStore = create<EditProfileStepStore>((set) => ({
@@ -63,6 +71,46 @@ export const useProfileStepStore = create<EditProfileStepStore>((set) => ({
       formData: {
         ...state.formData,
         ...data,
+      },
+    })),
+
+  // Add Preference
+  addPreference: (preference) =>
+    set((state) => ({
+      formData: {
+        ...state.formData,
+        looking_for: [...state.formData.looking_for, preference],
+      },
+    })),
+
+  // Remove Preference
+  removePreference: (tag) =>
+    set((state) => ({
+      formData: {
+        ...state.formData,
+        looking_for: state.formData.looking_for.filter(
+          (item) => item.tag !== tag,
+        ),
+      },
+    })),
+
+  // Update Preference
+  updatePreference: (tag, data) =>
+    set((state) => ({
+      formData: {
+        ...state.formData,
+        looking_for: state.formData.looking_for.map((item) =>
+          item.tag === tag ? { ...item, ...data } : item,
+        ),
+      },
+    })),
+
+  // Clear Preference
+  clearPreferences: () =>
+    set((state) => ({
+      formData: {
+        ...state.formData,
+        looking_for: [],
       },
     })),
 }));

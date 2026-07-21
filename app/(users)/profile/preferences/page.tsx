@@ -1,8 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore";
 import { Search } from "lucide-react";
+import { useState } from "react";
 
 export const tags = [
   {
@@ -240,7 +244,23 @@ export const tags = [
   },
 ];
 
+type Selection = "seeking" | "offering";
+
 function PreferencePage() {
+
+  const { addPreference } = useProfileStepStore();
+  const [selections, setSelections] = useState<Record<string, Selection>>({});
+
+  const handleSelect = (title: string, value: Selection) => {
+    setSelections(
+      (prev) =>
+        ({
+          ...prev,
+          [title]: prev[title] === value ? undefined : value,
+        }) as Record<string, Selection>,
+    );
+  };
+
   return (
     <div className="flex justify-center items-center my-13">
       <Card className="w-4xl space-y-5 p-15">
@@ -249,7 +269,7 @@ function PreferencePage() {
             <h1 className="text-3xl font-bold tracking-wide">
               What are you looking for?
             </h1>
-            <p className="text-zinc-400 text-md tracking-wide">
+            <p className="text-zinc-400 text-md tracking-wide mt-2">
               Select what you are seeking or offering below. You can select up
               to 10 tags.
             </p>
@@ -261,9 +281,9 @@ function PreferencePage() {
             Skip
           </Button>
         </div>
-        <div className="mt-16 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400" />
 
+        <div className="mt-13 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400" />
           <Input
             placeholder="Search tags (e.g. business, jobs, events)..."
             className="h-12 pl-10 focus-visible:ring-1 focus-visible:ring-(--brand-maroon)"
@@ -276,43 +296,65 @@ function PreferencePage() {
               <h1 className="text-2xl font-bold">{tag.category}</h1>
 
               <div className="grid grid-cols-2 gap-4">
-                {tag.items.map((item) => (
-                  <Card
-                    key={item.title}
-                    className="border-red-400 bg-red-50/50 shadow-2xs"
-                  >
-                    <h1 className="font-semibold text-xl">{item.title}</h1>
+                {tag.items.map((item) => {
+                  const selected = selections[item.title];
+                  return (
+                    <Card
+                      key={item.title}
+                      className="border-red-400 bg-red-50/50 shadow-2xs"
+                    >
+                      <h1 className="font-semibold text-xl">{item.title}</h1>
+                      <p className="text-sm text-zinc-500">
+                        {item.description}
+                      </p>
 
-                    <p className="text-sm text-zinc-500">{item.description}</p>
+                      <div className="flex gap-3 mt-3 mb-3">
+                        <Button
+                          variant={
+                            selected === "seeking" ? "maroonRed" : "lightRed"
+                          }
+                          className="px-6"
+                          onClick={() => handleSelect(item.title, "seeking")}
+                        >
+                          Seeking
+                        </Button>
 
-                    <div className="flex gap-3 mt-3 mb-3">
-                      <Button variant="maroonRed" className="px-6">
-                        Seeking
-                      </Button>
+                        <Button
+                          variant={
+                            selected === "offering" ? "maroonRed" : "lightRed"
+                          }
+                          className="px-6"
+                          onClick={() => handleSelect(item.title, "offering")}
+                        >
+                          Offering
+                        </Button>
+                      </div>
 
-                      <Button variant="lightRed" className="px-6">
-                        Offering
-                      </Button>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id="feature-profile"
-                        className="bg-white border-(--brand-maroon) data-checked:bg-(--brand-maroon) data-checked:border-(--brand-maroon) cursor-pointer"
-                      />
-
-                      <span className="text-zinc-500 text-sm">
-                        Feature on profile
-                      </span>
-                    </div>
-                  </Card>
-                ))}
+                      {selected && (
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            id={`feature-profile-${item.title}`}
+                            className="bg-white border-(--brand-maroon) data-checked:bg-(--brand-maroon) data-checked:border-(--brand-maroon) cursor-pointer"
+                          />
+                          <span className="text-zinc-500 text-sm">
+                            Feature on profile
+                          </span>
+                        </div>
+                      )}
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           ))}
         </div>
         <div className="flex justify-end">
-          <Button variant="maroonRed" className="rounded-lg p-5">Save Preferences</Button>
+          <Button
+            variant="maroonRed"
+            className="rounded-lg p-5 hover:bg-red-600"
+          >
+            Save Preferences
+          </Button>
         </div>
       </Card>
     </div>
