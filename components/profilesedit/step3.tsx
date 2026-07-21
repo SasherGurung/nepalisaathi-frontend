@@ -9,6 +9,7 @@ import { Field, FieldLabel } from "../ui/field";
 import { Textarea } from "../ui/textarea";
 import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore";
+import { Switch } from "../ui/switch";
 
 export default function Step3() {
   const { formData, setFormData } = useProfileStepStore();
@@ -32,7 +33,6 @@ export default function Step3() {
     if (!file) return;
     console.log("Selected file:", file);
 
-
     const preview = URL.createObjectURL(file);
 
     setProfilePicture(file); // File -> image store
@@ -51,7 +51,6 @@ export default function Step3() {
   const handleCoverImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
 
     const preview = URL.createObjectURL(file);
 
@@ -84,7 +83,6 @@ export default function Step3() {
   };
 
   useEffect(() => {
-    
     if (formData.profilePicture) {
       setProfilePreview(formData.profilePicture);
     }
@@ -204,6 +202,18 @@ export default function Step3() {
           className="h-23 bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-red-600"
         />
       </Field>
+
+      <div className="flex items-center justify-between p-5">
+        <div className="pr-6">
+          <h3 className="font-medium">Open to networking</h3>
+
+          <p className="text-sm text-zinc-500 mt-1">
+          Show an indicator on your profile that you are open to messages.
+          </p>
+        </div>
+
+        <Switch className="cursor-pointer data-[state=checked]:bg-red-700" />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
+import { boolean } from "zod";
+import { fa } from "zod/v4/locales";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export interface EditProfileFormData {
   // Step 1
@@ -17,6 +18,12 @@ export interface EditProfileFormData {
   profilePicture: string | null;
   coverPicture: string | null;
   bio: string;
+
+  // Step 4
+  arrival_date: string | null;
+  visa_type: string | null;
+  is_new_arrival: boolean;
+  open_to_helping_newcomers: boolean;
 }
 
 const initialFormData: EditProfileFormData = {
@@ -34,6 +41,12 @@ const initialFormData: EditProfileFormData = {
   profilePicture: null,
   coverPicture: null,
   bio: "",
+
+  // step 4
+  arrival_date: null,
+  visa_type: null,
+  is_new_arrival: false,
+  open_to_helping_newcomers: false,
 };
 
 interface EditProfileStepStore {

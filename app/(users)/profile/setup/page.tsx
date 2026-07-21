@@ -9,13 +9,20 @@ import Step1 from "@/components/profilesedit/step1";
 import Step2 from "@/components/profilesedit/step2";
 import Step3 from "@/components/profilesedit/step3";
 import { toast } from "react-hot-toast";
-import { step1Schema, step2Schema } from "@/app/schema/profileStepSchema";
+import {
+  step1Schema,
+  step2Schema,
+  step4Schema,
+} from "@/app/schema/profileStepSchema";
 import { useSetupProfileStore } from "@/lib/stores/EditProfile/setupProfileStore";
 import Step4 from "@/components/profilesedit/step4";
 import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore";
 import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
+import { useRouter } from "next/navigation";
 
 export default function ProfileSetup() {
+
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const { formData } = useProfileStepStore();
@@ -75,12 +82,17 @@ export default function ProfileSetup() {
       return;
     }
 
-    if (step === 3) {
-      setStep(4);
-      return;
-    }
-
     if (step === 4) {
+      console.log(formData);
+      const result = step4Schema.safeParse({
+        arrival_date: formData.arrival_date,
+        visa_type: formData.visa_type,
+      });
+
+      if (!result.success) {
+        toast.error(result.error.issues[0].message);
+        return;
+      }
       await handleSetupProfile();
     }
   };
@@ -106,9 +118,7 @@ export default function ProfileSetup() {
 
       // Step3
       data.append("bio", formData.bio);
-      console.log("Setup state:", useImageStore.getState());
-      console.log(profilePicture);
-      console.log(coverPicture);
+
       if (profilePicture) {
         data.append("profilePicture", profilePicture);
       }
@@ -117,13 +127,34 @@ export default function ProfileSetup() {
         data.append("coverPicture", coverPicture);
       }
 
-      await postSetupProfile(data);
-      for (const [key, value] of data.entries()) {
-        console.log(key, value);
+      // Step 4
+      if (formData.arrival_date) {
+        data.append("arrival_date", formData.arrival_date);
       }
+
+      if (formData.visa_type) {
+        data.append("visa_type", formData.visa_type);
+      }
+
+      data.append(
+        "is_new_arrival",
+        formData.is_new_arrival ? "1" : "0"
+      );
+      
+      data.append(
+        "open_to_helping_newcomers",
+        formData.open_to_helping_newcomers ? "1" : "0"
+      );
+
+      const success = await postSetupProfile(data);
+      
+      if (success) {
+        router.push("/profile/preference")
+      }
+
+      
     } catch (error) {
       console.log(error);
-      toast.error("Failed to setup Profile");
     } finally {
       setLoading(false);
     }

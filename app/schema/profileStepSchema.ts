@@ -12,5 +12,6 @@ export const step2Schema = z.object({
 });
 
 export const step4Schema = z.object({
-  // bio: z.string().trim().min(1, {message: "Please enter your respective profession."}),
+  // arrival_date: z.string().trim().min(1, {message: "Please enter your arrival date."}),
+  // visa_type: z.string().trim().min(1, {message: "Please enter your visa type."}),
 });

@@ -6,7 +6,7 @@ import { api } from "@/lib/api/config";
 type setupProfileState = {
   setupProfile: SetupProfileUser | null;
 
-  postSetupProfile: (formData: FormData) => Promise<void>;
+  postSetupProfile: (formData: FormData) => Promise<boolean>;
 };
 
 export const useSetupProfileStore = create<setupProfileState>((set) => ({
@@ -21,9 +21,12 @@ export const useSetupProfileStore = create<setupProfileState>((set) => ({
         setupProfile: data.user,
       });
       toast.success(data.message || "Profile set successfully");
+
+      return true;
     } catch (error) {
       console.log(error);
       toast.error("Failed to setup Profile");
+      return false;
     }
   },
 }));
