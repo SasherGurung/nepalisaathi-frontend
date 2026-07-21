@@ -20,19 +20,18 @@ import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore"
 import { useImageStore } from "@/lib/stores/EditProfile/imageStore";
 import { useRouter } from "next/navigation";
 
-export default function ProfileSetup() {
+const progress = {
+  1: 25,
+  2: 50,
+  3: 75,
+  4: 100,
+};
 
+export default function ProfileSetup() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const { formData } = useProfileStepStore();
-
-  const progress = {
-    1: 25,
-    2: 50,
-    3: 75,
-    4: 100,
-  };
 
   const { postSetupProfile } = useSetupProfileStore();
 
@@ -118,11 +117,9 @@ export default function ProfileSetup() {
 
       // Step3
       data.append("bio", formData.bio);
-
       if (profilePicture) {
         data.append("profilePicture", profilePicture);
       }
-
       if (coverPicture) {
         data.append("coverPicture", coverPicture);
       }
@@ -131,28 +128,20 @@ export default function ProfileSetup() {
       if (formData.arrival_date) {
         data.append("arrival_date", formData.arrival_date);
       }
-
       if (formData.visa_type) {
         data.append("visa_type", formData.visa_type);
       }
-
-      data.append(
-        "is_new_arrival",
-        formData.is_new_arrival ? "1" : "0"
-      );
-      
+      data.append("is_new_arrival", formData.is_new_arrival ? "1" : "0");
       data.append(
         "open_to_helping_newcomers",
-        formData.open_to_helping_newcomers ? "1" : "0"
+        formData.open_to_helping_newcomers ? "1" : "0",
       );
 
       const success = await postSetupProfile(data);
-      
-      if (success) {
-        router.push("/profile/preference")
-      }
 
-      
+      if (success) {
+        router.push("/profile/preferences");
+      }
     } catch (error) {
       console.log(error);
     } finally {
