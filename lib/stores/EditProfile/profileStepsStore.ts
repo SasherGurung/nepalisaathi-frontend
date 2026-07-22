@@ -1,4 +1,5 @@
 import { LookingFor } from "@/lib/types/EditProfile/editProfile.types";
+import toast from "react-hot-toast";
 import { create } from "zustand";
 
 export interface EditProfileFormData {
@@ -76,12 +77,27 @@ export const useProfileStepStore = create<EditProfileStepStore>((set) => ({
 
   // Add Preference
   addPreference: (preference) =>
-    set((state) => ({
-      formData: {
-        ...state.formData,
-        looking_for: [...state.formData.looking_for, preference],
-      },
-    })),
+    set((state) => {
+      const preferences = state.formData.looking_for;
+
+      // Prevent duplicates
+      if (preferences.some((item) => item.tag === preference.tag)) {
+        return state;
+      }
+
+      // Limit to 10
+      if (preferences.length >= 10) {
+        toast.error("You can only select up to 10 tags.");
+        return state;
+      }
+
+      return {
+        formData: {
+          ...state.formData,
+          looking_for: [...preferences, preference],
+        },
+      };
+    }),
 
   // Remove Preference
   removePreference: (tag) =>
