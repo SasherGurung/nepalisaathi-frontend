@@ -12,6 +12,7 @@ interface TagStore {
 export const useTagsStore = create<TagStore>((set) => ({
   tags: [],
 
+  // Fetch Tags
   fetchTags: async () => {
     try {
       const { data } = await api.get("/tags");

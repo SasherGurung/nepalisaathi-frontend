@@ -25,6 +25,7 @@ export interface EditProfileFormData {
   is_new_arrival: boolean;
   open_to_helping_newcomers: boolean;
 
+  // Preferences
   looking_for: LookingFor[];
 }
 
@@ -35,16 +36,13 @@ const initialFormData: EditProfileFormData = {
   municipalityType: "",
   approximateLocation: "",
 
-  // Step 2
   status: "",
   profession: "",
 
-  // Step 3
   profilePicture: null,
   coverPicture: null,
   bio: "",
 
-  // step 4
   arrival_date: null,
   visa_type: null,
   is_new_arrival: false,
@@ -59,74 +57,91 @@ interface EditProfileStepStore {
   setFormData: (data: Partial<EditProfileFormData>) => void;
 
   addPreference: (preference: LookingFor) => void;
-  removePreference: (tag: string) => void;
   updatePreference: (tag: string, data: Partial<LookingFor>) => void;
+  removePreference: (tag: string) => void;
   clearPreferences: () => void;
+
+  getPreference: (tag: string) => LookingFor | undefined;
 }
 
-export const useProfileStepStore = create<EditProfileStepStore>((set) => ({
-  formData: initialFormData,
+export const useProfileStepStore = create<EditProfileStepStore>(
+  (set, get) => ({
+    formData: initialFormData,
 
-  setFormData: (data) =>
-    set((state) => ({
-      formData: {
-        ...state.formData,
-        ...data,
-      },
-    })),
-
-  // Add Preference
-  addPreference: (preference) =>
-    set((state) => {
-      const preferences = state.formData.looking_for;
-
-      // Prevent duplicates
-      if (preferences.some((item) => item.tag === preference.tag)) {
-        return state;
-      }
-
-      // Limit to 10
-      if (preferences.length >= 10) {
-        toast.error("You can only select up to 10 tags.");
-        return state;
-      }
-
-      return {
+    setFormData: (data) =>
+      set((state) => ({
         formData: {
           ...state.formData,
-          looking_for: [...preferences, preference],
+          ...data,
         },
-      };
-    }),
+      })),
 
-  // Remove Preference
-  removePreference: (tag) =>
-    set((state) => ({
-      formData: {
-        ...state.formData,
-        looking_for: state.formData.looking_for.filter(
-          (item) => item.tag !== tag,
-        ),
-      },
-    })),
+    // Add new preference
+    addPreference: (preference) =>
+      set((state) => {
+        const preferences = state.formData.looking_for;
 
-  // Update Preference
-  updatePreference: (tag, data) =>
-    set((state) => ({
-      formData: {
-        ...state.formData,
-        looking_for: state.formData.looking_for.map((item) =>
-          item.tag === tag ? { ...item, ...data } : item,
-        ),
-      },
-    })),
+        if (preferences.length >= 10) {
+          toast.error("You can only select up to 10 tags.");
+          return state;
+        }
 
-  // Clear Preference
-  clearPreferences: () =>
-    set((state) => ({
-      formData: {
-        ...state.formData,
-        looking_for: [],
-      },
-    })),
-}));
+        return {
+          formData: {
+            ...state.formData,
+            looking_for: [...preferences, preference],
+          },
+        };
+      }),
+
+    // Update existing preference
+    updatePreference: (tag, data) =>
+      set((state) => {
+        // Limit featured tags to 3
+        if (data.is_featured) {
+          const featuredCount = state.formData.looking_for.filter(
+            (item) => item.is_featured && item.tag !== tag
+          ).length;
+
+          if (featuredCount >= 3) {
+            toast.error("You can only feature up to 3 tags.");
+            return state;
+          }
+        }
+
+        return {
+          formData: {
+            ...state.formData,
+            looking_for: state.formData.looking_for.map((item) =>
+              item.tag === tag ? { ...item, ...data } : item
+            ),
+          },
+        };
+      }),
+
+    // Remove preference
+    removePreference: (tag) =>
+      set((state) => ({
+        formData: {
+          ...state.formData,
+          looking_for: state.formData.looking_for.filter(
+            (item) => item.tag !== tag
+          ),
+        },
+      })),
+
+    // Clear all
+    clearPreferences: () =>
+      set((state) => ({
+        formData: {
+          ...state.formData,
+          looking_for: [],
+        },
+      })),
+
+    // Find one preference
+    getPreference: (tag) => {
+      return get().formData.looking_for.find((item) => item.tag === tag);
+    },
+  })
+);

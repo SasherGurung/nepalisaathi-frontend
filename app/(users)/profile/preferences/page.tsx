@@ -11,19 +11,35 @@ import { useEffect, useMemo, useState } from "react";
 
 function PreferencePage() {
   const { tags, fetchTags } = useTagsStore();
+  const [searchTags, setSearchTags] = useState("");
 
   useEffect(() => {
     fetchTags();
   }, [fetchTags]);
 
+  const filteredTags = useMemo(() => {
+    if (!searchTags.trim()) return tags;
+    const search = searchTags.toLowerCase();
+    return tags.filter(
+      (tag) =>
+        tag.name_en.toLowerCase().includes(search) ||
+        tag.notes?.toLowerCase().includes(search),
+    );
+  }, [tags, searchTags]);
+
   const groupedTags = useMemo(() => {
-    const groups: Record<string, typeof tags> = {};
-    for (const tag of tags) {
-      if (!groups[tag.category]) groups[tag.category] = [];
+    const groups: Record<string, typeof filteredTags> = {};
+
+    for (const tag of filteredTags) {
+      if (!groups[tag.category]) {
+        groups[tag.category] = [];
+      }
+
       groups[tag.category].push(tag);
     }
+
     return Object.entries(groups);
-  }, [tags]);
+  }, [filteredTags]);
 
   return (
     <div className="flex justify-center items-center my-13">
@@ -49,48 +65,57 @@ function PreferencePage() {
         <div className="mt-13 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400" />
           <Input
+            value={searchTags}
+            onChange={(e) => setSearchTags(e.target.value)}
             placeholder="Search tags (e.g. business, jobs, events)..."
             className="h-12 pl-10 focus-visible:ring-1 focus-visible:ring-(--brand-maroon)"
           />
         </div>
 
         <div>
-          {groupedTags.map(([category, categoryTags]) => (
-            <div key={category} className="space-y-4 mb-10">
-              <h1 className="text-2xl font-bold">{category}</h1>
+          {groupedTags.length === 0 ? (
+            <p className="text-zinc-500 text-xl font-semibold flex justify-center m-15">
+              {" "}
+              No tags found matching.{" "}
+            </p>
+          ) : (
+            groupedTags.map(([category, tags]) => (
+              <div key={category} className="space-y-4 mb-10">
+                <h1 className="text-2xl font-bold">{category}</h1>
 
-              <div className="grid grid-cols-2 gap-4">
-                {categoryTags.map((tag) => (
-                  <Card
-                    key={tag.id}
-                    className="border-red-400 bg-red-50/50 shadow-2xs p-5"
-                  >
-                    <h1 className="font-semibold text-xl">{tag.name_en}</h1>
-                    <p className="text-sm text-zinc-500">{tag.notes}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  {tags.map((tag) => (
+                    <Card
+                      key={tag.id}
+                      className="border-red-400 bg-red-50/50 shadow-2xs p-5"
+                    >
+                      <h1 className="font-semibold text-xl">{tag.name_en}</h1>
+                      <p className="text-sm text-zinc-500">{tag.notes}</p>
 
-                    <div className="flex gap-3 mt-3 mb-3">
-                      <Button variant="maroonRed" className="px-6">
-                        Seeking
-                      </Button>
-                      <Button variant="lightRed" className="px-6">
-                        Offering
-                      </Button>
-                    </div>
+                      <div className="flex gap-3 mt-3 mb-3">
+                        <Button variant="maroonRed" className="px-6">
+                          Seeking
+                        </Button>
+                        <Button variant="lightRed" className="px-6">
+                          Offering
+                        </Button>
+                      </div>
 
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id={`feature-profile-${tag.id}`}
-                        className="bg-white border-(--brand-maroon) data-checked:bg-(--brand-maroon) data-checked:border-(--brand-maroon) cursor-pointer"
-                      />
-                      <span className="text-zinc-500 text-sm">
-                        Feature on profile
-                      </span>
-                    </div>
-                  </Card>
-                ))}
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id={`feature-profile-${tag.id}`}
+                          className="bg-white border-(--brand-maroon) data-checked:bg-(--brand-maroon) data-checked:border-(--brand-maroon) cursor-pointer"
+                        />
+                        <span className="text-zinc-500 text-sm">
+                          Feature on profile
+                        </span>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
         <div className="flex justify-end">
           <Button
