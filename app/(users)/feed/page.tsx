@@ -22,7 +22,6 @@ type DiscoverUser = {
 export default function FeedPage() {
   const router = useRouter();
   const [discoverUsers, setDiscoverUsers] = useState<DiscoverUser[]>([]);
-
   const { posts, fetchPosts } = usePostStore();
 
 

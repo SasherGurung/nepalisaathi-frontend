@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { SetupProfileUser } from "@/lib/types/EditProfile/editProfile.types";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api/config";
+import { useAuthStore } from "../Auth/authStores";
 
 type setupProfileState = {
   setupProfile: SetupProfileUser | null;
@@ -20,6 +21,8 @@ export const useSetupProfileStore = create<setupProfileState>((set) => ({
       set({
         setupProfile: data.user,
       });
+      // keep auth store in sync too
+      useAuthStore.getState().setUser?.(data.user);
       toast.success(data.message || "Profile set successfully");
 
       return true;

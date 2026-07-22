@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useTagsStore } from "@/lib/stores/EditProfile/Preferences/tagsStore";
-import { useProfileStepStore } from "@/lib/stores/EditProfile/profileStepsStore";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -34,7 +33,6 @@ function PreferencePage() {
       if (!groups[tag.category]) {
         groups[tag.category] = [];
       }
-
       groups[tag.category].push(tag);
     }
 

@@ -34,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/lib/stores/Auth/authStores";
+import { useConnectionStore } from "@/lib/stores/Connection/connectionStore";
 
 function Navbar() {
   const router = useRouter();
@@ -41,6 +42,7 @@ function Navbar() {
 
   const { clearUser } = useAuthStore();
   const { user } = useAuthStore();
+  const { receiveRequest } = useConnectionStore();
 
   return (
     <header className="flex justify-between px-30 py-1 items-center cursor-pointer sticky top-0 z-50 bg-white backdrop-blur-md border-b shadow-sm">
@@ -67,16 +69,24 @@ function Navbar() {
           <FiHome className="h-6 w-6" />
         </button>
 
-        <button
-          onClick={() => router.push("/connection")}
-          className={`flex h-11 w-11 items-center justify-center transition-all duration-200 cursor-pointer ${
-            pathname === "/connection"
-              ? "border-b-2 border-(--brand-maroon) text-(--brand-maroon)"
-              : "hover:bg-zinc-100 text-zinc-500   hover:text-(--brand-maroon)"
-          }`}
-        >
-          <MdOutlineGroup className="h-7 w-7" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => router.push("/connection")}
+            className={`flex h-11 w-11 items-center justify-center transition-all duration-200 cursor-pointer ${
+              pathname === "/connection"
+                ? "border-b-2 border-(--brand-maroon) text-(--brand-maroon)"
+                : "hover:bg-zinc-100 text-zinc-500 hover:text-(--brand-maroon)"
+            }`}
+          >
+            <MdOutlineGroup className="h-7 w-7" />
+          </button>
+
+          {receiveRequest.length > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-sm font-semibold text-white">
+              {receiveRequest.length}
+            </span>
+          )}
+        </div>
 
         <button
           onClick={() => router.push("/chat")}
@@ -103,11 +113,13 @@ function Navbar() {
       <div className="flex gap-5 items-center">
         <DropdownMenu>
           <DropdownMenuTrigger>
-          <FiBell className="h-6 w-6 cursor-pointer" />
+            <FiBell className="h-6 w-6 cursor-pointer" />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-lg">Notifications</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-lg">
+                Notifications
+              </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
